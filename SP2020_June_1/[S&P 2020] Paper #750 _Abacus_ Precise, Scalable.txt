@@ -1,0 +1,293 @@
+Delivered-To: qinkunbao@gmail.com
+Received: by 2002:a05:6402:b38:0:0:0:0 with SMTP id bo24csp17888390edb;
+        Wed, 1 Jan 2020 14:59:42 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxqssY4ucv5T6Jco6l2Y11HK6JVzay5RYXNcxd6C5NeeoyxVQj3JHPAOQYvGhw6TCWzIX21
+X-Received: by 2002:a92:8f46:: with SMTP id j67mr59434684ild.125.1577919582534;
+        Wed, 01 Jan 2020 14:59:42 -0800 (PST)
+ARC-Seal: i=2; a=rsa-sha256; t=1577919582; cv=pass;
+        d=google.com; s=arc-20160816;
+        b=jUQzv+p0lJvtDASp+i37hOlw6nWCFUNQSJv9ZFU2INm7V36lOBnvEPRkwRQvN8f5a/
+         uY42RBFX+MgpnBNhB//SzaLUenZonzUOLDwwWzWlXs0sZB86w24tiOuLRjrePtcaRB6y
+         nYhVRKLit6yG+UsfygJ6kyYAO4OHrEez+NSWfsgGQkszz2/BFMPXhawISg2Sa6t0+797
+         vOLVKpIkK0qO3Kj2L8BTsIwnL9Hnen1hfK1s8EcFqUSeH90x5hHBiNGIDx/AYuJOC2GX
+         ZysVWDR5q/qzRLFApV9kYHmxacOTIdXCUjatNf7stx9dAgKdUiluwQVbcsB90Kigt2Yw
+         6FIA==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=date:message-id:mime-version:reply-to:to:subject:from:resent-from
+         :dkim-signature;
+        bh=UEGLkWZvJnCIm9dZHfs40TskH2wPCnrQn5XrZ03whQ4=;
+        b=K3Jw7RL7YF6gRTZgHcNV5xKTTXXv1DNNW4ddsw8foqVZ0INq6clot5po5dlVHd52U8
+         IzoCLMTOS5hCJRPfzJMdv7Ensk7/dM0RxhqRvmrVuGpvqCZHCLJu/8qsE+ScrJOlKYvT
+         /0DXM/bJ7+zNaxGmzOT36OGaDFwi7z0xU3bfztQ/Vl4wqXu3y1ID/zzUWnwo2Tsi2cem
+         HuSd6sNobFThI9xVLZp/9/3wfh0l1sF1QboknXKDVpWAyQ5Rie+ds3Vc4T4otZiAOjvN
+         A3zBWIfpGm44WWvV63gy0N+SJ1uC3FSPX+U+rLzh/zxNYHr8kvPD2GfXA/5AINPRWG+i
+         /UEA==
+ARC-Authentication-Results: i=2; mx.google.com;
+       dkim=pass header.i=@PennStateOffice365.onmicrosoft.com header.s=selector2-PennStateOffice365-onmicrosoft-com header.b=Nax7oaQc;
+       arc=pass (i=1);
+       spf=neutral (google.com: 40.107.93.125 is neither permitted nor denied by best guess record for domain of qub14@psu.edu) smtp.mailfrom=qub14@psu.edu
+Return-Path: <qub14@psu.edu>
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2125.outbound.protection.outlook.com. [40.107.93.125])
+        by mx.google.com with ESMTPS id n126si39998123jaa.4.2020.01.01.14.59.42
+        for <qinkunbao@gmail.com>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 Jan 2020 14:59:42 -0800 (PST)
+Received-SPF: neutral (google.com: 40.107.93.125 is neither permitted nor denied by best guess record for domain of qub14@psu.edu) client-ip=40.107.93.125;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@PennStateOffice365.onmicrosoft.com header.s=selector2-PennStateOffice365-onmicrosoft-com header.b=Nax7oaQc;
+       arc=pass (i=1);
+       spf=neutral (google.com: 40.107.93.125 is neither permitted nor denied by best guess record for domain of qub14@psu.edu) smtp.mailfrom=qub14@psu.edu
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jpToFocxEBGmDYYe2d6Pl1S7T9umqiFrtsC59b1J3s3Spe4V13D83oJv2WOq1evhMUoWQJsyXEWgcOOOLzCzPKXesZD9cDo4mVbQOgAtrc4CJBwZfh9ZogAT9caJ4S5S0tpOXtx7mKQbOChy39xcmUtGKc1mCgL1nrwDAnoZQ6RSozwWnzLXF3gFNek88LVgD58jV511lZIkmBYQmNKJmPFH5hh2oAKy92r1DaWy/rxUc7962vjRcwjGNudbFIaMKe2ptlD4ZDXnih5yKjkZ0fsriQTwf8znxJxT0mptUAmwErlMJycJsMLM3owwtSBSwdwsRJInMNYtMcIYXqmj3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UEGLkWZvJnCIm9dZHfs40TskH2wPCnrQn5XrZ03whQ4=;
+ b=Iinz+5utJKbZcIxOteFYNJQUKDJ3IBAnJ4GH6J9TxADDUpZ7TeR4wZMi50PZXUFf+edXdV3MeXsQjfGNB7tFd0ppe/qmxUubiFVxRkiQUTPPrW0GilQLxk53iH6kbbQ/9G5qqFHmVrl+PJgwHWVe4DXLQm7vhIHVYHRZSY7LI/Oukgaka1ETDkB5GxfbS7SAjMn2Os5K7qXzUt8t64t5jSJPSwZJsM6rdCwA52GM3X6tuKgU0R3S7vlL0LgvFKTQZDJiGyax4Qg/IChMfSE4Vv2/qVX1i/dfAgSnwCglZS3gBK4+nkZhAWI9CNBxYUczZvxjDqf3G/Q1tc36XRZhgQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=PennStateOffice365.onmicrosoft.com;
+ s=selector2-PennStateOffice365-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UEGLkWZvJnCIm9dZHfs40TskH2wPCnrQn5XrZ03whQ4=;
+ b=Nax7oaQc2fjCRfbLZHIF52i2gEcCDxITau1inaEinGnn472zRD8i6SfWY05bbixz/m712XpxXpfl7CMXwbXO6lJey6frz48BbbKiGvLZIUTDW218xNhQr9gRIFZhcJYW4mKRcqTKu94SB6cAIFiy40IwULR8Ftyb7FoRaWeuP9c=
+Resent-From: <qub14@psu.edu>
+Received: from CY4PR02CA0012.namprd02.prod.outlook.com (2603:10b6:903:18::22)
+ by MN2PR02MB6783.namprd02.prod.outlook.com (2603:10b6:208:198::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.11; Wed, 1 Jan
+ 2020 22:59:39 +0000
+Received: from BN3NAM01FT038.eop-nam01.prod.protection.outlook.com
+ (2a01:111:f400:7e41::209) by CY4PR02CA0012.outlook.office365.com
+ (2603:10b6:903:18::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2581.11 via Frontend
+ Transport; Wed, 1 Jan 2020 22:59:39 +0000
+Authentication-Results: spf=pass (sender IP is 128.111.48.17)
+ smtp.mailfrom=oakland20.seclab.cs.ucsb.edu; psu.edu; dkim=none (message not
+ signed) header.d=none;psu.edu; dmarc=none action=none
+ header.from=ieee-security.org;
+Received-SPF: Pass (protection.outlook.com: domain of
+ oakland20.seclab.cs.ucsb.edu designates 128.111.48.17 as permitted sender)
+ receiver=protection.outlook.com; client-ip=128.111.48.17;
+ helo=reed.seclab.cs.ucsb.edu;
+Received: from reed.seclab.cs.ucsb.edu (128.111.48.17) by
+ BN3NAM01FT038.mail.protection.outlook.com (10.152.67.253) with Microsoft SMTP
+ Server id 15.20.2602.11 via Frontend Transport; Wed, 1 Jan 2020 22:59:38
+ +0000
+Received: by reed.seclab.cs.ucsb.edu (Postfix, from userid 33)
+	id 2B2191741D37; Wed,  1 Jan 2020 14:59:36 -0800 (PST)
+From: sp20-pcchairs@ieee-security.org
+Subject: [S&P 2020] Paper #750 "Abacus: Precise, Scalable, and..."
+To: Qinkun Bao <qub14@psu.edu>
+Reply-To: sp20-pcchairs@ieee-security.org
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Message-Id: <20200101225936.2B2191741D37@reed.seclab.cs.ucsb.edu>
+Date: Wed,  1 Jan 2020 14:59:36 -0800 (PST)
+Return-Path: hotcrp@oakland20.seclab.cs.ucsb.edu
+X-EOPAttributedMessage: 0
+X-EOPTenantAttributedMessage: 7cf48d45-3ddb-4389-a9c1-c115526eb52e:0
+X-Forefront-Antispam-Report:
+ CIP:128.111.48.17;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10019020)(136003)(376002)(346002)(39860400002)(396003)(189003)(199004)(7596002)(66574012)(1076003)(70586007)(6266002)(2160300002)(68406010)(7636002)(26005)(6862004)(966005)(75432002)(498600001)(33656002)(42186006)(356004)(42882007)(316002)(9686003)(786003)(30864003)(8676002)(5660300002)(2906002)(246002)(336012)(14776007);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR02MB6783;H:reed.seclab.cs.ucsb.edu;FPR:;SPF:Pass;LANG:en;PTR:reed.seclab.cs.ucsb.edu;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: da3be3df-ed0f-43be-35cf-08d78f0e4792
+X-MS-TrafficTypeDiagnostic: MN2PR02MB6783:|MN2PR02MB6783:
+X-LD-Processed: 7cf48d45-3ddb-4389-a9c1-c115526eb52e,ExtFwd
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS:
+ <MN2PR02MB6783EC14310C4A219A51C90BF1210@MN2PR02MB6783.namprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
+X-Forefront-PRVS: 02698DF457
+X-MS-Exchange-SenderADCheck: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+ Xd0jvzvPKjSQ3CeAEKB1wSFyceI80XK8mpyXn0wMq518oRHCcaxcGGlhBauIZ1BDVRxZTF6NcCz24erIxAb+y9XbNsF6PBZd3GC+Q/X/alpNqSocXCEL61aw+ov7QayNuhgbUD25R4VEUy8aeA3t7Lp1W/VHe3QgdkNKgS9T9wo/BTPUKgChwNuY9b5nT8iEk4kVav1xz2dzk8+IRmsh4BuPRBJvBKaH2wQ9+mLxXaL9od1JTHqNORGwMDq9+cE3OQW9UKtxt1EFPbxukZ5na5fiTyXYRd3S/eOMO8AjLpKMYQkHQOYO32DRoUCG7ugXOSaczhQMXdB0gopChC8rlBQtHiDQL6uj/6oTV1zkPBcNMXBFXDBNom1aV0OgqOp+P+7CFk+1kX1W4gf5zZxV6woS/4A66vCJANc0COtOB7E/QN+ofHlnRiQmPvIbgfA0ldb9M1B6cUo2O8y23dIUOnQbz/RLd3QxKR8uc9cDcfve1EOmueH7iT5VGaA2ubwh8TLEwPOGw0pVfSNbiibDsg==
+X-ExternalRecipientOutboundConnectors: 7cf48d45-3ddb-4389-a9c1-c115526eb52e
+X-OriginatorOrg: psu.edu
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jan 2020 22:59:38.7751
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: da3be3df-ed0f-43be-35cf-08d78f0e4792
+X-MS-Exchange-CrossTenant-Id: 7cf48d45-3ddb-4389-a9c1-c115526eb52e
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6783
+
+Dear Qinkun,
+
+Happy New Year! Thank you for submitting your paper to IEEE S&P 2020.
+
+The IEEE S&P 2020 program committee is sorry to inform you that your paper
+#750 has not been accepted and will not appear at the symposium.
+
+       Title: Abacus: Precise, Scalable, and Fine-grained Side-channel
+              Information Leakage Quantification for Production Software
+     Authors: Qinkun Bao (The Pennsylvania State University)
+              Zihao Wang (The Pennsylvania State University)
+              Xiaoting Li (The Pennsylvania State University)
+              James Larus (École Polytechnique Fédérale de Lausanne)
+              Dinghao Wu (The Pennsylvania State University)
+  Paper site: https://oakland20.seclab.cs.ucsb.edu/hotcrp/paper/750?cap=0750aDSWvPE4U8CU
+
+The selection process was extremely competitive. We hope that your
+submission will find a good home and that you will be able to present your
+results to the community at another venue.
+
+Reviews (and comments, if any) on your paper are appended to this email. We
+hope they will be useful to you in revising your work. The submissions were
+extensively discussed by the PC members online and during an online PC
+meeting. We urged the reviewers to include as much information as possible
+in their reviews, but even so, the reviews you’ll see below may present
+only a partial picture of the process that led to the negative decision on
+your submission.
+
+We thank you again for submitting your work to IEEE S&P and hope that you
+will consider doing so again in the future.
+
+Best regards,
+
+Alina Oprea and Hovav Shacham
+IEEE S&P 2020 PC co-chairs
+
+Reviews:
+===========================================================================
+                           S&P 2020 Review #750A
+---------------------------------------------------------------------------
+Paper #750: Abacus: Precise, Scalable, and Fine-grained Side-channel
+            Information Leakage Quantification for Production Software
+---------------------------------------------------------------------------
+
+                      Overall merit: 3. Weak reject - The paper has flaws,
+                                        but I will not argue against it.
+
+              ===== Brief paper summary (2-3 sentences) =====
+
+The paper considers the task of detecting side channel leakage in cryptographic libraries. Going beyond simple detection of a leakage location, the authors attempt to estimate the number of bits leaked, allowing developers to triage the patching effort for side channel vulnerabilities.  To that end, after demonstrating the downsides of using entropy based techniques to estimate the amount of leakage bits, the authors build a framework that estimates leakage using mutual information between traces. They then show how mutual information leakage computation can be scaled to large code based, using static and dynamic analysis. Finally, the authors evaluate their approach on real world cryptographic libraries.
+
+                           ===== Strengths =====
+
++ The paper is well written and easy to read. The problem considered is interesting and has real world impact.
++ The results are impressive, as the authors indeed make a case that they are able to better estimate the number of bits leaking from a side channel weakness. 
++ The authors also benchmark their approach on real word crypto libraries. The engineering effort undertaken by them to make this work on a large code base is acknowledged, together with a performance improvement of up to x100 compared to previous techniques.
+
+                          ===== Weaknesses =====
+
+-	Only considers address based side channels. No other side channels such as speculation or Rowhammer are considered. 
+-	The paper does not discover new attacks but focuses on rediscovering old vulnerabilities. Moreover, the vulnerabilities that are pointed in the paper to are quite blunt and can be easily noticed via a code review. 
+-	The paper only considers the crypto primitive layer, not the protocol layer. 
+-	Only considers 32-bit code, while most modern crypto code is 64 bits. 
+-	The paper uses random testing for constraint solving. While I see this as an elegant solution to the third challenge, it also misses chosen ciphertext attacks where m is selected as a function of k, so that it will only cause leakage for some k’s but not others.
+
+              ===== Detailed comments for the author(s) =====
+
+Thank you for submitting to SP20, I enjoyed reading the paper. I find the problem considered interesting, especially given the recent side channel storm. As side channel vulnerabilities are numerous, I agree that tools are needed to triage them. I like the analysis presented in the paper, as well as the mutual information metric proposed by the authors. I also liked how the authors benchmarked their approach on real cryptographic code, and not merely examples. 
+
+On the negative side, I’m worried that the authors are arguing that triaging should be done based on the amounts of bits leaked. Using this logic, we should first handle hard-to-measure multi-bit leaks, as opposed to remote easily exploitable single bit large timing variations (e.g., Kocher’s original attack from 96). I am simply a bit uncomfortable with such an approach, especially given the large amount of mathematical techniques for extracting information from even single bit leakage sources to which the authors refer to as “not severe” (Section VC2). 
+Next, the proposed approach quantifies the amount of leakage using random testing (Solution to C3 paragraph). The problem here is that it will miss chosen ciphertext attacks, where leakage only occurs for specific keys or bits targeted by the ciphertext (see “remote timing attacks are practical” or “Power analysis by exploiting chosen message and internal collisions — vulnerability of checking mechanism for RSA-decryption”). That said, eliminating the non-chosen ciphertext class of attacks is also an important result. 
+Finally, the leakage sources discovered by the paper are well known and easily spotted. The paper did not contain any vulnerabilities that are not well known. Moreover, the paper only considered the crypto primitive layer, completely ignoring protocol-level vulnerabilities (See “Pseudo Constant Time Implementations of TLS Are Only Pseudo Secure” paper for one such example). I consider these two points, as well as the rather narrow focus on only two libraries (MbedTLS and OpenSSL) to be the paper’s main limitations.
+
+Overall, while I liked the results, I feel that in terms of attacks discovered and scope considered that paper is a bit weak for a venue like Oakland. Thus, my recommendation is a weak reject.
+
+===========================================================================
+                           S&P 2020 Review #750B
+---------------------------------------------------------------------------
+Paper #750: Abacus: Precise, Scalable, and Fine-grained Side-channel
+            Information Leakage Quantification for Production Software
+---------------------------------------------------------------------------
+
+                      Overall merit: 3. Weak reject - The paper has flaws,
+                                        but I will not argue against it.
+
+              ===== Brief paper summary (2-3 sentences) =====
+
+The paper presents a measure for side channel information leakage, describes methods to find leakage sites in a binary and to compute the proposed leakage measure for these sites. Finally, the paper presents a prototype implementation.
+
+                           ===== Strengths =====
+
+- Abacus finds lots of leakage sites and returns plausible leakage estimates.
+- The design looks interesting.
+
+                          ===== Weaknesses =====
+
+- The evaluation does not make a strong case for the practical benefits of the new leakage measure.
+- The design relies on many heuristics, and it is not clear how reliable any particular output of Abacus is.
+- While the design is non-standard, its ingredients are neither new nor deep.
+
+              ===== Detailed comments for the author(s) =====
+
++ The new leakage measure is intuitively appealing.
+
++ The argument why "the existing static method does not work well" is unclear. If you only consider deterministic programs and assume that there is no noise then why is it a problem that "the adversary will run the attack over and over again"?
+
++ The evaluation could do a better job at demonstrating practical value. For AES/DES, the leakage through table lookups is quite evident. Any developer with a minimal understanding of what his code does should know what is going on even without leakage measurement tools.
+
++ For RSA, if the bulk of the leakage sites are error checks that do not really leak then it appears that we are once again telling the developer things he already knows.
+
++ The design is non-standard and combines several ideas that are potentially interesting. This is not just a tweak on an existing system.
+
++ The main techniques are heuristic. By combining several heuristics, each with its own failure cases, Abacus inherits the combination of these failures. This makes it hard to have confidence in the results. 
+
++ The formal definitions and the theorem do not change this, as the theorem talks only about one out of several optimizations. 
+
++ Discovery based on execution traces may miss entire paths to leakage sites. As the paper notes, this is probably not a problem for typical crypto code. Is Abacus intended only for such code? If so, the paper should say so clearly in the introduction. If not, the paper has to make a better case in the design and the evaluation that it can handle arbitrary code.
+
++ The Monte Carlo simulation may time out. This may or may not show that leakage is severe (p10c2).
+ 
++ More importantly, how do you estimate the variance (sigma) on page 8. The one sentence that seems to talk about this is broken and does not make sense. 
+
++ What does "this is still a #P problem" (page 8) mean? Is it #P complete, #P hard, contained in #P? Why?
+
++ There is a huge literature on approximate counting, including on approximating #P complete problems in polynomial time. The sampling procedure of Section 4 uses simple sampling which has the obvious property that it will take a very long time to sample from a very large space. This is ok; but there is nothing very profound or new here.
+
++ The paper dismisses alternatives (e.g., constraint solvers) without making a convincing case. Running a constraint solver takes time. However, they have been used successfully for related problems. Can the paper provide some insight into why they are too slow for this task?
+
+===========================================================================
+                           S&P 2020 Review #750C
+---------------------------------------------------------------------------
+Paper #750: Abacus: Precise, Scalable, and Fine-grained Side-channel
+            Information Leakage Quantification for Production Software
+---------------------------------------------------------------------------
+
+                      Overall merit: 3. Weak reject - The paper has flaws,
+                                        but I will not argue against it.
+
+              ===== Brief paper summary (2-3 sentences) =====
+
+This paper proposes ABACUS which precisely quantifies (in bits) the amount of information leaked due to side-channel vulnerabilities. ABACUS uses symbolic execution to obtain a leakage formula which includes the path constraint of the program. It then uses monte Carlo simulation to approximate the number of models of the leakage formula which is used to calculate the leakage in the number of bits. Analysis of OpenSSL and Mbed TLS with ABACUS identify several missed side-channel vulnerabilities.
+
+                           ===== Strengths =====
+
+- The paper is very well written and clearly explains the problem and its solution. 
+
+- The notion of leakage is intuitive. 
+
+- The use of monte Carlo simulation to approximate the number of models of the leakage formula is indeed neat.
+
+                          ===== Weaknesses =====
+
+- Practical significance of precise quantification. 
+
+- The empirical evaluation is limited 
+
+- Generation of traces is not clear
+
+              ===== Detailed comments for the author(s) =====
+
+The paper introduces the notion of leakage in bits. This is a neat way of modeling leakage. In their definition, the state space reduction due to an observation is what the authors refer to as leakage. 
+
+The approach goes something like the following. The authors first obtain a bunch of dynamic execution traces. For each such trace, the authors run symbolic execution to obtain a leakage formula. The leakage formula models whether there is a secret dependent branch or load including the path constraint. It then uses Monte Carlo simulation to obtain the number of models of that leakage formula. The difference between the whole state space and the number of models is what constitutes the leakage. The main idea is to eliminate the call to SMT solvers for model counting of the leakage formula to attain scalability.
+
+The paper is very well written and explains all the relevant notions very clearly. I thoroughly enjoyed reading the paper. 
+
+There are two weaknesses. First, it uses dynamic traces to start its analysis. It's not clear how these dynamic traces are generated. The effectiveness of the per-path analysis relies on the dynamic traces exercising the leakage. A detailed description of how one can go about generating effective dynamic traces will be useful. Next, it is not clear how such a precise quantification in bits could be exploitable or be used by the developers to decide whether certain leakages are okay. A clear discussion can strengthen the paper. 
+
+
+The other sticking point is the empirical evaluation. I feel that the authors could have strengthened by performing the evaluation on a larger corpus of implementations. The current one relies only on OpenSSL and Mbed TLS. Analyzing other provably leakage-free cryptographic implementations could have been interesting. Also, the vulnerabilities identified with ABACUS are well known and no new vulnerabilities were identified. 
+
+The discussion about traditional symbolic execution's scalability is not entirely relevant as the analysis of ABACUS is per-path. I was also wondering whether there is a middle ground of using monte Carlo simulation and the SMT solver; relying on the Monte Carlo simulation only when the SMT solver is the bottleneck. This is particularly doable as the authors decompose the original formula based on dependencies to a bunch of other formulas. The other possibility is to use other model counting approach along with SMT solvers. 
+
+The paper was discussed in the PC meeting and the other reviewers have identified some additional weaknesses. Please see the other reviewer comments for details. The paper can be strengthened by: (1) adding motivations of why precise quantification (in bits) is useful for a developer to make a decision of whether to fix a particular side-channel vulnerability; (2) add empirical evaluation showing that ABACUS can indeed quantify the leakage in a wider number of applications.
+
+
+
+========================================================================
+

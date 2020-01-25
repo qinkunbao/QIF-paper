@@ -1,0 +1,272 @@
+
+\newcommand{\vvv}{\vspace*{-3pt}}
+
+
+\section{Algorithm to Compute the Maximum Independent Partition}
+\label{appendix:partition}
+~
+{\small
+\IncMargin{1em}
+\begin{algorithm}[h]\small
+    \DontPrintSemicolon
+    \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+    \Input{$c_t(\addr{1},\addr{2},\ldots,\addr{n}) = c_{\addr{1}} \land c_{\addr{2}} \land \ldots \land c_{\addr{m}}$}
+    \Output{The Maximum Independent Partition of $G = \{g_{1}, g_{2}  , \ldots,  g_{m} \}$ }
+    \For{$i\leftarrow 1$ \KwTo $n$}
+    {
+        $S_{c_{\addr{i}}}$ $\leftarrow$ $\pi(c_{\addr{i}})$ \;
+        \For{$g_{i} \in G$}
+        {
+            $S_{g_j}$ $\leftarrow$ $\pi(g_{j})$ \;
+            $S$ $\leftarrow$ $S_{c_{\addr{i}}} \cap S_{g_j}$  \;
+            \If{$S \neq \emptyset$}
+            {
+                $g_{j} \leftarrow g_{i} \land g_{\addr{i}}$ \;
+                \textbf{break} \;
+            }
+            Insert $c_{\addr{i}}$ to $G$
+        }
+    }
+    \caption{The Maximum Independent Partition}
+    \label{algo:max-inde}
+\end{algorithm}
+\DecMargin{1em}
+}
+~
+%\newpage
+\section{Algorithm to Compute the Number of Satisfying Assignments}
+\label{appendix:montecarlo}
+~
+{\small
+\IncMargin{1em}
+\begin{algorithm}\small
+    \SetAlgoLined
+    \DontPrintSemicolon
+
+    \KwIn{{The constraint $g_{i}= c_{i_1} \land c_{i_2}
+                    \land \ldots \land c_{i_m}$}}
+    \KwOut{{The number of assignments that satisfy $g_{i}$ $|K_{g_{i}}|$}}
+
+    $n$: the number of sampling times \;
+    $S_{c_i}$: the set contains input variables for $c_{i}$ \;
+    $n_{s}$: the number of satisfying assignments \;
+    $N_{c_t}$: the set contains all solution for $c_t$ \;
+    $r$: times of reducing $g$\;
+    $k$: the input variable \;
+    $R$: a function that produces a random point from $S_{c_i}$\;
+    %$\#k$: the satisfying number of k \fixme{this number is not used syntactically} \;
+    %Initialization: \;
+    $r$ $\leftarrow$ $1$,
+    $n$ $\leftarrow$ $0$ \;
+    \For{$t$ $\leftarrow$ $1$ \KwTo $m$} {
+        $S_{c_t}$ $\leftarrow$ $\pi(c_t)$ \;
+        \If{$|S_{c_t}| = 1$}
+        {
+            $N_{c_t}$ $\leftarrow$ Compute all solutions of $c_i$ \;
+            $N_{c_t} = \{n_1, \ldots, n_m\},\ S_{c_t} = \{k\}  $ \;
+            $g_{i} = $ $g_i(k=n_1) \land \ldots \land g_i(k=n_m)$ \;
+            $r \leftarrow r+1$ \;
+
+        }
+    }
+    \While{$n \leq \frac{6p}{1-p}$} {
+        $S_{g_i}$ $\leftarrow$ $\pi(g_i)$ \;
+        $v \leftarrow R(S_{g_i})$ 
+        \If{$v$ satisfies $g_i$}
+        {
+           $n_s \leftarrow n_s + 1$
+        }
+        $n \leftarrow n +1,\ p = \frac{n_s}{n}$
+    }
+
+    $|K_{g_{i}}|$ $\leftarrow$ $n_s|K| / (n * r * range(k))$
+    \caption{Multiple Step Monte Carlo Sampling}
+\end{algorithm}
+\DecMargin{1em}
+}
+~\vvv
+
+\clearpage
+\section{Mitigation Method Evaluation}
+%\section{SBOX Example of Bit-slicing}
+\label{appendix:SBOX}
+~
+\vvv
+\vvv
+\vvv
+\vvv
+\vvv
+\vvv
+\begin{figure}[h!]
+    \centering
+    \begin{lstlisting}[xleftmargin=.02\textwidth,xrightmargin=.01\textwidth]
+uint8_t password = input();
+
+a = *password & 0b001;
+b = (*password & 0b010) >> 1;
+c = (*password & 0b100) >> 2;
+
+na = ~a & 1;
+nb = ~b & 1;
+nc = ~c & 1;
+
+t0 = (b & nc);
+t1 = (b | nc);
+
+l = (a & nb) | t0;
+r = (na & t1) | t0;
+
+ret = l << 1 + r;
+      \end{lstlisting}
+    \caption{SBOX with BitSlicing}
+    \label{fig:SBOX_bitslicing}
+\end{figure}
+~\vvv
+\vvv
+\vvv
+\vvv
+\begin{figure}[h!]
+    \centering
+    \begin{lstlisting}[xleftmargin=.02\textwidth,xrightmargin=.01\textwidth]
+uint8_t password = input();
+
+uint8_t SBOX[] = {1, 0, 3, 1, 2, 2, 3, 0};
+
+if (password <= 0b111)      \\Leaks 5 bits of password
+    ret = SBOX[password];   \\Leaks 4 bits of password
+      \end{lstlisting}
+\vvv
+\vvv
+    \caption{SBOX without BitSlicing}
+    \label{fig:SBOX_da}
+\end{figure}
+~\vvv
+\vvv
+\vvv
+\vvv
+%\section{Example for Lookup Table}
+\begin{figure}[h!]
+    \centering
+    \begin{lstlisting}[xleftmargin=.02\textwidth,xrightmargin=.01\textwidth]
+static const uint8_t T[16] = {
+      0x63U, 0x7cU, 0x77U, 0x7bU, 0xf2U, 0x6bU, 0x6fU, 0xc5U,
+      0x30U, 0x01U, 0x67U, 0x2bU, 0xfeU, 0xd7U, 0xabU, 0x76U};
+      \end{lstlisting}
+    \caption{One-byte Entry Lookup Table}
+    \label{fig:one_byte_table}
+\end{figure}
+~\vvv
+\vvv
+\vvv
+\vvv
+\begin{figure}[h!]
+    \centering
+    \begin{lstlisting}[xleftmargin=.02\textwidth,xrightmargin=.01\textwidth]
+static const uint32_t T[16] = {
+    0xc66363a5U, 0xf87c7c84U, 0xee777799U, 0xf67b7b8dU,
+    0xfff2f20dU, 0xd66b6bbdU, 0xde6f6fb1U, 0x91c5c554U,
+    0x60303050U, 0x02010103U, 0xce6767a9U, 0x562b2b7dU,
+    0xe7fefe19U, 0xb5d7d762U, 0x4dababe6U, 0xec76769aU};
+    \end{lstlisting}
+\vvv
+\vvv
+    \caption{Four-byte Entry Lookup Table}
+    \label{fig:four_byte_table}
+\end{figure}
+~\vvv
+\vvv
+\vvv
+\vvv
+\vvv
+\vvv
+\begin{figure}[h!]
+    \centering
+    \begin{lstlisting}[xleftmargin=.02\textwidth,xrightmargin=.01\textwidth]
+void encrypt_one(uint32_t *o, uint32_t *key, uint32_t l) {
+    for (int i = 0; i < l; i+=4)
+        output[i] = (T[(key[i]>>24)] << 24) ^
+                    (T[(key[i+1]>>16) & 0xff] << 16) ^
+                    (T[(key[i+2]>>8) & 0xff] << 8) ^
+                    (T[(key[i+3]) & 0xff]);
+}
+    \end{lstlisting}
+\vvv
+\vvv
+    \caption{Encrypt with One-byte Entry Lookup Table}
+    \label{fig:one_byte_table_lookup}
+\end{figure}
+~\vvv
+\vvv
+\vvv
+\vvv
+\vvv
+\vvv
+\begin{figure}[h!]
+    \centering
+    \begin{lstlisting}[xleftmargin=.02\textwidth,xrightmargin=.01\textwidth]
+void encrypt_four(uint32_t *o, uint32_t *key, uint32_t l) {
+    for (int i = 0; i < l; i+=4)
+        output[i] = (T[(key[i]>>24)] & 0xff000000) ^
+                    (T[(key[i+1]>>16) & 0xff] & 0x00ff0000) ^
+                    (T[(key[i+2]>>8) & 0xff] & 0x0000ff00) ^
+                    (T[(key[i+3]) & 0xff] & 0x000000ff);
+}
+    \end{lstlisting}
+\vvv
+\vvv
+    \caption{Encrypt with One-byte Entry Lookup Table}
+    \label{fig:four_byte_table_lookup}
+\end{figure}
+
+
+
+\newpage
+\section{Detailed Experimental Results}
+\label{sec:result-table}
+
+Here we present the detailed experimental results.
+Due to space limitation, we select the representative implementations of
+AES, DES, and RSA in
+mbed TLS 2.5,
+OpenSSL 1.1.0f,  and
+OpenSSL 1.1.1.  
+%For RSA, we also include OpenSSL 1.0.2f and OpenSSL 1.0.2k.
+The results are representative to other versions.
+All the results will be made available in electronic format online
+when the paper is published. %at \fixme{http://tinyurl}.
+
+In all the tables presented in this appendix, the mark ``$*$'' means timeout,
+which indicates more severe leakages. See \S\ref{loc:timeout} for the details.
+Also note that we round the calculated numbers of leaked bits to include one digit
+after the decimal point, so $0.0$ really means very small amount of leakage, but not exactly zero. See \S\ref{sssec:errest} for the details of error estimate.
+
+  %as an integer.
+  %Hence the `0' leakage does not equals to no leakage but some leakage size
+ % between 0 and 0.5 bit, see \S\ref{sssec:errest} for the details.
+
+
+\input{figures/form/latex/DES-mbedTLS-2-5.tex}
+%% \input{figures/form/latex/DES-mbedTLS-2-15-1.tex}
+%% \input{figures/form/latex/DES-openssl-0-9-7.tex}
+%% \input{figures/form/latex/DES-openssl-1-0-2f.tex}
+%% \input{figures/form/latex/DES-openssl-1-0-2k.tex}
+\input{figures/form/latex/DES-openssl-1-1-0f.tex}
+\input{figures/form/latex/DES-openssl-1-1-1.tex}
+
+
+\input{figures/form/latex/RSA-mbedTLS-2-5.tex}
+%% \input{figures/form/latex/RSA-mbedTLS-2-15-1.tex}
+%% \input{figures/form/latex/RSA-openssl-0-9-7.tex}
+%% \input{figures/form/latex/RSA-openssl-1-0-2f.tex}
+%% \input{figures/form/latex/RSA-openssl-1-0-2k.tex}
+\input{figures/form/latex/RSA-openssl-1-1-0f.tex}
+\input{figures/form/latex/RSA-openssl-1-1-1.tex}
+
+
+\input{figures/form/latex/AES-mbedTLS-2-5.tex}
+%% \input{figures/form/latex/AES-mbedTLS-2-15-1.tex}
+%% \input{figures/form/latex/AES-openssl-0-9-7.tex}
+%% \input{figures/form/latex/AES-openssl-1-0-2f.tex}
+%% \input{figures/form/latex/AES-openssl-1-0-2k.tex}
+\input{figures/form/latex/AES-openssl-1-1-0f.tex}
+\input{figures/form/latex/AES-openssl-1-1-1.tex}
