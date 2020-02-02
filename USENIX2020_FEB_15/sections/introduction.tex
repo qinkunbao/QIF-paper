@@ -28,22 +28,20 @@ from two specific circumstances: data flow from secrets to load
 addresses and data flow from secrets to branch conditions. We refer to them as
  secret-dependent memory-access and control-flow, respectively. A
 central problem is eliminating these two code patterns. 
-However, those vulnerable code patterns are unavoidable in many crypto libraries.
-Therefore,
-recent
+Recent
 works~\cite{203878,217537,Wichelmann:2018:MFF:3274694.3274741,Brotzman19Casym,236338,182946},
-find plenty of side-channel vulnerabilities. 
+find plenty of side-channel vulnerabilities. For example,
 DATA~\cite{217537} reports 2,246 potential leakage site for the RSA
 implementation in OpenSSL\@. 
 %After some inspections, 1,510 leakages are dismissed. But it
 %still leaves 460 data-access leakages and 278 control-flow leakages. 
-However, we find most of the reported vulnerabilities are not patched because
+However, we find most of the reported vulnerabilities are not fixed because
 of the following reasons.
 First, many side-channels vulnerable implementations have better performance.
 Those vulnerabilities are well-known for years. For example,
 Symmetric encryptions like AES and DES still uses lookup tables (T-tables), which
 is fast but notoriously known to be vulnerable to side channels.
-As for asymmetric encryptions, many implementation of RSA, adopt the CRT optimization,
+As for asymmetric encryptions, most implementation of RSA, adopt the CRT optimization,
 which is faster but vulnerable to fault attacks~\cite{aumuller2002fault}.
 Second, side-channels are numerous and it is hard to fix all these vulnerabilities, 
 let alone the majority of them are negligible. 
@@ -71,28 +69,27 @@ scenarios. The average information assumes that the target program has
 launched. However, for real-world attacks, an adversary may run the target
 problem with the \emph{fixed} unknown sensitive information
 as the input. Therefore, the previous threat model cannot model real attack
-scenarios. In contrast, our method is more precise and fine-grained. We quantify
+scenarios. In contrast, our method is more precise and fine-grained. 
+We quantify
 the amount of leaked information as the cardinality of the set of possible
 inputs based on attackers' observations.
-
-
 Before an attack, an adversary has a large but finite input space. Every time
 when the adversary observes a leakage site, he can eliminate some potential
 inputs and reduce the size of the input space. The smaller the input space is,
 the more information is obtained. In an extreme case, if the size of the
-input space reduces to one, the adversary can determine the input information
-uniquely, which means all the secret information (e.g., the whole secret key) is
+input space reduces to one, the adversary can uniquely determine the input, 
+which means all the secret information (e.g., the whole secret key) is
 leaked. By counting the number of distinct inputs, we can quantify the
 information leakage precisely.
 
 We use constraints to model the relation between the original sensitive input
-and the attacker's observations. We run the instruction level symbolic execution on the
-whole execution trace to generate the constraints. Symbolic execution can
+and the attacker's observations and run the instruction level symbolic execution on the
+whole execution trace to generate constraints. Symbolic execution can
 provide fine-grained information but is usually believed to be an expensive
 operation in terms of performance. Therefore, existing dynamic symbolic
 execution based works~\cite{203878,236338,Brotzman19Casym} either only analyze
-small programs or apply some domain knowledge to simplify the execution. We
-systematically analyze the bottleneck of the symbolic execution and optimize it
+small programs or apply some domain knowledge~\cite{203878} to simplify the analysis. We
+systematically exam the bottleneck of the trace-oriented symbolic execution and optimize it
 to be scalable to real-world cryptosystems.
 
 We apply the above technique and build a tool called \tool{},
@@ -108,7 +105,7 @@ libraries and then run symbolic execution on the traces. In this way, we model
 each side-channel leakage as a logic formula. The sensitive input is divided into
 several independent bytes, and each byte is regarded as a unique symbol. Those
 formulas can precisely model side-channel vulnerabilities. Then we extend the
-problem to multiple leakages and related leakages and introduce the Monte Carlo
+problem to multiple leakages and related leakages and introduce Monte Carlo
 sampling method to estimate the single and combined information leakage. 
 
 
