@@ -4,12 +4,12 @@ In this section, we discuss how \tool{} quantifies the amount of leaked
 information. \tool{} adopts a dynamic-based approach to quantifying the leaked
 information. We first present the limitation of existing quantification metrics.
 After that, we introduce the abstract of our model and math notations for the
-paper and propose our method.
+rest of the paper and propose our method.
 
 \subsection{Problem Setting}
 Existing static-based side-channel quantification
 works~\cite{182946,Wichelmann:2018:MFF:3274694.3274741 } define information
-leakage with max entropy or Shannon entropy. These definitions provide a strong
+leakage using max entropy or Shannon entropy. These definitions provide a strong
 security guarantee when one tries to prove a program is secure.  If zero bit of
 information leakage is reported, the program is secure. However, it is not
 useful in practice if their tools report the program leaks some information.
@@ -38,7 +38,7 @@ the input is the correct password. If an attacker knows the code executes branch
 $\{{1\}}$ by side-channel attacks, he can infer the password equals to
 ``password'', in which case the attacker can entirely retrieve the password.
 Therefore, the total leaked information should be 64 bits, which equals to the
-size of the sensitive input, when an attacker observes the code executes branch
+size of the original sensitive input if the code executes branch
 $1$.
 
 However, previous static-based approaches cannot precisely reflect the amount of
@@ -49,27 +49,27 @@ branches, tools based on max-entropy will report the code has $\log_2{2} = 1$
 bit leakage.
 
 Both approaches fail to tell how much information is leaked during the execution
-precisely. The problem with existing methods is that they are static-based and,
-the input values are neglected by their approaches. They assume an attacker runs
+precisely. The problem with existing methods is that they are static-based and
+input values are neglected by their approaches. They assume an attacker runs
 the program multiple times with many different or random sensitive inputs. As
 shown in Figure~\ref{fig:gap}(a), previous models, both Shannon entropy and max
 entropy, give an ``average'' estimate of the information leakage. However, it is
 not the typical scenario for an adversary to launch a side-channel attack. When
 a side-channel attack happens, the adversary wants to retrieve the sensitive
 information, in which case the sensitive information is fixed (e.g., AES keys).
-The adversary will run the attack over and over again and guess the value bit by
-bit, as in Figure~\ref{fig:gap}(b). Like the previous example, the existing
-static method does not work well in those situations. We want to produce a
+The adversary will run the attack over and over again with fixed input and 
+guess the value bit by
+bit, as in Figure~\ref{fig:gap}(b). We want to have a
 theory for dynamic analysis that if the theory says an attack leaks $x$ bits of
 secret information from a side-channel vulnerability, then $x$ should be useful
-in estimating the sensitive level of the side-channel. However, the above
+in estimating the sensitive level of the vulnerability. However, the above
 methods all fail in real attack models. This is the first challenge we face
 \textbf{(Challenge C1)}.
 
 \begin{figure}
     \centering
     \includegraphics[width=.8\columnwidth]{./figures/RA.pdf}
-    \caption{The gap between the real attack and previous model}\label{fig:gap}
+    \caption{The gap between the real attack and previous models}\label{fig:gap}
 \end{figure}
 
 
@@ -81,7 +81,7 @@ letters to represent one element in the set (e.g., $a \in A$).
 
 We assume a program ($\beta$) has $K$ as the sensitive input. $K$ should be a
 finite set of keys. The program also takes known messages $M$ as the input. The
-model applies to most cryptosystems. For example, during the AES encryption,
+model applies to most cryptosystems. For example, the AES encryption,
 $\beta$ is the encryption function. $K$ is AES key, and $M$ is messages to be
 encrypted. During the execution, an adversary may have some observations ($O$)
 from the program. Examples of those observations include timing, CPU usages, and
@@ -138,7 +138,7 @@ some observations ($O$).
 \end{equation}
 
 In this project, we hope to give a very precise definition of information
-leakages. Suppose an attacker runs the target program multiple times with one
+leakages. Suppose an attacker runs the target program with one
 fixed input, we want to know how much information he can infer by observing the
 memory access patterns ($o$). We come to the simple slogan
 ~\cite{10.1007/978-3-642-00596-1_21} %% where the information
@@ -207,7 +207,7 @@ information in some attack scenarios.
     \centering
     \caption{New leakage modeling results}
     \label{shtable2}
-    %  \resizebox{.8\columnwidth}{!}{
+    \resizebox{\columnwidth}{!}{
     \begin{tabular}{l|cccc}
         \hline
         %Observation (o)     & $\emptyset$ & ${\{1\}}$ & ${\{2\}}$ & ${\{1, 2\}}$ \\ \hline
@@ -218,9 +218,8 @@ information in some attack scenarios.
         Leaked Information (bits) & 1.0         & 11.7      & 1.0       & 12.0         \\
         \hline
     \end{tabular}
-    %    }
+     }
 \end{table}
-
 \subsection{Our Conceptual Framework}
 \label{side-channel:condition}
 We now discuss how to model the observation (o), which is the direct information
@@ -229,7 +228,7 @@ that an adversary can get during the attack.
 During the execution, a program ($\beta$) have many temporary values ($t_i \in
 T$). Once $\beta$ (program), $k$ (secret), and $m$ (message, public) are
 determined, $t_i$ is also fixed. Therefore, $ t_i = f_i(\beta, k, m)$, where $f_
-i$ is a function that maps $t_i$ and ($\beta$, $k$, $m$).
+i$ is a function that maps between $t_i$ and ($\beta$, $k$, $m$).
 
 In the paper, we consider two code patterns that can be exploited by an attacker,
 \emph{secret-dependent control transfers} and \emph{secret-dependent data
@@ -238,11 +237,8 @@ and data accesses.
 
 \subsubsection{Secret-dependent Control Transfers}
 We think a control-flow is secret-dependent if different input sensitive keys
-($K$) can lead to different branch conditions. For a specific branch, the
-condition is either true or false. Therefore, the branch condition is always a
-boolean variable.
-
-We think a branch is secret-dependent if:
+($K$) can lead to different branch conditions. Therefore,
+We define a branch is secret-dependent if:
 $$\exists k_{i1}, k_{i2} \in K, \,f_i(\beta, k_{i1}, m) \neq f_i(\beta, k_{i2}, m)$$
 
 An adversary can observe which branch the code executes, if the branch condition
@@ -262,7 +258,7 @@ If the branch condition equals to $t_b$, we can use the constraint $c_i :
 f_i(\beta, k, m) >> L = t_b >> L$ to model the observation on secret-dependent
 control-transfers.
 
-With the above definitions, we can model an attacker's observation with math
+With the above definitions, we can model an attacker's observation by math
 formulas. For example, in Figure~\ref{fig:side-channel}, if an attacker observes
 the code executes the branch 1, we have $c_5: k_1 + k_2 < 8$ to describe an
 attacker's knowledge and $K^{o5} = \{k_1,\, k_2\,|\, (k_1 + k_2) < 8\}$. If an

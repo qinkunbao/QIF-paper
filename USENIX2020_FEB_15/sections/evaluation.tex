@@ -16,6 +16,8 @@
     \settowidth{\y}{m}
     \addtolength{\x}{-1\y}
     \newcommand{\foo}{\mbox{\hspace*{\the\x}}}
+    \resizebox{2.1\columnwidth}{!}{
+
     \begin{tabular}{clrrrrrrr}
         \hline
         \textbf{Algorithm} & \textbf{Implementation}  & \textbf{Leakage Sites} & \textbf{CF}         & \textbf{DF}
@@ -69,6 +71,7 @@
         % RSA                & OpenSSL 1.1.1            & 26                    & 20                  & 6                    & 18,207,020  & 12   & 7 ~~      & 455 ~~          \\\hline
         % Total              &                          & 883                   & 205                 & 678                  & 128,042,089 &      & 213m \foo & 1,688m \foo     \\\hline
     \end{tabular}
+    }
 \end{table*}
 
 We evaluate \tool{} on real-world crypto libraries, OpenSSL and mbed TLS\@. OpenSSL
