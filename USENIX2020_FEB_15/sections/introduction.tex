@@ -1,50 +1,60 @@
-\section{Introduction}
+\section{Introduction} 
 %% side channels are important
 Side channels are inevitable in modern computer systems as the sensitive
 information may be leaked through many kinds of inadvertent behaviors, such as power,
 electromagnetic radiation, and even
 sound~\cite{agrawal2002side,kar20178,chari1999towards,217605,genkin2014rsa}.
-Among them, software-based side channels, such as cache attacks, memory page
+Among them, software-based side channel attacks, such as cache attacks, memory page
 attacks, and controlled-channel attacks, are especially common and have been
 studied for
 years~\cite{7163052,217543,217589,lee2017inferring,191010,liu2015last}. These
-vulnerabilities result from vulnerable software and shared hardware components.
-By observing the outputs or hardware behaviors, attackers can infer the program
-execution flow that manipulates secrets and guess the secrets such as encryption
+attacks result from vulnerable software and shared hardware components.
+By observing program outputs or hardware behaviors, attackers can infer program
+execution flows that manipulate secrets and guess secrets such as encryption
 keys~\cite{Osvik2006,Gullasch:2011:CGB:2006077.2006784,203878,10.1007/978-3-540-45238-6_6}.
 
 %% to deal with side channels, we can protect or detect them and detection is better
-Various countermeasures have been proposed to defend against software-based
-side-channel attacks. Hardware-level solutions, such as reducing shared
-resources, adopting oblivious RAM, and using transnational
-memory~\cite{203878,217537,shih2017t,Zhang:2015:HDL:2775054.2694372}, need new
-hardware features or changes in modern complex computer systems, which is
-impractical and hard to adopt in reality. Therefore, a more promising and
-universal direction is software countermeasures, detecting and eliminating
-side-channel vulnerabilities from code base.
+%%arious countermeasures have been proposed to defend against software-based
+%%side-channel attacks. Hardware-level solutions, such as reducing shared
+%%resources, adopting oblivious RAM, and using transnational
+%%memory~\cite{203878,217537,shih2017t,Zhang:2015:HDL:2775054.2694372}, need new
+%%hardware features and changes in modern complex computer systems, which are
+%%impractical and hard to adopt in reality. Therefore, a promising and
+%%universal direction is software countermeasures, detecting and eliminating
+%%side-channel vulnerabilities from code base.
 
-Regarding the root cause of software-based side channels, many of them originate
-from the following two specific circumstances: data flow from secrets to load
+Regarding the root cause of software-based side channel attacks, many of them originate
+from two specific circumstances: data flow from secrets to load
 addresses and data flow from secrets to branch conditions. We refer to them as
  secret-dependent memory-access and control-flow, respectively. A
-central problem is how to identify these two code patterns automatically. Recent
-works~\cite{203878,217537,Wichelmann:2018:MFF:3274694.3274741,Brotzman19Casym,236338,182946}
-adopt static and dynamic analysis to detect side-channels. They are capable to find
-potential leak sites in real-world software, but fail to report how severe each
-potential leakage could be. Moreover, many of the reported vulnerabilities are typically
-hard to exploit and leak very little information. For example,
+central problem is eliminating these two code patterns. 
+However, those vulnerable code patterns are unavoidable in many crypto libraries.
+Therefore,
+recent
+works~\cite{203878,217537,Wichelmann:2018:MFF:3274694.3274741,Brotzman19Casym,236338,182946},
+find plenty of side-channel vulnerabilities. 
 DATA~\cite{217537} reports 2,246 potential leakage site for the RSA
-implementation in OpenSSL\@. After some inspections, 1,510 are dismissed, but it
-still leaves 460 data-access leakages and 278 control-flow leakages. For software
-developers, it is hard to fix all these vulnerabilities, let alone the majority
-of them are negligible. That is, some vulnerabilities can be exploited to recover the
-full secret keys~\cite{184415}, but many other vulnerabilities prove to be less
-severe in reality.
+implementation in OpenSSL\@. 
+%After some inspections, 1,510 leakages are dismissed. But it
+%still leaves 460 data-access leakages and 278 control-flow leakages. 
+However, we find most of the reported vulnerabilities are not patched because
+of the following reasons.
+First, many side-channels vulnerable implementations have better performance.
+Those vulnerabilities are well-known for years. For example,
+Symmetric encryptions like AES and DES still uses lookup tables (T-tables), which
+is fast but notoriously known to be vulnerable to side channels.
+As for asymmetric encryptions, many implementation of RSA, adopt the CRT optimization,
+which is faster but vulnerable to fault attacks~\cite{aumuller2002fault}.
+Second, side-channels are numerous and it is hard to fix all these vulnerabilities, 
+let alone the majority of them are negligible. 
+That is, some vulnerabilities can result in the key being 
+entirely compromised~\cite{184415, aumuller2002fault}, but many other vulnerabilities prove to be less
+severe in reality. Therefore, we need a proper quantification metric to 
+assess the sensitive level of side-channel vulnerabilities.
 
-To assess the sensitive level of side-channel vulnerabilities, we need a proper
-quantification metric. Static methods~\cite{182946,5207642}, usually with
+Previous attempts like static methods~\cite{182946,5207642}, usually with
 abstract interpretation, can give a leakage upper bound, which is useful to
-justify the implementation is secure when they report zero or little leakage.
+justify the implementation is secure if they report zero or little leakage.
 However, they cannot indicate how serious the leakage is because of the
 over-approximation method they apply. For example, CacheAudit~\cite{182946} reports that the upper
 bound leakage of AES-128 exceeds the original key size! The dynamic methods take
@@ -57,9 +67,9 @@ To overcome these limitations, we propose a novel method to quantify information
 leakage precisely. Unlike previous works that only consider the
 ``average'' information leakage, we study the problem based on real attack
 scenarios. The average information assumes that the target program has
-\emph{variable} or \emph{random} sensitive information as input when an attack is
+\emph{variable} or \emph{random} sensitive information as inputs when an attack is
 launched. However, for real-world attacks, an adversary may run the target
-problem again and over again with \emph{fixed} unknown sensitive information
+problem with the \emph{fixed} unknown sensitive information
 as the input. Therefore, the previous threat model cannot model real attack
 scenarios. In contrast, our method is more precise and fine-grained. We quantify
 the amount of leaked information as the cardinality of the set of possible
@@ -148,18 +158,19 @@ In summary, we make the following contributions:
             scenarios.  Our method is different from previous ones in that we
             model real attack scenarios more precisely, while the previous
             research only models the ``average'' or ``random'' case. 
+            We transfer the information quantification problem into a counting
+            problem and use the Monte Carlo sampling method to estimate the
+            information leakage.
             % compared to previous results and
             %%   We model each side-channel vulnerabilities as math formulas %
             %and mutiple side-channel vulnerabilities can be seen as the %
             %conjunction of those formulas, which precisely models the % program
             %semantics.
 
-      \item We transfer the information quantification problem into a counting
-            problem and use the Monte Carlo sampling method to estimate the
-            information leakage. Some initial results indicate the sampling
-            method suffers from the curse of dimensionality problem. Therefore, we
-            design a guided sampling method and provide the
-            corresponding error estimate.
+      %%\item  Some initial results indicate the sampling
+      %%     method suffers from the curse of dimensionality problem. Therefore, we
+      %%      design a guided sampling method and provide the
+      %%      corresponding error estimate.
 
       \item We implement the proposed method into a practical tool and apply it
             on several real-world software. \tool{} successfully identifies
