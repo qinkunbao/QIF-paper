@@ -53,7 +53,6 @@ However, the IR layer, which predigest the implementation
 and reduce the workload of those tools, also introduce significant
 overhead~\cite{217563}.
 
-
 First, transferring machine instructions into IR is time-consuming. For example,
 REIL IR~\cite{dullien2009reil}, adopted in CacheS~\cite{236338}, has multiple
 transform processes, from binary to VEX IR, BAP IR, and finally REIL IR\@. As IR
@@ -171,9 +170,12 @@ multiple leakage sites, we take the conjunction of those constraints to
 represent those leakage sites.
 
 According to the Definition~\ref{def}, to calculate the amount of leaked
-information, the key is to calculate $\frac{|K|}{|K^o|}$. $K^o$ represents the
-set that contains every input keys that satisfy the constraint. As the
-cardinality of $K$ is known, the primary problem is to estimate the cardinality
+information, the key is to calculate 
+%%$\frac{|K|}{|K^o|}$. 
+%%$K^o$ represents the
+%%set that contains every input keys that satisfy the constraint. As the
+%%cardinality of $K$ is known, the primary problem is to estimate 
+the cardinality
 of $K^o$. Suppose an attacker can observe $n$ leakage sites, and each leakage
 site has the following constraints: $c_{\addr{1}}, c_{\addr{2}}, \ldots,
 c_{\addr{n}}$ respectively. The total leakage has the constraint
@@ -397,8 +399,8 @@ Let $n$ be the number of samples and $n_s$ be the number of samples that satisfy
 the constraint $C$. Then we can get $\hat{p} = \frac{n_s}{n}$. If we repeat the
 experiment multiple times, each time we can get a $\hat{p}$. As each
 $\hat{p}$ is independent and identically distributed, according to the central limit
-theorem, the mean value should follow normal distribution.
-$$ \frac{\bar{p}-E(p)}{\sigma\sqrt{n}} \rightarrow N(0,1) $$ Here $E(p)$ is the
+theorem, the mean value should follow normal distribution
+$ \frac{\bar{p}-E(p)}{\sigma\sqrt{n}} \rightarrow N(0,1) $. Here $E(p)$ is the
 mean value of $p$, and $\sigma$ is the standard variance of $p$. If we use the
 observed value $\hat{p}$ to the describe standard deviation. We can claim that
 we have 95\% confidence that the error $\Delta p= \bar{p} - E(p)$ falls in the
