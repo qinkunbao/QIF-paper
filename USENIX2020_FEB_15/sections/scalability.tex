@@ -28,19 +28,20 @@ symbolic execution based
 works~\cite{203878,Chattopadhyay:2017:QIL:3127041.3127044} all have large
 performance bottlenecks. As a result, those approaches either only apply to
 small-size programs~\cite{Chattopadhyay:2017:QIL:3127041.3127044} or apply some
-domain knowledge to simplify the analysis. Those tools interpret each
-instruction and update memory cells and registers with formulas that
-captured the semantics of the execution and search different input values that
-can lead to different execution behaviors using constraint solver. We implement
+domain knowledge to simplify the analysis. 
+%Those tools interpret each
+%instruction and update memory cells and registers with formulas that
+%captured the semantics of the execution and search different input values that
+%can lead to different execution behaviors using constraint solver. 
+We implement
 the approach presented in \S\ref{sec:trace-qif} and model the side-channels as
 formulas. While the tool can finish analyzing some simple cases like AES, it can
 not handle complicated cases like RSA.
-
 We observe that finding side-channels using symbolic execution is different from
 traditional general symbolic execution and can be optimized to be as efficient
 as other methods with approaches below.
 
-%\subsubsection{Interpret Instructions Symbolically}
+\subsubsection{Interprete Instructions Symbolically}
 Existing binary analysis tools~\cite{shoshitaishvili2016state,
 10.1007/978-3-642-22110-1_37} usually translate machine instructions into
 intermediate languages (IR). The reason is that the number of machine instructions is
@@ -57,8 +58,8 @@ First, transferring machine instructions into IR is time-consuming. For example,
 REIL IR~\cite{dullien2009reil}, adopted in CacheS~\cite{236338}, has multiple
 transform processes, from binary to VEX IR, BAP IR, and finally REIL IR\@. As IR
 can also introduce additional conditional jump instructions, in order to
-precisely identify secret-dependent control-flows, we need to rule out
-conditional jump instructions introduced by IR, which is also time-consuming.
+precisely identify secret-dependent control-flows, it alos need to rule out
+conditional jump instructions introduced by IR.
 Second, IR increases the total number of instructions. For example, x86
 instruction \textit{test eax, eax} transfers into 18 REIL IR instructions. If we
 assume the time of symbolically executing one instruction is constant, the
@@ -89,7 +90,7 @@ the analysis.
       }
 \end{table}
 
-\subsection{Constraint Solving}
+\subsubsection{Constraint Solving}
 As discussed in \S\ref{side-channel:condition}, the problem of identifying
 side-channels can be reduced to the question below.
 
@@ -180,10 +181,12 @@ of $K^o$. Suppose an attacker can observe $n$ leakage sites, and each leakage
 site has the following constraints: $c_{\addr{1}}, c_{\addr{2}}, \ldots,
 c_{\addr{n}}$ respectively. The total leakage has the constraint
 $c_t({\addr{1}},{\addr{2}},\ldots,{\addr{n}}) = c_{\addr{1}} \land c_{\addr{2}}
-\land \ldots \land c_{\addr{n}}$. The problem of estimating the total leaked
-information can be reduced to the problem of counting the number of different
-solutions that satisfies the constraint
-$c_t({\addr{1}},{\addr{2}},\ldots,{\addr{n}})$. A native method for
+\land \ldots \land c_{\addr{n}}$. 
+%%The problem of estimating the total leaked
+%%information can be reduced to the problem of counting the number of different
+%%solutions that satisfies the constraint
+%%$c_t({\addr{1}},{\addr{2}},\ldots,{\addr{n}})$. 
+A native method for
 approximating the result is to pick elements $k$ from $K$ and check if the
 element also contained in $K^o$. Assume $q$ elements satisfy this condition. In
 expectation, we can use $\frac{k}{q}$ to approximate the value of
@@ -263,15 +266,15 @@ one.
       the maximum independent partition of $c_t(\addr{1},\addr{2},\ldots,\addr{n})$ iff
       \begin{enumerate}
             \item $g_{1} \land g_{2} \land \ldots \land g_{m} = c_t(\addr{1},\addr{2},\ldots,\addr{n})$
-            \item $\forall \quad i, j \in \{1, 2, 3, \ldots, m\} \quad \textrm{and} \quad
-                        i \neq j, \quad \pi(g_{i}) \cap \pi(g_{j}) = \emptyset $
+            \item $\forall\quad i, j \in \{1, 2, \ldots, m\} \quad \textrm{and} \quad
+                        i \neq j, \quad\pi(g_{i}) \cap \pi(g_{j}) = \emptyset $
             \item For any other partitions  $h_{1}, h_{2}, \ldots, h_{m'}$ satisfy 1) and
                   2), $m \geq m'$
       \end{enumerate}
 
 \end{mydef}
 
-The reason we want a good partition of the constraints is that we want to reduce
+The reason we want a good partition of constraints is that we want to reduce
 the dimensions. Consider the example in the previous section,
 $$c: ({k_1} = 1)\land({k_2} = 2)\land({k_3} > 4)\land({k_3} - {k_4} > 10)$$ A
 good partition of $F$ would be
