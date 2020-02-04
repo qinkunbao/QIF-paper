@@ -148,11 +148,12 @@ which gives us confidence on the leakage quantification with the \emph{precision
 the latter case, it means the number of satisfying keys is very small and the
 leakage is quite severe. \emph{That is, timeout indicates severe leakage.}
 %The tool marks the Monte Carlo is failed.
-\label{loc:timeout}
-During the evaluation,
-we find \tool{} can quantify every side-channel leakage for every symmetric
-encryption. For asymmetric encryptions, Monte Carlo sometimes
-times out. We manually check those leakage sites and find most of them are quite severe.
+%\label{loc:timeout}
+%During the evaluation,
+%we find \tool{} can quantify every side-channel leakage for every symmetric
+%encryption. For asymmetric encryptions, Monte Carlo sometimes
+%times out. 
+We manually check those leakage sites and find most of them are quite severe.
 We will present the details in the subsequent sections.
 
 \subsection{Comparison with the Existing Tools}
@@ -174,7 +175,7 @@ existing trace-based side-channel identification tools.
 
 As shown in Table~\ref{eval:cacheD},
 \tool{} can not only identify all the leakage sites reported by CacheD~\cite{203878}, but also
-many new ones. CacheD fails to detect many other vulnerabilities for two
+many new ones. CacheD fails to detect many vulnerabilities for two
 reasons. First, CacheD can only detect secret-dependent memory access
 vulnerabilities. But \tool{} can detect secret-dependent control-flows as well.
 Second, CacheD suffers from some performance issues and uses some domain
