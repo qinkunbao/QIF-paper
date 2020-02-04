@@ -345,7 +345,7 @@ search, have difficulty scaling up to large problem sizes.
 We apply the ``counting by sampling" method. The basic idea is as follows. For
 the constraint $g_{i}= c_{i_1} \land c_{i_2} \land ,\ldots, \land c_{i_j} \land
 ,\ldots, \land c_{i_m}$, if the solution satisfies $g_{i}$, it should also
-satisfies any constraint from $c_{i_1}$ to $c_{i_m}$. In other words, $K_{c_gi}$
+satisfy any constraint from $c_{i_1}$ to $c_{i_m}$. In other words, $K_{c_gi}$
 should be the subset of $K_{c_1}$, $K_{c_2}$, \ldots , $K_{c_m}$. We notice that
 $c_i$ usually has less numbers of input compared to $g_{i}$. For example, if
 $c_{i_j}$ has only one 8-bit input variable, we can find the exact solution set
@@ -393,10 +393,10 @@ The detailed algorithm is shown in Appendix~\ref{appendix:montecarlo}.
 
 \subsubsection{Error Estimation}
 \label{sssec:errest}
-In this part, we analyze the accuracy of the result from the Monte Carlo
-approximation. We use the central limit theorem (CLT) and uncertainty
-propagation theorem to estimate errors of the number of leaked bits for each
-site.
+In the part, we will show that even we use approximating methods, our result
+still have probabilistic guarantee that the error of the amount of leaked 
+information is less than 1 bit under the central limit theorem (CLT) and uncertainty
+propagation theorem.
 
 Let $n$ be the number of samples and $n_s$ be the number of samples that satisfy
 the constraint $C$. Then we can get $\hat{p} = \frac{n_s}{n}$. If we repeat the
