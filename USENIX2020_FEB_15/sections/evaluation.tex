@@ -14,7 +14,7 @@
     \settowidth{\y}{m}
     \addtolength{\x}{-1\y}
     \newcommand{\foo}{\mbox{\hspace*{\the\x}}}
-    \resizebox{2.1\columnwidth}{!}{
+    \resizebox{2\columnwidth}{!}{
 
     \begin{tabular}{clrrrrrrr}
         \hline
@@ -116,9 +116,7 @@ leakages due to the implementation of the lookup table to speed up the
 computation. Every leakage found during the evaluation belongs to the type of
 secret-dependent memory accesses. We believe that the secret-dependent
 control-flow transfers have been widely studied in the past few years, and
-developers have patched most of those leakages. One method to address the
-leakage is to use bit-slicing. We will analyze the corresponding countermeasure
-in the following sections.
+developers have patched most of those leakages. 
 
 \tool{} finds several leakage sites for both implementations of DES and AES in
 OpenSSL and mbed TLS\@. \tool{} confirms that all those leakages come from table
@@ -126,20 +124,21 @@ lookups. mbed TLS 2.15 and 2.5 have the same implementations of DES and AES so
 they have the same leakage report. One proper fix would be a scalar bit-sliced
 implementation. However, we do not see the bit-sliced implementation of AES and
 DES in various versions of OpenSSL and mbed TLS\@. However, we find the new
-implementation of OpenSSL instead uses typical four 1K tables. It only uses 1K
+implementation of OpenSSL instead uses typical four 1K tables. It only uses one 1K
 of the tables. This implementation is rather easy but is still vulnerable to a
 side channel attack. However, the countermeasures do somehow decrease the total
-amount of leaked information.
+amount of leaked information as the quantification result shown in the next
+section.
 
-We also evaluates our tool on the RSA implementations. With the optimizations
+We also evaluates our tool on the RSA implementation. With the optimization
 introduced in \S\ref{sec:scala}, we do not apply any domain knowledge to
-simplify the analysis. Therefore, our tools can identify all the leakage sites
-reported by CacheD~\cite{203878} in a shorter time. Our tool finds that most
-leakages in RSA occur in the big number implementation. We also find the newer
+simplify the analysis. Therefore, our tools can not only identify all the leakage sites
+reported by CacheD~\cite{203878}, but find new leakages in a shorter time. 
+We also find the newer
 versions of RSA in OpenSSL tend to have fewer leakages detected by \tool{}. We
 will discuss the version changes and corresponding leakages in the next section.
 
-In addition to identifying side-channel leakages, \tool{} can also estimate how
+\tool{} can also estimate how
 much information is leaked from each vulnerability. \tool{} achieves the goal by
 estimating number of keys that satisfy the constraints. During the evaluation,
 for each leakage site, \tool{} will stop once 1) it has 95\% confidence
