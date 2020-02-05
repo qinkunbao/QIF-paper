@@ -2,7 +2,8 @@
 \tool{} works on native x86 execution traces. The design, which is very
 precise in terms of true leakages compared to other static source code
 method~\cite{197207,BacelarAlmeida:2013:FVS:2483313.2483334}, also has 
-the common limitations of dynamic approaches. \tool{} may only cover part of the code.
+the common limitations of dynamic approaches. \tool{} also has the coverage
+problem.
   % Each time we only get one single execution trace. Therefore,
 We may 
 neglect some side-channel vulnerabilities not covered by the traces analyzed.
@@ -14,7 +15,7 @@ implementations have several secret-dependent control-flow transfers.
   %But after we manually check those leakages cites. We find
 Most of them are  %used for
 bound checks, which do not leak much information and have negligible effects
-on the whole code coverage as well.
+on the whole code coverage as well. 
 
 One of the motivations of \tool{} is that while recent works have reported lots
 of potential side-channel vulnerabilities, most of them are not patched by
