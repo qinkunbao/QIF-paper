@@ -393,8 +393,8 @@ The detailed algorithm is shown in Appendix~\ref{appendix:montecarlo}.
 
 \subsubsection{Error Estimation}
 \label{sssec:errest}
-In the part, we will show that even we use approximating methods, our result
-still have probabilistic guarantee that the error of the amount of leaked 
+In this part, we will show that even we use approximating methods, our result
+can have probabilistic guarantee that the error of the estimated amount of leaked 
 information is less than 1 bit under the central limit theorem (CLT) and uncertainty
 propagation theorem.
 
@@ -405,16 +405,16 @@ $\hat{p}$ is independent and identically distributed, according to the central l
 theorem, the mean value should follow normal distribution
 $ \frac{\bar{p}-E(p)}{\sigma\sqrt{n}} \rightarrow N(0,1) $. Here $E(p)$ is the
 mean value of $p$, and $\sigma$ is the standard variance of $p$. If we use the
-observed value $\hat{p}$ to the describe standard deviation. We can claim that
-we have 95\% confidence that the error $\Delta p= \bar{p} - E(p)$ falls in the
-interval:
+observed value $\hat{p}$ to the calculate the standard deviation, we can claim that
+we have 95\%\footnote{The value falls within two sigmas of the mean.} 
+confidence that the error $\Delta p= \bar{p} - E(p)$ falls in the interval:
 $$ |\Delta p| \leq 1.96\sqrt{\frac{ \hat{p} (1- \hat{p} )}{n}}$$
 
 Since we use $L = \log_{2}p$ to estimate the amount of leaked information, we
 can have the following error propagation formula $\Delta L = \frac{\Delta
-p}{p\ln2}$ by differentiation. For \tool, we want the error of estimated leaked
+p}{p\ln2}$ by taking the derivative. For \tool, we want the error of estimated leaked
 information ($\Delta L$) to be less than 1 bit. So we can get $\frac{\Delta
 p}{p\ln2} \leq 1$. As long as $ n \geq \frac{1.96^2(1-p)}{p(\ln2)^2}$, we have
 95\% confidence that the error of estimated leaked information is less than 1 bit.
-During the simulation, if $n$ and $p$ satisfy the above inequation, the Monte Carlo
+During the simulation, if $n$ and $p$ satisfy the above inequation, Monte Carlo
 simulation will terminate.
