@@ -251,23 +251,22 @@ each. On the contrary, leakage 4, 5, 6, 7 each accesses a smaller lookup table
 
 
 \subsubsection{Asymmetric Ciphers: RSA}\label{eval:asym}
-We also evaluate the tool on RSA. First, we find developers are more interested in 
+We also evaluate \tool{} on RSA. First, we find developers are more interested in 
 fixing side-channels from RSA implementations. Second, those vulnerabilities
 can leak more information are more likely to be fixed in the newer version.
 
 We test five versions of OpenSSL (0.9.7, 1.0.2f, 1.0.2k, 1.1.0f, 1.1.1). The
 result, as shown in Figure~\ref{fig:rsa}, confirms our assumptions. The newer
 version of OpenSSL leaked less amount of information compared to the previous
-versions. After version 0.9.7g, OpenSSL adopted a fixed-window mod\_exp
+versions. After version 0.9.7g, OpenSSL adopted a fixed-window \emph{mod\_exp}
 implementation for RSA\@. With the new design, the sequence of squares and
 multiples and the memory access patterns are independent of the secret key.
 \tool{}'s result confirms the new exponentiation implementation has quite
 effectively mitigated most of leakages because the other four versions have fewer
 leakages than 0.9.7. OpenSSL version 1.0.2f, 1.0.2k and 1.1.0f almost have the
-same amount of leakage. We check the changelog and find only one change for
-patching vulnerabilities for RSA (CVE-2016-0702). RSA changelog also claims
-OpenSSL 1.1.1 adopted ``numerous side-channel attack mitigation.'' The result
-confirms our assumptions.
+same amount of leakage. We check the changelog and find only one code change for
+patching vulnerabilities for RSA (CVE-2016-0702). The changelog of OpenSSL 1.1.1 claims
+the RSA implementation adopted ``numerous side-channel attack mitigation.'' 
 
 \begin{figure*}
     \centering
