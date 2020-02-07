@@ -232,8 +232,11 @@ However, leakages in OpenSSL is more severe. We do not see any mitigation
 in the new version. We think it is not seen as worth the engineering
 efforts given the life cycles of DES\@.
 
-\tool{} also shows that AES\@ in OpenSSL 1.1.1 has less amount of leakages 
-compared to other versions by our tools. We find that OpenSSL 1.1.1 version 
+\tool{} also shows that the AES\@ in OpenSSL 1.1.1 
+has less amount of leakages compared to other versions by our tools. 
+(e.g., the max leakage of AES in OpenSSL 4.4 bits, but other version
+and )
+We find that OpenSSL 1.1.1 version 
 rather than uses the 1KB lookup tables with 32bit entries like older version, it uses an 
 tables with 8 bit entries. In other words, our tools shows that lookup tables with smaller 
 entries will leak less amount of information. Our tool also suggests a smaller lookup
@@ -248,8 +251,58 @@ each. On the contrary, leakage 4, 5, 6, 7 each accesses a smaller lookup table
 
 
 \subsubsection{Asymmetric Ciphers: RSA}\label{eval:asym}
+We also evaluate the tool on RSA. First, we find developers are more interested in 
+fixing side-channels from RSA implementations. Second, those vulnerabilities
+can leak more information are more likely to be fixed in the newer version.
+
+We test five versions of OpenSSL (0.9.7, 1.0.2f, 1.0.2k, 1.1.0f, 1.1.1). The
+result, as shown in Figure~\ref{fig:rsa}, confirms our assumptions. The newer
+version of OpenSSL leaked less amount of information compared to the previous
+versions. After version 0.9.7g, OpenSSL adopted a fixed-window mod\_exp
+implementation for RSA\@. With the new design, the sequence of squares and
+multiples and the memory access patterns are independent of the secret key.
+\tool{}'s result confirms the new exponentiation implementation has quite
+effectively mitigated most of leakages because the other four versions have fewer
+leakages than 0.9.7. OpenSSL version 1.0.2f, 1.0.2k and 1.1.0f almost have the
+same amount of leakage. We check the changelog and find only one change for
+patching vulnerabilities for RSA (CVE-2016-0702). RSA changelog also claims
+OpenSSL 1.1.1 adopted ``numerous side-channel attack mitigation.'' The result
+confirms our assumptions.
+
+\begin{figure*}
+    \centering
+    \vspace*{-9pt}
+    \hspace*{-8pt}
+    \subfloat[RSA OpenSSL 0.9.7]{
+        \includegraphics[width=.19\linewidth]{./figures/result/RSA-openssl-0-9-7.pdf}
+        \label{fig:rsa-1}
+    }
+    \subfloat[RSA OpenSSL 1.0.2f]{
+        \includegraphics[width=.19\linewidth]{./figures/result/RSA-openssl-1-0-2f.pdf}
+        \label{fig:rsa-2}
+    }
+    \subfloat[RSA OpenSSL 1.0.2k]{
+        \includegraphics[width=.19\linewidth]{./figures/result/RSA-openssl-1-0-2k.pdf}
+        \label{fig:rsa-3}
+    }
+    \subfloat[RSA OpenSSL 1.1.0f]{
+        \includegraphics[width=.19\linewidth]{./figures/result/RSA-openssl-1-1-0f.pdf}
+        \label{fig:rsa-4}
+    }
+    \subfloat[RSA OpenSSL 1.1.1]{
+        \includegraphics[width=.19\linewidth]{./figures/result/RSA-openssl-1-1-1.pdf}
+        \label{fig:rsa-5}
+    }
+    \caption{RSA implementations in different versions of OpenSSL\@. 
+        We round the number of leaked information into the nearest integer. 
+        The mark $*$ means timeout,
+        which indicates more severe leakages (see \S\ref{loc:timeout}).}
+    \label{fig:rsa}
+    \vspace*{-12pt}
+\end{figure*}
+
 \tool{} identifies several side-channel leakages for the RSA implementation in
-Mbed TLS. Here we introduce and analyze two cases.
+mbed TLS. Here we introduce and analyze two cases.
 %, as shown in Figure~\ref{fig:mbedtls_rsa_1} and \ref{fig:mbedtls_rsa_2}.
 
 \tool{} reports one bit information is leaked from the branch at line 2 in
@@ -297,55 +350,6 @@ Recent patches have fixed many leakages in function \emph{mpi\_mul\_hlp}.
 multiplication. As the code will be executed many times, each time it will leak
 independent information. The leakage is severe compared to the previous one.
 
-For crypto libraries, it is likely that an updated version has less
-vulnerabilities compared to the previous versions because software developers
-have patched some of those vulnerabilities.
-
-We test five versions of OpenSSL (0.9.7, 1.0.2f, 1.0.2k, 1.1.0f, 1.1.1). The
-result, as shown in Figure~\ref{fig:rsa}, confirms our assumptions. The newer
-version of OpenSSL leaked less amount of information compared to the previous
-versions. After version 0.9.7g, OpenSSL adopted a fixed-window mod\_exp
-implementation for RSA\@. With the new design, the sequence of squares and
-multiples and the memory access patterns are independent of the secret key.
-\tool{}'s result confirms the new exponentiation implementation has quite
-effectively mitigated most of leakages because the other four versions have fewer
-leakages than 0.9.7. OpenSSL version 1.0.2f, 1.0.2k and 1.1.0f almost have the
-same amount of leakage. We check the changelog and find only one change for
-patching vulnerabilities for RSA (CVE-2016-0702). RSA changelog also claims
-OpenSSL 1.1.1 adopted ``numerous side-channel attack mitigation.'' The result
-confirms our assumptions.
-
-\begin{figure*}
-    \centering
-    \vspace*{-9pt}
-    \hspace*{-8pt}
-    \subfloat[RSA OpenSSL 0.9.7]{
-        \includegraphics[width=.19\linewidth]{./figures/result/RSA-openssl-0-9-7.pdf}
-        \label{fig:rsa-1}
-    }
-    \subfloat[RSA OpenSSL 1.0.2f]{
-        \includegraphics[width=.19\linewidth]{./figures/result/RSA-openssl-1-0-2f.pdf}
-        \label{fig:rsa-2}
-    }
-    \subfloat[RSA OpenSSL 1.0.2k]{
-        \includegraphics[width=.19\linewidth]{./figures/result/RSA-openssl-1-0-2k.pdf}
-        \label{fig:rsa-3}
-    }
-    \subfloat[RSA OpenSSL 1.1.0f]{
-        \includegraphics[width=.19\linewidth]{./figures/result/RSA-openssl-1-1-0f.pdf}
-        \label{fig:rsa-4}
-    }
-    \subfloat[RSA OpenSSL 1.1.1]{
-        \includegraphics[width=.19\linewidth]{./figures/result/RSA-openssl-1-1-1.pdf}
-        \label{fig:rsa-5}
-    }
-    \caption{RSA implementations in different versions of OpenSSL\@. 
-        We round the number of leaked information into the nearest integer. 
-        The mark $*$ means timeout,
-        which indicates more severe leakages (see \S\ref{loc:timeout}).}
-    \label{fig:rsa}
-    \vspace*{-12pt}
-\end{figure*}
 
 \subsection{Analysis of Software Countermeasures}\label{sec:eval_countermeasures}
 \subsubsection{Bit-slicing}
