@@ -263,7 +263,7 @@ greater than zero, which is one bit leak, not severe.
     \centering
     \begin{lstlisting}[xleftmargin=.02\textwidth,xrightmargin=.01\textwidth]
 ...
-if( mbedtls_mpi_cmp_int( N, 0 ) < 0 || ( N->p[0] & 1 ) == 0 )
+if( mbedtls_mpi_cmp_int(N,0) < 0 || ( N->p[0] & 1 ) == 0 )
     return( MBEDTLS_ERR_MPI_BAD_INPUT_DATA );
 ...
 \end{lstlisting}
