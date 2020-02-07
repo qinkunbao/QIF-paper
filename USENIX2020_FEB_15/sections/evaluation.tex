@@ -14,7 +14,7 @@
     \settowidth{\y}{m}
     \addtolength{\x}{-1\y}
     \newcommand{\foo}{\mbox{\hspace*{\the\x}}}
-    \resizebox{2\columnwidth}{!}{
+    \resizebox{1.9\columnwidth}{!}{
 
     \begin{tabular}{clrrrrrrr}
         \hline
@@ -218,7 +218,7 @@ actually leaked, which eases the pain to discover sensitive leakages.
 
 \subsection{Case Studies}
 
-\subsubsection{Symmetric Ciphers}\label{eval:sym}
+\subsubsection{Symmetric Ciphers: DES and AES}\label{eval:sym}
 We test both DES and AES ciphers from mbed TLS and OpenSSL. Both cipher
 implementations apply lookup tables, which can
 speed up the optimization, but can also introduce additional side-channels
@@ -247,7 +247,7 @@ each. On the contrary, leakage 4, 5, 6, 7 each accesses a smaller lookup table
 (2K).
 
 
-\subsubsection{Asymmetric Ciphers}\label{eval:asym}
+\subsubsection{Asymmetric Ciphers: RSA}\label{eval:asym}
 \tool{} identifies several side-channel leakages for the RSA implementation in
 Mbed TLS. Here we introduce and analyze two cases.
 %, as shown in Figure~\ref{fig:mbedtls_rsa_1} and \ref{fig:mbedtls_rsa_2}.
@@ -297,8 +297,7 @@ Recent patches have fixed many leakages in function \emph{mpi\_mul\_hlp}.
 multiplication. As the code will be executed many times, each time it will leak
 independent information. The leakage is severe compared to the previous one.
 
-\subsection{Case Study of RSA in OpenSSL} \label{sec::eval_rsa}
-For the crypto libraries, it is likely that an updated version has less
+For crypto libraries, it is likely that an updated version has less
 vulnerabilities compared to the previous versions because software developers
 have patched some of those vulnerabilities.
 
