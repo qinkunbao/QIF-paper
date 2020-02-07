@@ -226,13 +226,13 @@ as well. During our evaluation, we find mbed TLS 2.5 and 2.15.1 have the same
 implementation of AES\@ and DES\@. Our tool also provides the same leakage report for both
 versions. A simple of the generated report can be found in the Appendix~\ref{sec:result-table}.
 
-According to \tool{}, we find DES in both mbed TLS and OpenSSL has several
+According to \tool{}, we find DES\@ in both mbed TLS and OpenSSL has several
 sensitive information leakage from the key schedule function.
 However, leakages in OpenSSL is more severe. We do not see any mitigation
 in the new version. We think it is not seen as worth the engineering
-efforts given the life cycles of DES.
+efforts given the life cycles of DES\@.
 
-\tool{} also shows that AES in OpenSSL 1.1.1 has less amount of leakages 
+\tool{} also shows that AES\@ in OpenSSL 1.1.1 has less amount of leakages 
 compared to other versions by our tools. We find that OpenSSL 1.1.1 version 
 rather than uses the 1KB lookup tables with 32bit entries like older version, it uses an 
 tables with 8 bit entries. In other words, our tools shows that lookup tables with smaller 
