@@ -93,7 +93,7 @@ aspects:
           Can \tool{} precisely report the number of leaked bits in crypto
           libraries? Are the numbers of leaked bits reported by \tool{} useful
           to justify the severity levels of the side-channel vulnerabilities?
-          (\S\ref{sec:eval_case}, \S\ref{sec::eval_rsa}, and \S\ref{sec:eval_countermeasures})
+          (\S\ref{sec:sym}, \S\ref{sec:asym}, and \S\ref{sec:eval_countermeasures})
 \end{enumerate}
 
 \subsection{Evaluation Result Overview} \label{sec:eval_overview}
@@ -218,7 +218,7 @@ actually leaked, which eases the pain to discover sensitive leakages.
 
 \subsection{Case Studies}
 
-\subsubsection{Symmetric Ciphers}
+\subsubsection{Symmetric Ciphers}\label{eval:sym}
 We test both DES and AES ciphers from mbed TLS and OpenSSL. Both cipher
 implementations apply lookup tables, which can
 speed up the optimization, but can also introduce additional side-channels
@@ -247,7 +247,7 @@ each. On the contrary, leakage 4, 5, 6, 7 each accesses a smaller lookup table
 (2K).
 
 
-\subsubsection{RSA in mbedTLS}
+\subsubsection{Asymmetric Ciphers}\label{eval:asym}
 \tool{} identifies several side-channel leakages for the RSA implementation in
 Mbed TLS. Here we introduce and analyze two cases.
 %, as shown in Figure~\ref{fig:mbedtls_rsa_1} and \ref{fig:mbedtls_rsa_2}.
