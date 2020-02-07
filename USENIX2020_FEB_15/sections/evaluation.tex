@@ -261,12 +261,16 @@ version of OpenSSL leaked less amount of information compared to the previous
 versions. After version 0.9.7g, OpenSSL adopted a fixed-window \emph{mod\_exp}
 implementation for RSA\@. With the new design, the sequence of squares and
 multiples and the memory access patterns are independent of the secret key.
-\tool{}'s result confirms the new exponentiation implementation has quite
+\tool{}'s result confirms the new exponentiation implementation has 
 effectively mitigated most of leakages because the other four versions have fewer
 leakages than 0.9.7. OpenSSL version 1.0.2f, 1.0.2k and 1.1.0f almost have the
 same amount of leakage. We check the changelog and find only one code change for
-patching vulnerabilities for RSA (CVE-2016-0702). The changelog of OpenSSL 1.1.1 claims
-the RSA implementation adopted ``numerous side-channel attack mitigation.'' 
+patching vulnerabilities for RSA (CVE-2016-0702). 
+\tool{} also find OpenSSL 1.1.1 version has significantly less amount of 
+leaked information compared to other versions.
+We check the changelog of OpenSSL 1.1.1 and find it claims
+the RSA implementation adopted ``numerous side-channel attack mitigation.'', 
+which proves the effectiveness of our tool.
 
 \begin{figure*}
     \centering
