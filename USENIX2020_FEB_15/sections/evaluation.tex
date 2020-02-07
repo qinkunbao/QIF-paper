@@ -224,7 +224,15 @@ implementations apply lookup tables, which can
 speed up the optimization, but can also introduce additional side-channels
 as well. During our evaluation, we find mbed TLS 2.5 and 2.15.1 have the same
 implementation of AES\@ and DES\@. Our tool also provides the same leakage report for both
-versions. We find AES in OpenSSL 1.1.1 has less amount of leakages 
+versions. A simple of the generated report can be found in the Appendix~\ref{sec:result-table}.
+
+According to \tool{}, we find DES in both mbed TLS and OpenSSL has several
+sensitive information leakage from the key schedule function.
+However, leakages in OpenSSL is more severe. We do not see any mitigation
+in the new version. We think it is not seen as worth the engineering
+efforts given the life cycles of DES.
+
+\tool{} also shows that AES in OpenSSL 1.1.1 has less amount of leakages 
 compared to other versions by our tools. We find that OpenSSL 1.1.1 version 
 rather than uses the 1KB lookup tables with 32bit entries like older version, it uses an 
 tables with 8 bit entries. In other words, our tools shows that lookup tables with smaller 
@@ -237,7 +245,6 @@ We check the source code and find leakage 1, 2,
 3 use secret to access the lookup table \emph{RT0, RT1, RT2, RT3}, which is 8K
 each. On the contrary, leakage 4, 5, 6, 7 each accesses a smaller lookup table
 (2K).
-
 
 
 \subsubsection{RSA in mbedTLS}
