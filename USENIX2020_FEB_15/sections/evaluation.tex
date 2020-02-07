@@ -216,21 +216,27 @@ actually leaked, which eases the pain to discover sensitive leakages.
     }
 \end{table}
 
-\subsection{Vulnerability Case Study}\label{sec:eval_case}
-\subsubsection{AES in mbed TLS}
-During our evaluation, we find mbed TLS 2.5 and 2.15.1 have the same
-implementation of AES\@. Our tool provides the same leakage report for both
-versions. \tool{} identifies that most leakages are in function
-\emph{mbedtls\_internal\_aes\_decrypt}. (Other leakage sites are in function
-\emph{mbedtls\_aes\_setkey\_enc}.) All leakages are caused by secret-dependent
-memory accesses. Shown in Appendix~\ref{mbedtls_aes}, there are seven leakage
-sites in total. Leakage 1, 2, 3 are the same and leakage 4, 5, 6, 7 are the
-same. They both use a pre-computed lookup table to speed up computation.
+\subsection{Case Studies}
+
+\subsubsection{Symmetric Ciphers}
+We test both DES and AES ciphers from mbed TLS and OpenSSL. Both cipher
+implementations apply lookup tables, which can
+speed up the optimization, but can also introduce additional side-channels
+as well. During our evaluation, we find mbed TLS 2.5 and 2.15.1 have the same
+implementation of AES\@ and DES\@. Our tool also provides the same leakage report for both
+versions. We find AES in OpenSSL 1.1.1 has less amount of leakages 
+compared to other versions by our tools. We find that OpenSSL 1.1.1 version 
+rather than uses the 1KB lookup tables with 32bit entries like older version, it uses an 
+tables with 8 bit entries. In other words, our tools shows that lookup tables with smaller 
+entries will leak less amount of information. Our tool also suggests a smaller lookup
+table can mitigate side-channels vulnerabilities. For example, Shown in Appendix~\ref{mbedtls_aes},
+\tool{} identify seven leakages from function \emph{mbedtls\_internal\_aes\_decrypt}.
 However, \tool{} reports leakage 1, 2, 3 typically leak more information
-compared to leakage 4, 5, 6, 7. We check the source code and find leakage 1, 2,
+compared to leakage 4, 5, 6, 7. 
+We check the source code and find leakage 1, 2,
 3 use secret to access the lookup table \emph{RT0, RT1, RT2, RT3}, which is 8K
 each. On the contrary, leakage 4, 5, 6, 7 each accesses a smaller lookup table
-(2K). Therefore, leakage 4, 5, 6, 7 leak less information.
+(2K).
 
 
 
