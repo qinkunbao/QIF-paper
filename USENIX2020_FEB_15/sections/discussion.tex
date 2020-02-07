@@ -1,25 +1,28 @@
 \section{Discussions and Limitations}
+\tool{} estimates the amount of leaked information for each side-channels
+in particular executions. \tool{} is useful for software
+engineers to tests programs and fix vulnerabilities. 
+While recent works have reported lots
+of potential side-channel vulnerabilities, most of them are not patched by
+developers because they do not think those vulnerabilities are severe enough.
+However, side-channels are inevitable in software. In fact, many of them
+are easily spotted but it is hard to fix all of them. They need to a
+tool that can automatically estimate the sensitive level of each vulnerabilities.
+Second, addressing old vulnerabilities may also introduce new leakage
+sites.  Our evaluation result also confirms that many of them are not 
+severe and can be safely ignored. So software engineering can focus on
+``severe'' leakages. For example, our tool will report that 
+the modular exponentiation with square and multiply algorithms can
+leak much information than a key length validation function.
+
 \tool{} works on native x86 execution traces. The design, which is very
 precise in terms of true leakages compared to other static source code
-method~\cite{197207,BacelarAlmeida:2013:FVS:2483313.2483334}, also has 
-the common limitations of dynamic approaches. \tool{} also has the coverage
-problem.
-  % Each time we only get one single execution trace. Therefore,
-We may 
-neglect some side-channel vulnerabilities not covered by the traces analyzed.
-However, this is not a crucial problem for analyzing crypto libraries because crypto
-libraries are designed to have the same code coverage for various inputs. Our
-evaluation also confirms the above point. For symmetric encryptions, during our
-evaluation there is no secret-dependent control-flow transfers. RSA
-implementations have several secret-dependent control-flow transfers. 
-  %But after we manually check those leakages cites. We find
-Most of them are  %used for
-bound checks, which do not leak much information and have negligible effects
-on the whole code coverage as well. 
+method~\cite{197207,BacelarAlmeida:2013:FVS:2483313.2483334}, can omit
+leakages on other traces. However, as the tool is intended for debugging,
+we think it is software engineers to select the input to trigger the 
+path in which they are interested.
 
-One of the motivations of \tool{} is that while recent works have reported lots
-of potential side-channel vulnerabilities, most of them are not patched by
-developers. Our evaluation result confirms that most of them are not severe and can be safely ignored.
+
 For RSA, the latest
 OpenSSL only has one leakage site that can leak more than 3 bits while there
 are 22 leakage sites according to \tool{}. DES implementation of OpenSSL has
@@ -35,8 +38,6 @@ unpatched for the worth of engineering effort.
 %% We leave the task of applying \tool{} on other libraries and
 %% non-crypto libraries in the future.
 %
-In the future, we would like to apply \tool{} on other libraries including 
-non-crypto ones. 
 
 %\tool{} works on the native x86 instructions, while some existing
 %works~\cite{197207,BacelarAlmeida:2013:FVS:2483313.2483334} find side-channels
