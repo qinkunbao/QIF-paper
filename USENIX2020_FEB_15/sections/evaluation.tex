@@ -328,7 +328,18 @@ Besides, branches can also be compiled to non-branch machine instructions
 like conditional moves. Therefore, simple code reviews are not accurate
 enough to detect side-channels. 
 
-On the other hand, for those vulnerability with less than 
+On the other hand, for those vulnerabilities that leak less information. 
+Developers are more resilient to fix them. 
+For example, OpenSSL 0.9.7 has a fixed windows version of 
+function \emph{BN\_mod\_exp\_mont\_constime} to replace original function
+\emph{BN\_mod\_exp\_mont}.
+However, \tool{} detects a minor vulnerability in the function that can
+leaks the last bit of the big number \emph{m}. In the updated version,
+developers make the fixed windows default and write part of the 
+function. However, the vulnerability still exits in OpenSSL 1.1.1.
+despite the vulnerability is blunt. Details of the 
+vulnerability can been seen in Appendix.
+
 
 \begin{figure}
     \centering
