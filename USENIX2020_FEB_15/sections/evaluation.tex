@@ -251,14 +251,10 @@ each. On the contrary, leakage 4, 5, 6, 7 each accesses a smaller lookup table
 
 
 \subsubsection{Asymmetric Ciphers: RSA}\label{eval:asym}
-We also evaluate \tool{} on RSA. First, we find developers are more interested in 
+We also evaluate \tool{} on RSA.  We find developers are more interested in 
 fixing side-channel vulnerabilities for RSA implementations. 
-Second, those vulnerabilities
-that leak more information identified by \tool{} 
-are more likely to be fixed in the newer version.
-
 We test five versions of OpenSSL (0.9.7, 1.0.2f, 1.0.2k, 1.1.0f, 1.1.1). The
-result, as shown in Figure~\ref{fig:rsa}, confirms our assumptions. The newer
+result, as shown in Figure~\ref{fig:rsa}, indicates that the newer
 version of OpenSSL leaked less amount of information compared to the previous
 versions. After version 0.9.7g, OpenSSL adopted a fixed-window \emph{mod\_exp}
 implementation for RSA\@. With the new design, the sequence of squares and
@@ -266,13 +262,13 @@ multiples and the memory access patterns are independent of the secret key.
 \tool{}'s result confirms the new exponentiation implementation has 
 effectively mitigated most of leakages because the other four versions have fewer
 leakages than 0.9.7. OpenSSL version 1.0.2f, 1.0.2k and 1.1.0f almost have the
-same amount of leakage. We check the changelog and find only one code change for
-patching vulnerabilities for RSA (CVE-2016-0702). 
+same amount of leakage. We check the changelog and find only one change for
+patching the vulnerability CVE-2016-0702. 
 \tool{} also find OpenSSL 1.1.1 version has significantly less amount of 
 leaked information compared to other versions.
 We check the changelog of OpenSSL 1.1.1 and find it claims
 the RSA implementation adopted ``numerous side-channel attack mitigation.'', 
-which proves the effectiveness of our tool.
+which proves the effectiveness of our quantifying method.
 
 \begin{figure*}
     \centering
@@ -306,54 +302,74 @@ which proves the effectiveness of our tool.
     \vspace*{-12pt}
 \end{figure*}
 
-\tool{} identifies several side-channel leakages for the RSA implementation in
-mbed TLS. Here we introduce and analyze two cases.
-%, as shown in Figure~\ref{fig:mbedtls_rsa_1} and \ref{fig:mbedtls_rsa_2}.
+Our quantifying result also shows vulnerabilities
+that leak more information identified by \tool{} 
+are more likely to be fixed in the updated version.
+As presented in Appendix~\ref{sec:result-table}, 
+OpenSSL 0.9.7 has several sensitive leaks from
+function \emph{bn\_sqr\_comba8}, which is a main 
+component of the OpenSSL big number implementation.
+The value of the function parameter \emph{a} is derived from
+the secret key. 
+Shown in Figure~\ref{fig:old_sqr2}, it has a 
+secret-dependent control flow at line 8.
+As function \emph{bn\_sqr\_comba8}
+call the macro (\emph{sqr\_add\_c2}) multiple times, 
+and the code will leak some information each times.
+\tool{} thinks the vulnerability is quite serious. 
+The vulnerability has been patched for OpenSSL 1.1.1. Seen in 
+Figure~\ref{fig:new_sqr2}, control-flows transfers are replaced
+with bitwise operations. So there is no leaks from function
+\emph{sqr\_add\_c2} in OpenSSL 1.1.1. We also mention
+that even line 4 and 9 in Figure~\ref{fig:old_sqr2} all have if branches.
+However, it is not a secret-dependent control-flow transfers because
+most compilers will use \emph{add with carry} instruction to remove the branch.
+Besides, branches can also be compiled to non-branch machine instructions 
+like conditional moves. Therefore, simple code reviews are not accurate
+enough to detect side-channels. 
 
-\tool{} reports one bit information is leaked from the branch at line 2 in
-Figure~\ref{fig:mbedtls_rsa_1} and it leaks less information than other
-leakages. Function \emph{mbedtls\_mpi\_exp\_mod} performs sliding-window
-exponentiation for big numbers. The leakage is caused by checking the signed bit
-of the big number $N$. Therefore, the leakage can only tell whether $N$ is
-greater than zero, which is one bit leak, not severe.
+On the other hand, for those vulnerability with less than 
 
-\begin{figure}%[h!]
+\begin{figure}
     \centering
     \begin{lstlisting}[xleftmargin=.02\textwidth,xrightmargin=.01\textwidth]
-...
-if( mbedtls_mpi_cmp_int(N,0) < 0 || ( N->p[0] & 1 ) == 0 )
-    return( MBEDTLS_ERR_MPI_BAD_INPUT_DATA );
-...
+# define mul_add_c2(a,b,c0,c1,c2) \
+    t=(BN_ULLONG)a*b; \
+    tt=(t+t)&BN_MASK; \
+    if (tt < t) c2++; \
+    t1=(BN_ULONG)Lw(tt); \
+    t2=(BN_ULONG)Hw(tt); \
+    c0=(c0+t1)&BN_MASK2;  \
+    if ((c0 < t1) && (((++t2)&BN_MASK2) == 0)) c2++; \
+    c1=(c1+t2)&BN_MASK2; if ((c1) < t2) c2++;
 \end{lstlisting}
     \vspace*{-6pt}
-    \caption{Function \textit{mbedtls\_mpi\_exp\_mod}}
-    \label{fig:mbedtls_rsa_1}
+    \caption{Macro \textit{sqr\_add\_c2} in OpenSSL 0.9.7}
+    \label{fig:old_sqr2}
     \vspace*{-6pt}
 \end{figure}
 
-\begin{figure}%[h!]
+
+
+\begin{figure}
     \centering
     \begin{lstlisting}[xleftmargin=.02\textwidth,xrightmargin=.01\textwidth]
-...
-do {
-    *d += c; c = ( *d < c ); d++;
-}
-while( c != 0 );
-...
+# define mul_add_c2(a,b,c0,c1,c2)      do { \
+    BN_ULONG ta = (a), tb = (b);            \
+    BN_ULONG lo, hi, tt;                    \
+    BN_UMULT_LOHI(lo,hi,ta,tb);             \
+    c0 += lo; tt = hi+((c0<lo)?1:0);        \
+    c1 += tt; c2 += (c1<tt)?1:0;            \
+    c0 += lo; hi += (c0<lo)?1:0;            \
+    c1 += hi; c2 += (c1<hi)?1:0;            \
+    } while(0)
 \end{lstlisting}
     \vspace*{-6pt}
-    \caption{Function \textit{mpi\_mul\_hlp}}
-    \label{fig:mbedtls_rsa_2}
+    \caption{Macro \textit{sqr\_add\_c2} in OpenSSL 1.1.1}
+    \label{fig:new_sqr2}
     \vspace*{-6pt}
 \end{figure}
 
-Function \emph{mpi\_mul\_hlp}, shown in Figure~\ref{fig:mbedtls_rsa_2},
-is notoriously for a series of timing attacks.
-Recent patches have fixed many leakages in function \emph{mpi\_mul\_hlp}.
-\tool{} reports 8 bits of information is leaked from line 5.
-\emph{mpi\_mul\_hlp} is a helper function to perform mbedtls\_mpi
-multiplication. As the code will be executed many times, each time it will leak
-independent information. The leakage is severe compared to the previous one.
 
 
 
