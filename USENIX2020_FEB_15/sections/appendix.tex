@@ -141,6 +141,7 @@ return( 0 );
     \vspace*{-9pt}
 \end{figure}
 
+\clearpage
 \section{Minor side-channels vulnerability}
 \label{appendix:minor:vul}
 Here we present a side-channel vulnerability that leaks
@@ -149,7 +150,7 @@ from OpenSSL 0.9.7 to OpenSSL 1.1.1. We think
 developers do not have enough motivations
 to fix the vulnerability.
 
-\begin{figure}
+\begin{figure}[h]
 \centering
 \begin{lstlisting}[xleftmargin=.02\textwidth,xrightmargin=.01\textwidth]
 int BN_mod_exp_mont_consttime(BIGNUM *rr, 
@@ -174,7 +175,7 @@ if (bits == 0)
 
 
 
-\begin{figure}
+\begin{figure}[h]
     \centering
     \begin{lstlisting}[xleftmargin=.02\textwidth,xrightmargin=.01\textwidth]
 int BN_mod_exp_mont(BIGNUM *rr, 
