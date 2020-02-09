@@ -176,15 +176,14 @@ side-channels leakages as well. In this section, we compare \tool{} with the
 existing trace-based side-channel detection tools.
 
 As shown in Table~\ref{eval:cacheD},
-\tool{} can not only discover all the leakage sites reported by CacheD~\cite{203878}, but also
-many new ones. CacheD fails to detect many vulnerabilities for two
+\tool{} not only discovers all the leakage sites reported by CacheD~\cite{203878}, but also
+find many new ones. CacheD fails to detect many vulnerabilities for two
 reasons. First, CacheD can only detect secret-dependent memory access
 vulnerabilities. But \tool{} can detect secret-dependent control-flows as well.
-Second, CacheD suffers from some performance issues and uses some domain
+Second, CacheD uses some domain
 knowledge to simplify symbolic execution and has to trim the traces before
 processing, which does not introduce false positives, but can neglect some
-vulnerabilities. On the contrary, \tool{} does not apply any domain knowledge
-and can find more vulnerabilities. The table~\ref{eval:cacheD} shows that
+vulnerabilities. The table~\ref{eval:cacheD} shows that
 \tool{} is three times faster than CacheD. As the time of symbolic execution
 grow quadratically, \tool{} is much faster than CacheD when analyzing the same
 number of instructions. For example, when we test~\tool{} on AES from OpenSSL
@@ -228,17 +227,17 @@ leakage report for both
 versions. A simple of the generated report can be found in the Appendix~\ref{sec:result-table}.
 
 According to \tool{}, we find DES\@ implementations in both mbed TLS and OpenSSL have several
-sensitive information leakage from the key schedule function.
+sensitive information leakages in the key schedule function.
 However, leakages in OpenSSL are more severe. We do not see any mitigation
 in the new version. We think it is not seen as worth the engineering
 efforts given the life cycles of DES\@.
 
-\tool{} also shows that the AES\@ in OpenSSL 1.1.1 
+\tool{} shows that the AES\@ in OpenSSL 1.1.1 
 has less amount of leakages compared to other versions by our tools. 
 (e.g., the max leakage of AES in OpenSSL 1.1.1 is 4.4 bits, but other version
-have leakages that can leak can around 10 bits. )
+have leakages that can leak can around 10 bits.)
 We find that OpenSSL 1.1.1 version 
-instead uses the 1KB lookup tables with 32bit entries like older version, it uses an 
+instead uses the 1KB lookup tables with 32bit entries like older versions, it uses an 
 tables with 8 bit entries. In other words, our tools shows that lookup tables with smaller 
 entries will leak less amount of information. Our tool also suggests a smaller lookup
 table can mitigate side-channels vulnerabilities. For example, Shown in Appendix~\ref{mbedtls_aes},

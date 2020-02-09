@@ -1,33 +1,33 @@
 \section{Discussions and Limitations}
 \tool{} estimates the amount of leaked information for each side-channels
 in particular executions. \tool{} is useful for software
-engineers to tests programs and fix vulnerabilities. 
+engineers to tests programs and fix vulnerabilities.
+\tool{} works on native x86 execution traces. The design, which is very
+precise in terms of true leakages compared to other static source code
+method~\cite{197207,BacelarAlmeida:2013:FVS:2483313.2483334}, can omit
+leakages on other traces. However, as the tool is intended for debugging,
+we think it is software engineers' responsibilty to select the input and trigger the 
+path in which they are interested.
+
 While recent works have reported lots
-of potential side-channel vulnerabilities, most of them are not patched by
+of potential side-channel vulnerabilities, we find most of them are not patched by
 developers because they do not think those vulnerabilities are severe enough.
 However, side-channels are inevitable in software. In fact, many of them
 are easily spotted but it is hard to fix all of them. They need to a
 tool that can automatically estimate the sensitive level of each vulnerabilities.
 Second, addressing old vulnerabilities may also introduce new leakage
-sites.  Our evaluation result also confirms that many of them are not 
-severe and can be safely ignored. So software engineering can focus on
+sites. Our evaluation result also confirms that many of them are not 
+severe and can be safely ignored. So software engineers can focus on
 ``severe'' leakages. For example, our tool will report that 
 the modular exponentiation with square and multiply algorithms can
 leak much information than a key length validation function.
-
-\tool{} works on native x86 execution traces. The design, which is very
-precise in terms of true leakages compared to other static source code
-method~\cite{197207,BacelarAlmeida:2013:FVS:2483313.2483334}, can omit
-leakages on other traces. However, as the tool is intended for debugging,
-we think it is software engineers to select the input to trigger the 
-path in which they are interested.
 
 
 For RSA, the latest
 OpenSSL only has one leakage site that can leak more than 3 bits while there
 are 22 leakage sites according to \tool{}. DES implementation of OpenSSL has
 several sensitive leakages, but given the end life status of DES, it is still
-unpatched for the worth of engineering effort. 
+unpatched because of the worth of engineering effort. 
 %% At the early stage of the
 %% project, we hope to find some sensitive leakages but are neglected by
 %% communities for years. But somehow every sensitive leakages identified by
