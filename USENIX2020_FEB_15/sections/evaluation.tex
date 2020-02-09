@@ -75,7 +75,7 @@
 We evaluate \tool{} on real-world crypto libraries, OpenSSL and mbed TLS\@. OpenSSL
 is the most commonly used crypto libraries in today's software. mbed TLS\@
 (previous known as PolarSSL) is designed to be easy to understand and fit on
-small embedded devices.
+embedded devices.
 
 We build the source code into 32-bit x86 Linux executables with the GCC 8.0
 under Ubuntu 14.04. Although we use use symbol information to track back leakage
@@ -106,7 +106,7 @@ transfers and 678 of them are leaked due to secret-dependent memory accesses.
 cause most leakages. \tool{} also identifies that most side-channel
 vulnerabilities leak very little information in practice, which confirms our
 initial assumptions.  Without our tool, developers will not be able to
-distinguish those ``vulnerabilities'' from severe ones and ignore them for sure.
+distinguish those ``vulnerabilities'' from severe ones and ignore others for sure.
 However, we do find some vulnerabilities that \tool\ reports with more severe
 leakages. Some of them have been confirmed by existing research that those
 vulnerabilities can be exploited to realize real attacks.
@@ -173,16 +173,16 @@ We will present the details in the subsequent sections.
 %\subsubsection{Comparison with the Existing Tools}
 \tool{} is designed to quantify side-channel leakages. But it can detect
 side-channels leakages as well. In this section, we compare \tool{} with the
-existing trace-based side-channel identification tools.
+existing trace-based side-channel detection tools.
 
 As shown in Table~\ref{eval:cacheD},
-\tool{} can not only identify all the leakage sites reported by CacheD~\cite{203878}, but also
+\tool{} can not only discover all the leakage sites reported by CacheD~\cite{203878}, but also
 many new ones. CacheD fails to detect many vulnerabilities for two
 reasons. First, CacheD can only detect secret-dependent memory access
 vulnerabilities. But \tool{} can detect secret-dependent control-flows as well.
 Second, CacheD suffers from some performance issues and uses some domain
 knowledge to simplify symbolic execution and has to trim the traces before
-processing. The design does not introduce false positives, but can neglect some
+processing, which does not introduce false positives, but can neglect some
 vulnerabilities. On the contrary, \tool{} does not apply any domain knowledge
 and can find more vulnerabilities. The table~\ref{eval:cacheD} shows that
 \tool{} is three times faster than CacheD. As the time of symbolic execution
@@ -196,7 +196,7 @@ For example, it takes 234 minutes for DATA to analysis the RSA of implementation
 in OpenSSL 1.1.0f. \tool{} only spends 34 minutes according to Table~\ref{table:over_result}.
 Also, DATA reports report 278 control-flow and 460 data leaks. Among those leakages,
 they found two vulnerabilities. On the contrary, \tool{} can report how many bits is
-actually leaked, which eases the pain to discover sensitive leakages.
+actually leaked for each vulnerability, which eases the pain to identify real sensitive leaks.
 
 \begin{table}[]
     \caption{Comparison with CacheD}
@@ -221,31 +221,32 @@ actually leaked, which eases the pain to discover sensitive leakages.
 \subsubsection{Symmetric Ciphers: DES and AES}\label{eval:sym}
 We test both DES and AES ciphers from mbed TLS and OpenSSL. Both cipher
 implementations apply lookup tables, which can
-speed up the optimization, but can also introduce additional side-channels
+speed up the calculation, but can also introduce additional side-channels
 as well. During our evaluation, we find mbed TLS 2.5 and 2.15.1 have the same
-implementation of AES\@ and DES\@. Our tool also provides the same leakage report for both
+implementation of AES\@ and DES\@. Therefore, our tool also provides the same 
+leakage report for both
 versions. A simple of the generated report can be found in the Appendix~\ref{sec:result-table}.
 
-According to \tool{}, we find DES\@ in both mbed TLS and OpenSSL has several
+According to \tool{}, we find DES\@ implementations in both mbed TLS and OpenSSL have several
 sensitive information leakage from the key schedule function.
-However, leakages in OpenSSL is more severe. We do not see any mitigation
+However, leakages in OpenSSL are more severe. We do not see any mitigation
 in the new version. We think it is not seen as worth the engineering
 efforts given the life cycles of DES\@.
 
 \tool{} also shows that the AES\@ in OpenSSL 1.1.1 
 has less amount of leakages compared to other versions by our tools. 
-(e.g., the max leakage of AES in OpenSSL 4.4 bits, but other version
-and )
+(e.g., the max leakage of AES in OpenSSL 1.1.1 is 4.4 bits, but other version
+have leakages that can leak can around 10 bits. )
 We find that OpenSSL 1.1.1 version 
-rather than uses the 1KB lookup tables with 32bit entries like older version, it uses an 
+instead uses the 1KB lookup tables with 32bit entries like older version, it uses an 
 tables with 8 bit entries. In other words, our tools shows that lookup tables with smaller 
 entries will leak less amount of information. Our tool also suggests a smaller lookup
 table can mitigate side-channels vulnerabilities. For example, Shown in Appendix~\ref{mbedtls_aes},
-\tool{} identify seven leakages from function \emph{mbedtls\_internal\_aes\_decrypt}.
-However, \tool{} reports leakage 1, 2, 3 typically leak more information
+\tool{} identify seven leakages from function \textsf{mbedtls\_internal\_aes\_decrypt}.
+However, \tool{} reports leakage 1, 2, 3 leak more information
 compared to leakage 4, 5, 6, 7. 
 We check the source code and find leakage 1, 2,
-3 use secret to access the lookup table \emph{RT0, RT1, RT2, RT3}, which is 8K
+3 use secret to access the lookup table \textsf{RT0, RT1, RT2, RT3}, which is 8K
 each. On the contrary, leakage 4, 5, 6, 7 each accesses a smaller lookup table
 (2K).
 
@@ -255,19 +256,20 @@ We also evaluate \tool{} on RSA.  We find developers are more interested in
 fixing side-channel vulnerabilities for RSA implementations. 
 We test five versions of OpenSSL (0.9.7, 1.0.2f, 1.0.2k, 1.1.0f, 1.1.1). The
 result, as shown in Figure~\ref{fig:rsa}, indicates that the newer
-version of OpenSSL leaked less amount of information compared to the previous
-versions. After version 0.9.7g, OpenSSL adopted a fixed-window \emph{mod\_exp}
+version of OpenSSL leaks less amount of information compared to the previous
+versions. After version 0.9.7g, OpenSSL adopts a fixed-window \textsf{mod\_exp\_mont}
 implementation for RSA\@. With the new design, the sequence of squares and
 multiples and the memory access patterns are independent of the secret key.
 \tool{}'s result confirms the new exponentiation implementation has 
 effectively mitigated most of leakages because the other four versions have fewer
-leakages than 0.9.7. OpenSSL version 1.0.2f, 1.0.2k and 1.1.0f almost have the
+leakages compared with version 0.9.7. 
+OpenSSL version 1.0.2f, 1.0.2k and 1.1.0f almost have the
 same amount of leakage. We check the changelog and find only one change for
 patching the vulnerability CVE-2016-0702. 
 \tool{} also find OpenSSL 1.1.1 version has significantly less amount of 
 leaked information compared to other versions.
 We check the changelog of OpenSSL 1.1.1 and find it claims
-the RSA implementation adopted ``numerous side-channel attack mitigation.'', 
+the new RSA implementation adopted ``numerous side-channel attack mitigation.'', 
 which proves the effectiveness of our quantifying method.
 
 \begin{figure*}
@@ -306,21 +308,21 @@ Our quantification result shows vulnerabilities
 that leak more information identified by \tool{} 
 are more likely to be fixed in the updated version.
 As presented in Appendix~\ref{sec:result-table}, 
-OpenSSL 0.9.7 has several sensitive leaks from
-function \emph{bn\_sqr\_comba8}, which is a main 
+OpenSSL 0.9.7 has several severe leaks from
+function \textsf{bn\_sqr\_comba8}, which is a main 
 component of the OpenSSL big number implementation.
-The value of the function parameter \emph{a} is derived from
+The value of the function parameter \textsf{a} is derived from
 the secret key. 
 Shown in Figure~\ref{fig:old_sqr2}, it has a 
 secret-dependent control flow at line 8.
-As function \emph{bn\_sqr\_comba8}
-call the macro (\emph{sqr\_add\_c2}) multiple times, 
+As function \textsf{bn\_sqr\_comba8}
+call the macro (\textsf{sqr\_add\_c2}) multiple times, 
 and the code will leak some information each times.
 \tool{} thinks the vulnerability is quite serious. 
 The vulnerability has been patched for OpenSSL 1.1.1. Seen in 
 Figure~\ref{fig:new_sqr2}, control-flows transfers are replaced
-with bitwise operations. So there is no leaks from function
-\emph{sqr\_add\_c2} in OpenSSL 1.1.1. We also mention
+with bitwise operations. So there is no leaks in the function
+\textsf{sqr\_add\_c2} in OpenSSL 1.1.1. We also mention
 that even line 4 and 9 in Figure~\ref{fig:old_sqr2} all have if branches.
 However, it is not a secret-dependent control-flow transfers because
 most compilers will use \emph{add with carry} instruction to remove the branch.
@@ -330,16 +332,15 @@ enough to detect side-channels.
 
 On the other hand, for those vulnerabilities that leak less information. 
 Developers are more resilient to fix them. 
-For example, OpenSSL 0.9.7 has a fixed windows version of 
-function \emph{BN\_mod\_exp\_mont\_constime} to replace original function
-\emph{BN\_mod\_exp\_mont}.
+For example, OpenSSL 0.9.7 uses a fixed windows version of 
+function \textsf{BN\_mod\_exp\_mont\_constime} to replace original function
+\textsf{BN\_mod\_exp\_mont}.
 However, \tool{} detects a minor vulnerability in the function that can
 leaks the last bit of the big number \emph{m}. In the updated version,
-developers make the fixed windows default and write part of the 
-function. However, the vulnerability still exits in OpenSSL 1.1.1.
+developers make the fixed windows default and rewrite part of the 
+function. However, the vulnerability still exits in OpenSSL 1.1.1,
 despite the vulnerability is blunt. Details of the 
 vulnerability can been seen in Appendix\S~\ref{appendix:minor:vul}.
-
 
 \begin{figure}
     \centering
