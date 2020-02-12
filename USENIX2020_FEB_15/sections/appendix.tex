@@ -204,6 +204,13 @@ if (bits == 0)
 \end{figure}
 
 \section{Unknown Leaks in OpenSSL 1.1.1}
+Shown in Table~\ref{tab:RSAOpenSSL1.1.1}, \tool{} discovers a series
+of side-channel vulnerabilities in the up-to-date OpenSSL library. 
+However, many of them are negligible quantified by our \tool{}.
+Here we present a unknown vulnerability. Despite the following
+vulnerability leaks through from the same code patterns as vulnerabilities
+in \S\ref{appendix:minor:vul}, \tool{} shows the following code can leak
+around 15 bits from the original key.
 \label{appendix:unknown}
 \begin{figure}[h]
 \centering
