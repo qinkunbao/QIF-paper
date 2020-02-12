@@ -16,9 +16,9 @@
     \newcommand{\foo}{\mbox{\hspace*{\the\x}}}
     \resizebox{1.9\columnwidth}{!}{
 
-    \begin{tabular}{clrrrrrrr}
+    \begin{tabular}{llrrrrrrr}
         \hline
-        \textbf{Application} & \textbf{Version}  & \textbf{Leakage Sites} & \textbf{CF}         & \textbf{DF}
+        \textbf{Algorithm} & \textbf{Version}  & \textbf{Leakage Sites} & \textbf{CF}         & \textbf{DF}
                            & \textbf{\# Instructions} & \textbf{Max Leakage}   & \textbf{Sym.\ Exe.} & \textbf{Monte Carlo}                                                    \\\hline
                            &                          &                        &                     &                      &             & bits & ms        & ms              \\\cline{7-9}
         AES                & Mbed TLS 2.5             & 68                     & 0                   & 68                   & 39,855      & 8.6  & 512 ~~    & 1,052 ~~        \\
@@ -35,6 +35,11 @@
         DES                & OpenSSL 1.0.2k           & 8                      & 0                   & 8                    & 2,593       & 10.1 & 165 ~~    & 5,975        ~~ \\
         DES                & OpenSSL 1.1.0f           & 8                      & 0                   & 8                    & 4,260       & 8.8  & 182 ~~    & 5,292        ~~ \\
         DES                & OpenSSL 1.1.1            & 6                      & 0                   & 6                    & 8,272       & 7.5  & 229 ~~    & 5,152       ~~  \\
+                           &                          &                        &                     &                      &             &      & seconds   & seconds               \\\cline{8-9}
+        Chacha20           & Monocypher 3.0           & 0                      & 0                   & 0                    & 149,353     & 0    & 2 ~~    & 0           ~~  \\  
+        Poly1305           & Monocypher 3.0           & 0                      & 0                   & 0                    & 1,213,937   & 0    & 15 ~~   & 0           ~~  \\
+        Argon2i            & Monocypher 3.0           & 0                      & 0                   & 0                    & 4,595,142   & 0    & 37 ~~   & 0           ~~  \\
+        EdDSA              & Monocypher 3.0           & 0                      & 0                   & 0                    & 5,713,619   & 0    & 271 ~~  & 0           ~~  \\
                            &                          &                        &                     &                      &             &      & minutes   & minutes         \\\cline{8-9}
         RSA                & Mbed TLS 2.5             & 6                      & 6                   & 0                    & 22,109,246  & 9.6  & 39 ~~     & 41  ~~          \\
         RSA                & Mbed TLS 2.15            & 12                     & 12                  & 0                    & 24,484,441  & 8.7  & 44 ~~     & 251  ~~         \\
@@ -43,8 +48,7 @@
         RSA                & OpenSSL 1.0.2k           & 36                     & 27                  & 9                    & 15,285,210  & 14.2 & 40 ~~     & 714   ~~        \\
         RSA                & OpenSSL 1.1.0f           & 31                     & 22                  & 9                    & 16,390,750  & 17.2 & 34 ~~     & 490 ~~          \\
         RSA                & OpenSSL 1.1.1            & 27                     & 20                  & 7                    & 18,207,020  & 14.9 & 7 ~~      & 501 ~~          \\
-        wget               & 1.18                     & 25                     & 25                  & 0                     &  373,573    & 15.6  & 4.2s          & 5.1s               \\ \hline
-        Total              &                          & 886                    & 219                 & 667                  & 128,061,910 &      & 209m \foo & 2,861m \foo     \\\hline
+        Total              &                          & 886                    & 219                 & 667                  & 139,733,961 &      & 214m \foo & 2,861m \foo     \\\hline
         %                    &                          &                       &                     &                      &             & bits & ms        & ms              \\\cline{7-9}
         % AES                & Mbed TLS 2.5             & 68                    & 0                   & 68                   & 39,855      & 8    & 570 ~~    & 850 ~~          \\
         % AES                & Mbed TLS 2.15            & 68                    & 0                   & 68                   & 39,855      & 8    & 550 ~~    & 829 ~~          \\
@@ -73,14 +77,16 @@
     }
 \end{table*}
 
-We evaluate \tool{} on real-world crypto libraries, OpenSSL, mbed TLS and Monocypher\@. OpenSSL
-is the most commonly used crypto libraries in today's software. mbed TLS\@
+We evaluate \tool{} on real-world crypto libraries, OpenSSL, mbed TLS and Monocypher\@. 
+OpenSSL is the most commonly used crypto libraries in today's software. mbed TLS\@
 (previous known as PolarSSL) is designed to be easy to understand and fit on
-embedded devices. We also evaluate Monocypher. It is designed to have no 
+embedded devices. We also evaluate Monocypher, a new cryptographic library that
+resists to side-channel attacks. 
+It is designed to have no 
 secrets dependent indices and no secret dependent branches. Therefore,
-Monocypher should have no side-channels under our threat model.
+Monocypher should be secure under our threat model.
 
-We build the source code into 32-bit x86 Linux executables with the GCC 8.0
+We build the source code into 32-bit x86 Linux executables with GCC 8.0
 under Ubuntu 14.04. Although we use use symbol information to track back leakage
 sites in the source code, our tool can also work on stripped binaries. We
 develop a Pin tool based on Intel Pin (version 3.7) to record the execution
