@@ -6,7 +6,7 @@
     \caption{Evaluation results overview. We evaluate two different versions of mbed TLS, five different
         versions of OpenSSL and Monocypher 3.0\@. CF represents secret-dependent control-flow transfers and
         DF represents secret-dependent data-flow transfers. A summary of vulnerabilities 
-        with the amount of leaked information can be found in the appendix \S\ref{sec:result-table}.
+        with the amount of leaked information can be found in Appendix \S\ref{sec:result-table}.
     }\label{table:over_result}
     \newlength{\x}
     \newlength{\y}
@@ -77,18 +77,18 @@
     }
 \end{table*}
 
-We evaluate \tool{} on real-world crypto libraries, OpenSSL, mbed TLS and Monocypher\@. 
+We evaluate \tool{} on real-world crypto libraries including OpenSSL, mbed TLS and Monocypher\@. 
 OpenSSL is the most commonly used crypto libraries in today's software. mbed TLS\@
 (previous known as PolarSSL) is designed to be easy to understand and fit on
 embedded devices. We also evaluate Monocypher, a new cryptographic library that
-resists to side-channel attacks. 
+resists to most side-channel attacks. 
 It is designed to have no 
 secrets dependent indices and no secret dependent branches. Therefore,
 Monocypher should be secure under our threat model.
 
 We build the source code into 32-bit x86 Linux executables with GCC 8.0
 under Ubuntu 14.04. Although we use use symbol information to track back leakage
-sites in the source code, our tool can also work on stripped binaries. We
+sites into the source code, our tool can also work on stripped binaries. We
 develop a Pin tool based on Intel Pin (version 3.7) to record the execution
 trace. We run our experiments on a 2.90GHz Intel Xeon(R) E5-2690 CPU with 128GB
 RAM memory. During our evaluation process, we are interested in the following
@@ -106,30 +106,26 @@ aspects:
 \end{enumerate}
 
 \subsection{Evaluation Result Overview} \label{sec:eval_overview}
-Table~\ref{table:over_result} shows the overview of evaluation results. \tool{} found
+Table~\ref{table:over_result} shows the overview of evaluation results. \tool{} finds
 883 leakages in total from real-world crypto system libraries. Among those 883
 leak points, 205 of them are leaked due to secret-dependent control-flow
 transfers and 678 of them are leaked due to secret-dependent memory accesses.
 
-\tool{} finds that secret-dependent memory accesses
-cause most leakages. \tool{} also identifies that most side-channel
+\tool{} also identifies that most side-channel
 vulnerabilities leak very little information in practice, which confirms our
 initial assumptions.  Without our tool, developers will not be able to
-distinguish those ``vulnerabilities'' from severe ones and ignore others for sure.
+distinguish those ``vulnerabilities'' from severe ones and ignore others for sure easily.
 However, we do find some vulnerabilities that \tool\ reports with more severe
 leakages. Some of them have been confirmed by existing research that those
 vulnerabilities can be exploited to realize real attacks.
 
 All the symmetric encryption implementations in OpenSSL and mbed TLS\@ have significant
 leakages due to the implementation of the lookup table to speed up the
-computation. Every leakage found during the evaluation belongs to the type of
-secret-dependent memory accesses. We believe that the secret-dependent
-control-flow transfers have been widely studied in the past few years, and
-developers have patched most of those leakages. 
-
-\tool{} finds several leakage sites for both implementations of DES and AES in
+computation. Every leakages found during the evaluation belong to the type of
+secret-dependent memory accesses. \tool{} finds several leakage sites for both 
+implementations of DES and AES in
 OpenSSL and mbed TLS\@. \tool{} confirms that all those leakages come from table
-lookups. mbed TLS 2.15 and 2.5 have the same implementations of DES and AES so
+lookups. mbed TLS 2.15 and 2.5 have the same implementation of DES and AES so
 they have the same leakage report. One proper fix would be a scalar bit-sliced
 implementation. However, we do not see the bit-sliced implementation of AES and
 DES in various versions of OpenSSL and mbed TLS\@. However, we find the new
