@@ -147,9 +147,9 @@ return( 0 );
 Here we present a side-channel vulnerability that leaks
 less than one bit information by~\tool{}. The vulnerability exists
 from OpenSSL 0.9.7 to OpenSSL 1.1.1. Shown in Figure~\ref{fig:old_sqr2} 
-and Figure~\ref{fig:new_sqr2}, \textsf{m} is a big number that
+and Figure~\ref{fig:new_sqr2}, \textbf{m} is a big number that
 derives from the private key.
-At line 6, it can leak the last bit of \textsf{m} by observing the branch. 
+At line 6, it can leak the last bit of \textbf{m} by observing the branch. 
 As the leak is tiny,
 we think developers do not have enough motivations
 to fix the vulnerability.
@@ -205,10 +205,10 @@ if (bits == 0)
 
 \section{Unknown Leaks in OpenSSL 1.1.1}
 Shown in Table~\ref{tab:RSAOpenSSL1.1.1}, \tool{} discovers a series
-of side-channel vulnerabilities in the up-to-date OpenSSL library. 
-However, many of them are negligible quantified by our \tool{}.
+of side-channel vulnerabilities in the up-to-date version of OpenSSL library. 
+However, many of them are negligible quantified by \tool{}.
 Here we present a unknown vulnerability. Despite the following
-vulnerability leaks through from the same code patterns as vulnerabilities
+vulnerability leaks through the same code patterns as the vulnerability shown
 in \S\ref{appendix:minor:vul}, \tool{} shows the following code can leak
 around 15 bits from the original key.
 \label{appendix:unknown}
@@ -221,13 +221,20 @@ while (!BN_is_bit_set(B, shift)) { /* note that 0 < B */
         if (!BN_uadd(X, X, n))
             goto err;
     }
+    ...
     if (!BN_rshift1(X, X))
         goto err;
 }
 
 \end{lstlisting}
     \vspace*{-6pt}
-    \caption{Unknown sensitive secret-dependent branch leaks from function \textsf{int\_bn\_mod\_inverse} in OpenSSL 1.1.1}
+    \caption{Unknown sensitive secret-dependent branch leaks from function 
+             \textsf{int\_bn\_mod\_inverse} in OpenSSL 1.1.1. Same as the example
+             in \S\ref{appendix:minor:vul}, the code can leak the last digit from
+             big number \textbf{X}. However, the leak is more sensitive because of the 
+             function \textsf{BN\_rshift1}. Each time function \textsf{BN\_rshift1}
+             will shift \textbf{X} right by one and places the result in \textbf{X}. Therefore,
+             an attacker can infer multiple bits of \textbf{X} by observing the branch at line 3.}
     \label{fig:unknown}
     \vspace*{-6pt}
 \end{figure}
