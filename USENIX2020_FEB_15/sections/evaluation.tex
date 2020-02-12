@@ -73,10 +73,12 @@
     }
 \end{table*}
 
-We evaluate \tool{} on real-world crypto libraries, OpenSSL and mbed TLS\@. OpenSSL
+We evaluate \tool{} on real-world crypto libraries, OpenSSL, mbed TLS and Monocypher\@. OpenSSL
 is the most commonly used crypto libraries in today's software. mbed TLS\@
 (previous known as PolarSSL) is designed to be easy to understand and fit on
-embedded devices.
+embedded devices. We also evaluate Monocypher. It is designed to have no 
+secrets dependent indices and no secret dependent branches. Therefore,
+Monocypher should have no side-channels under our threat model.
 
 We build the source code into 32-bit x86 Linux executables with the GCC 8.0
 under Ubuntu 14.04. Although we use use symbol information to track back leakage
@@ -382,6 +384,6 @@ vulnerability can been seen in Appendix\S~\ref{appendix:minor:vul}.
     \vspace*{-6pt}
 \end{figure}
 
-\subsubsection{Links}
+\subsubsection{Monocypher}
 
 
