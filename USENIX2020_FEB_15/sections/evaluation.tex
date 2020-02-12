@@ -39,7 +39,7 @@
         Chacha20           & Monocypher 3.0           & 0                      & 0                   & 0                    & 149,353     & 0    & 2 ~~    & 0           ~~  \\  
         Poly1305           & Monocypher 3.0           & 0                      & 0                   & 0                    & 1,213,937   & 0    & 15 ~~   & 0           ~~  \\
         Argon2i            & Monocypher 3.0           & 0                      & 0                   & 0                    & 4,595,142   & 0    & 37 ~~   & 0           ~~  \\
-        EdDSA              & Monocypher 3.0           & 0                      & 0                   & 0                    & 5,713,619   & 0    & 271 ~~  & 0           ~~  \\
+        Ed25519              & Monocypher 3.0           & 0                      & 0                   & 0                    & 5,713,619   & 0    & 271 ~~  & 0           ~~  \\
                            &                          &                        &                     &                      &             &      & minutes   & minutes         \\\cline{8-9}
         RSA                & Mbed TLS 2.5             & 6                      & 6                   & 0                    & 22,109,246  & 9.6  & 39 ~~     & 41  ~~          \\
         RSA                & Mbed TLS 2.15            & 12                     & 12                  & 0                    & 24,484,441  & 8.7  & 44 ~~     & 251  ~~         \\
@@ -102,7 +102,7 @@ aspects:
           Can \tool{} precisely report the number of leaked bits in crypto
           libraries? Are the numbers of leaked bits reported by \tool{} useful
           to justify the severity levels of the side-channel vulnerabilities?
-          (\S\ref{eval:sym}, \S\ref{eval:asym})
+          (\S\ref{eval:sym}, \S\ref{eval:asym}, \S\ref{eval:mono})
 \end{enumerate}
 
 \subsection{Evaluation Result Overview} \label{sec:eval_overview}
@@ -390,6 +390,16 @@ vulnerability can been seen in Appendix\S~\ref{appendix:minor:vul}.
     \vspace*{-6pt}
 \end{figure}
 
-\subsubsection{Monocypher}
+\subsubsection{Monocypher}\label{eval:mono}
+Monocypher is a small, easy to use cryptographic library with a
+comparable performance with LibSodium and NaCl. 
+We choose four ciphers that are designed to be more side-channel resistant.
+Because those ciphers have no 
+data flow from secrets to branch conditions and load addresses.
+Therefore, Monocypher should be safe under our threat models.
+However, we are still interested in those vulnerabilities caused
+by compiler optimizations and implementations.
+We analyze those ciphers with \tool{}, and it reports no leaks from the
+software implementations. 
 
 
