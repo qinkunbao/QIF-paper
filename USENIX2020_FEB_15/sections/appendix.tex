@@ -146,8 +146,12 @@ return( 0 );
 \label{appendix:minor:vul}
 Here we present a side-channel vulnerability that leaks
 less than one bit information by~\tool{}. The vulnerability exists
-from OpenSSL 0.9.7 to OpenSSL 1.1.1. We think
-developers do not have enough motivations
+from OpenSSL 0.9.7 to OpenSSL 1.1.1. Shown in Figure~\ref{fig:old_sqr2} 
+and Figure~\ref{fig:new_sqr2}, \textsf{m} is a big number that
+derives from the private key.
+At line 6, it can leak the last bit of \textsf{m} by observing the branch. 
+As the leak is tiny,
+we think developers do not have enough motivations
 to fix the vulnerability.
 
 \begin{figure}[h]
@@ -200,6 +204,26 @@ if (bits == 0)
 \end{figure}
 
 \section{Unknown Leaks in OpenSSL 1.1.1}
+\label{appendix:unknown}
+\begin{figure}[h]
+\centering
+\begin{lstlisting}[xleftmargin=.02\textwidth,xrightmargin=.01\textwidth]
+while (!BN_is_bit_set(B, shift)) { /* note that 0 < B */
+    shift++;
+    if (BN_is_odd(X)) {
+        if (!BN_uadd(X, X, n))
+            goto err;
+    }
+    if (!BN_rshift1(X, X))
+        goto err;
+}
+
+\end{lstlisting}
+    \vspace*{-6pt}
+    \caption{Unknown sensitive secret-dependent branch leaks from function \textsf{int\_bn\_mod\_inverse} in OpenSSL 1.1.1}
+    \label{fig:unknown}
+    \vspace*{-6pt}
+\end{figure}
 
 \section{Detailed Experimental Results}
 \label{sec:result-table}
