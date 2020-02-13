@@ -82,13 +82,13 @@ OpenSSL is the most commonly used crypto libraries in today's software. mbed TLS
 (previous known as PolarSSL) is designed to be easy to understand and fit on
 embedded devices. We also evaluate Monocypher, a new cryptographic library that
 resists to most side-channel attacks. 
-It is designed to have no 
+Monocypher is designed to have no 
 secrets dependent indices and no secret dependent branches. Therefore,
 Monocypher should be secure under our threat model.
 
 We build the source code into 32-bit x86 Linux executables with GCC 8.0
 under Ubuntu 14.04. Although we use use symbol information to track back leakage
-sites into the source code, our tool can also work on stripped binaries. We
+sites into the source code, our tool can work on stripped binaries as well. We
 develop a Pin tool based on Intel Pin (version 3.7) to record the execution
 trace. We run our experiments on a 2.90GHz Intel Xeon(R) E5-2690 CPU with 128GB
 RAM memory. During our evaluation process, we are interested in the following
@@ -101,7 +101,7 @@ aspects:
     \item  \textbf{Quantifying side-channel leakages.}
           Can \tool{} precisely report the number of leaked bits in crypto
           libraries? Are the numbers of leaked bits reported by \tool{} useful
-          to justify the severity levels of the side-channel vulnerabilities?
+          to justify the severity levels of each side-channel vulnerability?
           (\S\ref{eval:sym}, \S\ref{eval:asym}, \S\ref{eval:mono})
 \end{enumerate}
 
@@ -115,12 +115,12 @@ transfers and 678 of them are leaked due to secret-dependent memory accesses.
 vulnerabilities leak very little information in practice, which confirms our
 initial assumptions.  Without our tool, developers will not be able to
 distinguish those ``vulnerabilities'' from severe ones and ignore others for sure easily.
-However, we do find some vulnerabilities that \tool\ reports with more severe
+However, we do find some vulnerabilities that \tool{} reports with more severe
 leakages. Some of them have been confirmed by existing research that those
 vulnerabilities can be exploited to realize real attacks.
 
-All the symmetric encryption implementations in OpenSSL and mbed TLS\@ have significant
-leakages due to the implementation of the lookup table to speed up the
+All tested symmetric encryption implementations in OpenSSL and mbed TLS\@ have significant
+leakages due to the lookup table to speed up the
 computation. Every leakages found during the evaluation belong to the type of
 secret-dependent memory accesses. \tool{} finds several leakage sites for both 
 implementations of DES and AES in
@@ -130,8 +130,7 @@ they have the same leakage report. One proper fix would be a scalar bit-sliced
 implementation. However, we do not see the bit-sliced implementation of AES and
 DES in various versions of OpenSSL and mbed TLS\@. However, we find the new
 implementation of OpenSSL instead uses typical four 1K tables. It only uses one 1K
-of the tables. This implementation is rather easy but is still vulnerable to a
-side channel attack. However, the countermeasures do somehow decrease the total
+of the tables. This implementation is rather easy but does somehow decrease the total
 amount of leaked information as the quantification result shown in the next
 section.
 
@@ -141,7 +140,7 @@ simplify the analysis. Therefore, our tools can not only identify all the leakag
 reported by CacheD~\cite{203878}, but find new leakages in a shorter time. 
 We also find the newer
 versions of RSA in OpenSSL tend to have fewer leakages detected by \tool{}. We
-will discuss the version changes and corresponding leakages in the next section.
+will discuss the version changes and corresponding leakages in \S\ref{eval:asym}.
 
 \tool{} can also estimate how
 much information is leaked from each vulnerability. \tool{} achieves the goal by
@@ -153,13 +152,6 @@ or 2) it cannot reach the termination condition after 10 minutes. In
 the latter case, it means the number of satisfying keys is very small and the
 leakage is quite severe. \emph{That is, timeout indicates severe leakage.}
 \label{loc:timeout}
-
-%The tool marks the Monte Carlo is failed.
-
-%During the evaluation,
-%we find \tool{} can quantify every side-channel leakage for every symmetric
-%encryption. For asymmetric encryptions, Monte Carlo sometimes
-%times out. 
 We manually check those leakage sites and find most of them are quite severe.
 We will present the details in the subsequent sections.
 
@@ -270,7 +262,7 @@ leakages compared with version 0.9.7.
 OpenSSL version 1.0.2f, 1.0.2k and 1.1.0f almost have the
 same amount of leakage. We check the changelog and find only one change for
 patching the vulnerability CVE-2016-0702. 
-\tool{} also find OpenSSL 1.1.1 version has significantly less amount of 
+\tool{} find OpenSSL 1.1.1 version has significantly less amount of 
 leaked information compared to other versions.
 We check the changelog of OpenSSL 1.1.1 and find it claims
 the new RSA implementation adopted ``numerous side-channel attack mitigation.'', 
@@ -315,7 +307,7 @@ As presented in Appendix~\ref{sec:result-table},
 OpenSSL 0.9.7 has several severe leaks from
 function \textsf{bn\_sqr\_comba8}, which is a main 
 component of the OpenSSL big number implementation.
-The value of the function parameter \textsf{a} is derived from
+The value of the function parameter \textbf{a} is derived from
 the secret key. 
 Shown in Figure~\ref{fig:old_sqr2}, it has a 
 secret-dependent control flow at line 8.
@@ -323,12 +315,12 @@ As function \textsf{bn\_sqr\_comba8}
 call the macro (\textsf{sqr\_add\_c2}) multiple times, 
 and the code will leak some information each times.
 \tool{} thinks the vulnerability is quite serious. 
-The vulnerability has been patched for OpenSSL 1.1.1. Seen in 
+The vulnerability has been patched in OpenSSL 1.1.1. Seen in 
 Figure~\ref{fig:new_sqr2}, control-flows transfers are replaced
 with bitwise operations. So there is no leaks in the function
 \textsf{sqr\_add\_c2} in OpenSSL 1.1.1. We also mention
-that even line 4 and 9 in Figure~\ref{fig:old_sqr2} all have if branches.
-However, it is not a secret-dependent control-flow transfers because
+that even line 4 and 9 in Figure~\ref{fig:old_sqr2} all have if branches,
+however, it is not a secret-dependent control-flow transfers because
 most compilers will use \emph{add with carry} instruction to remove the branch.
 Besides, branches can also be compiled to non-branch machine instructions 
 like conditional moves. Therefore, simple code reviews are not accurate
@@ -336,12 +328,12 @@ enough to detect side-channels.
 
 On the other hand, for those vulnerabilities that leak less information. 
 Developers are more reluctant to fix them. 
-For example, OpenSSL 0.9.7 uses a fixed windows version of 
+For example, OpenSSL 0.9.7 adopts a fixed windows version of 
 function \textsf{BN\_mod\_exp\_mont\_constime} to replace original function
 \textsf{BN\_mod\_exp\_mont}.
 However, \tool{} detects a minor vulnerability in the function that can
-leaks the last bit of the big number \emph{m}. In the updated version,
-developers make the fixed windows default and rewrite part of the 
+leaks the last bit of the big number \textbf{m}. In the updated version,
+developers make the fixed windows become the default option and rewrite part of the 
 function. However, the vulnerability still exits in OpenSSL 1.1.1,
 despite the vulnerability is blunt. Details of the 
 vulnerability can been seen in Appendix\S~\ref{appendix:minor:vul}.
@@ -386,16 +378,21 @@ vulnerability can been seen in Appendix\S~\ref{appendix:minor:vul}.
     \vspace*{-6pt}
 \end{figure}
 
+Even for the up-to-date version of OpenSSL, \tool{} still find several
+side-channel leakages. Several of them are quite serious.
+Details can be found in Appendix \S\ref{appendix:minor:vul} and \S\ref{tab:RSAOpenSSL1.1.1}.
+
 \subsubsection{Monocypher}\label{eval:mono}
 Monocypher is a small, easy to use cryptographic library with a
-comparable performance with LibSodium and NaCl. 
-We choose four ciphers that are designed to be more side-channel resistant.
+comparable performance with LibSodium~\cite{libsodium} and NaCl~\cite{bernstein2012security}. 
+We choose four ciphers from the library that are 
+designed to be more side-channel resistant.
 Because those ciphers have no 
 data flow from secrets to branch conditions and load addresses.
 Therefore, Monocypher should be safe under our threat models.
 However, we are still interested in those vulnerabilities caused
 by compiler optimizations and implementations.
 We analyze those ciphers with \tool{}, and it reports no leaks from the
-software implementations. 
+implementation. 
 
 
