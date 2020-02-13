@@ -146,8 +146,8 @@ return( 0 );
 \label{appendix:minor:vul}
 Here we present a side-channel vulnerability that leaks
 less than one bit information by~\tool{}. The vulnerability exists
-from OpenSSL 0.9.7 to OpenSSL 1.1.1. Shown in Figure~\ref{fig:old_sqr2} 
-and Figure~\ref{fig:new_sqr2}, \textbf{m} is a big number that
+from OpenSSL 0.9.7 to OpenSSL 1.1.1. Shown in Figure~\ref{appen:fig:exp} 
+and Figure~\ref{appen:fig:exp_new}, \textbf{m} is a big number that
 derives from the private key.
 At line 6, it can leak the last bit of \textbf{m} by observing the branch. 
 As the leak is tiny,
@@ -173,7 +173,7 @@ if (bits == 0)
 \end{lstlisting}
     \vspace*{-6pt}
     \caption{\textsf{BN\_mod\_exp\_mont\_consttime} in OpenSSL 0.9.7}
-    \label{fig:old_sqr2}
+    \label{appen:fig:exp}
     \vspace*{-6pt}
 \end{figure}
 
@@ -199,7 +199,7 @@ if (bits == 0)
 \end{lstlisting}
     \vspace*{-6pt}
     \caption{\textsf{BN\_mod\_exp\_mont} in OpenSSL 1.1.1}
-    \label{fig:new_sqr2}
+    \label{appen:fig:exp_new}
     \vspace*{-6pt}
 \end{figure}
 
