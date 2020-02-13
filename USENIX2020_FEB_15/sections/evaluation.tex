@@ -224,7 +224,7 @@ speed up the calculation, but can also introduce additional side-channels
 as well. During our evaluation, we find mbed TLS 2.5 and 2.15.1 have the same
 implementation of AES\@ and DES\@. Therefore, our tool also provides the same 
 leakage report for both
-versions. A simple of the generated report can be found in the Appendix~\ref{sec:result-table}.
+versions. A sample of the generated report can be found in the Appendix~\ref{sec:result-table}.
 
 According to \tool{}, we find DES\@ implementations in both mbed TLS and OpenSSL have several
 sensitive information leakages in the key schedule function.
@@ -237,7 +237,7 @@ has less amount of leakages compared to other versions by our tools.
 (e.g., the max leakage of AES in OpenSSL 1.1.1 is 4.4 bits, but other version
 have leakages that can leak can around 10 bits.)
 We find that OpenSSL 1.1.1 version 
-instead uses the 1KB lookup tables with 32bit entries like older versions, it uses an 
+instead uses the 1KB lookup tables with 32 bit entries like older versions, it uses a 
 tables with 8 bit entries. In other words, our tools shows that lookup tables with smaller 
 entries will leak less amount of information. Our tool also suggests a smaller lookup
 table can mitigate side-channels vulnerabilities. For example, Shown in Appendix~\ref{mbedtls_aes},
@@ -315,15 +315,15 @@ the secret key.
 Shown in Figure~\ref{fig:old_sqr2}, it has a 
 secret-dependent control flow at line 8.
 As function \textsf{bn\_sqr\_comba8}
-call the macro (\textsf{sqr\_add\_c2}) multiple times, 
+calls the macro (\textsf{sqr\_add\_c2}) multiple times, 
 and the code will leak some information each times.
 \tool{} thinks the vulnerability is quite serious. 
 The vulnerability has been patched in OpenSSL 1.1.1. Seen in 
 Figure~\ref{fig:new_sqr2}, control-flows transfers are replaced
 with bitwise operations. So there is no leaks in the function
 \textsf{sqr\_add\_c2} in OpenSSL 1.1.1. We also mention
-that even line 4 and 9 in Figure~\ref{fig:old_sqr2} all have if branches,
-however, it is not a secret-dependent control-flow transfers because
+that even line 4 and 9 in Figure~\ref{fig:old_sqr2} both have if branches.
+However, it is not a secret-dependent control-flow transfers because
 most compilers will use \emph{add with carry} instruction to remove the branch.
 Besides, branches can also be compiled to non-branch machine instructions 
 like conditional moves. Therefore, simple code reviews are not accurate
@@ -382,8 +382,12 @@ vulnerability can been seen in Appendix\S~\ref{appendix:minor:vul}.
 \end{figure}
 
 Even for the up-to-date version of OpenSSL, \tool{} still find several
-side-channel leakages. Several of them are quite serious.
-Details can be found in Appendix \S\ref{appendix:minor:vul} and Table \ref{tab:RSAOpenSSL1.1.1}.
+side-channel leakages. One of the vulnerabilities has the similar leaked
+branch as the one in \S~\ref{appendix:minor:vul}. However, as the branch
+is inside a loop and a bit shift function causes the branch leak different
+bits from the sensitive buffer. The vulnerability is far severe by our tool.
+Deatails of the leak can be found in Appendix \S\ref{unknown:leak} and 
+Table \ref{tab:RSAOpenSSL1.1.1}.
 
 \subsubsection{Monocypher}\label{eval:mono}
 Monocypher is a small, easy to use cryptographic library with a
