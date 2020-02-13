@@ -64,7 +64,7 @@ software.
 To overcome these limitations, we propose a novel method to quantify information
 leakage precisely. Unlike previous works that only consider the
 ``average'' information leakage, we study the problem based on real attack
-scenarios. The average information assumes that the target program has
+scenarios. The average information leakage model assumes the target program has
 \emph{variable} or \emph{random} sensitive information as inputs when an attack is
 launched. However, for real-world attacks, an adversary may run the target
 problem with the \emph{fixed} unknown sensitive information
@@ -82,12 +82,12 @@ which means all the secret information (e.g., the whole secret key) is
 leaked. By counting the number of distinct inputs, we can quantify the
 information leakage precisely.
 
-We use constraints to model the relation between the original sensitive input
-and the attacker's observations and run the instruction level symbolic execution on the
-whole execution trace to generate constraints. Symbolic execution can
+We use constraints generated from symbolic execution to model the relation 
+between the original sensitive input
+and the attacker's observations. Symbolic execution can
 provide fine-grained information but is usually believed to be an expensive
 operation in terms of performance. Therefore, existing dynamic symbolic
-execution based works~\cite{203878,236338,Brotzman19Casym} either only analyze
+execution works~\cite{203878,236338,Brotzman19Casym} either only analyze
 small programs or apply some domain knowledge~\cite{203878} to simplify the analysis. We
 systematically exam the bottleneck of the trace-oriented symbolic execution and optimize it
 to be scalable to real-world cryptosystems.
@@ -100,12 +100,14 @@ many bits they can leak for each leakage site. We assume that adversaries can
 exploit secret-dependent control-flow transfers and data-access patterns when
 the program processes different sensitive data.
 %We refer them as the potential information leakage sites. 
-First, we collect the dynamic execution trace for each input of the target
+First, we collect the dynamic execution trace for each target
 libraries and then run symbolic execution on the traces. In this way, we model
 each side-channel leakage as a logic formula. The sensitive input is divided into
 several independent bytes, and each byte is regarded as a unique symbol. Those
-formulas can precisely model side-channel vulnerabilities. Then we extend the
-problem to multiple leakages and related leakages and introduce Monte Carlo
+formulas can precisely model side-channel vulnerabilities. Then we use the conjunction
+of those formulas to model the same leaks in the source code but appears in the different location of
+the execution trace file (e.g., leakages inside a loop).
+We introduce Monte Carlo
 sampling method to estimate the single and combined information leakage. 
 
 
@@ -138,12 +140,12 @@ sampling method to estimate the single and combined information leakage.
 %total information leakage.
 
 We apply \tool{} on both symmetric and asymmetric ciphers from real-world crypto
-libraries, including OpenSSL and mbed TLS\@. The experimental result confirms
+libraries, including OpenSSL, mbed TLS and Monocypher\@. The experimental result confirms
 that \tool{} can precisely identify previously known vulnerabilities, report
 how much information is leaked and which byte in the original sensitive buffer
 is leaked. Although some of the analyzed crypto libraries have a number of
-side-channels, they actually leak very little information. Also, we perform the
-analysis of widely deployed software countermeasures against side channels.
+side-channels, they actually leak very little information. Also, we also shows the
+of widely deployed software countermeasures can defend against side channels.
 \tool\ also discovers new vulnerabilities. With the help of \tool{}, we confirm
 that those vulnerabilities are serious.
 
@@ -152,7 +154,7 @@ In summary, we make the following contributions:
 \begin{itemize}
       \item We propose a novel method that can quantify fine-grained leaked
             information from side-channel vulnerabilities to match real attack
-            scenarios.  Our method is different from previous ones in that we
+            scenarios. Our method is different from previous ones in that we
             model real attack scenarios more precisely, while the previous
             research only models the ``average'' or ``random'' case. 
             We transfer the information quantification problem into a counting
