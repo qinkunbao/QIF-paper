@@ -21,16 +21,14 @@ common attack strategies, namely Prime+Probe~\cite{liu2015last} and
 Flush+Reload~\cite{yarom2014flush+}. Prime+Probe targets a single cache set. An
 attacker preloads the cache set with its own data and waits until the victim
 executes the program. If the victim accesses the cache set and evicts part of
-the data, the attacker will experience a slow measurement. If not, it will be
-fast. By knowing which cache set the target program accesses, the attacker can
-infer part of the sensitive information. While Flush+Reload targets a
+the data, the attacker will experience a slow measurement. 
+While Flush+Reload targets a
 single cache line, it requires the attacker and the victim share the same memory
 address space. During the ``flush'' stage, the attacker flushes the ``monitored
 memory'' from the cache and also waits for the victim to access the memory,
 who will load the sensitive information to the cache line. In the next phase,
 the attacker reloads the ``monitored memory''. By measuring the time difference
-brought by cache hit and miss, the attacker can know whether the victim has
-accessed the ``monitored memory'' and further infer the sensitive information.
+brought by cache hit and miss, the attacker can further infer the sensitive information.
 Some other types of side-channels target different hardware
 layers other than CPU cache. For example, the controlled-channel
 attack~\cite{7163052}, where an attacker works in the kernel space, can infer
@@ -159,12 +157,10 @@ uint_8 key[2], t1, t2;
 get_key(key);              // 0 <= key[0], key[1] < 256
 t1 = key[0] + key[1];
 t2 = key[0] - key[1];
-if (t1 < 8) {
+if (t1 < 8) 
     A();                   // branch 1
-}
-if (t2 > 0) {              // branch 2
-    B();
-}
+if (t2 > 0)                
+    B();                   // branch 2
 \end{lstlisting}
 \vspace*{-6pt}
     \caption{Side-channel leakage}
