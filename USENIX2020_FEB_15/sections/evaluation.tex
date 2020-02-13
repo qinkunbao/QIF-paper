@@ -2,19 +2,20 @@
 \label{res_overview}
 
 \begin{table*}[h]
-    \centering
+    \centering\small\footnotesize
     \caption{Evaluation results overview. We evaluate two different versions of mbed TLS, five different
         versions of OpenSSL and Monocypher 3.0\@. CF represents secret-dependent control-flow transfers and
         DF represents secret-dependent data-flow transfers. A summary of vulnerabilities 
         with the amount of leaked information can be found in Appendix \S\ref{sec:result-table}.
     }\label{table:over_result}
+    \vspace*{-9pt}
     \newlength{\x}
     \newlength{\y}
     \settowidth{\x}{~~}
     \settowidth{\y}{m}
     \addtolength{\x}{-1\y}
     \newcommand{\foo}{\mbox{\hspace*{\the\x}}}
-    \resizebox{1.9\columnwidth}{!}{
+%    \resizebox{1.9\columnwidth}{!}{
 
     \begin{tabular}{llrrrrrrr}
         \hline
@@ -74,7 +75,7 @@
         % RSA                & OpenSSL 1.1.1            & 26                    & 20                  & 6                    & 18,207,020  & 12   & 7 ~~      & 455 ~~          \\\hline
         % Total              &                          & 883                   & 205                 & 678                  & 128,042,089 &      & 213m \foo & 1,688m \foo     \\\hline
     \end{tabular}
-    }
+%    }
 \end{table*}
 
 We evaluate \tool{} on real-world crypto libraries including OpenSSL, mbed TLS and Monocypher\@. 
@@ -184,7 +185,8 @@ vulnerabilities. The table~\ref{eval:cacheD} shows that
 \tool{} is three times faster than CacheD. As the time of symbolic execution
 grow quadratically, \tool{} is much faster than CacheD when analyzing the same
 number of instructions. For example, when we test~\tool{} on AES from OpenSSL
-0.9.7, ~\tool{} is more than 100x faster than CacheD.
+0.9.7, ~\tool{} is over %more than
+100x faster than CacheD.
 
 Since DATA~\cite{217537} compares several execution traces to identify
 side-channel leakages, \tool{} also outperforms DATA in terms of performance.
@@ -197,6 +199,7 @@ actually leaked for each vulnerability, which eases the pain to identify real se
 \begin{table}[]
     \caption{Comparison with CacheD}
     \label{eval:cacheD}
+    \vspace*{-9pt}
     \resizebox{\columnwidth}{!}{%
         \begin{tabular}{c|c|c|c|ccc}
             \hline
@@ -389,10 +392,11 @@ We choose four ciphers from the library that are
 designed to be more side-channel resistant.
 Because those ciphers have no 
 data flow from secrets to branch conditions and load addresses.
-Therefore, Monocypher should be safe under our threat models.
-However, we are still interested in those vulnerabilities caused
-by compiler optimizations and implementations.
+Therefore, Monocypher should be safe under our threat models. 
+ %However, we are still interested in those vulnerabilities caused
+ %by compiler optimizations and implementations.
 We analyze those ciphers with \tool{}, and it reports no leaks from the
-implementation. 
+implementation.
+This indicates that \tool\ can be used for countermeasure confirmation.
 
 

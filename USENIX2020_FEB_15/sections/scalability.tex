@@ -73,10 +73,11 @@ eliminating the IR layer can reduce the number of instructions executed during
 the analysis.
 
 \begin{table}%[ht]
-      \centering%\small\footnotesize
+      \centering\small\footnotesize
       \caption{The number of x86,  % instructions and the number of 
              REIL IR, and VEX IR instructions on the traces of crypto programs.}
       \label{scala:ir}
+\vspace*{-9pt}
       \resizebox{\columnwidth}{!}{%
 
             \begin{tabular}{cccc}
@@ -266,7 +267,7 @@ one.
       the maximum independent partition of $c_t(\addr{1},\addr{2},\ldots,\addr{n})$ iff
       \begin{enumerate}
             \item $g_{1} \land g_{2} \land \ldots \land g_{m} = c_t(\addr{1},\addr{2},\ldots,\addr{n})$
-            \item $\forall\quad i, j \in \{1, 2, \ldots, m\} \quad \textrm{and} \quad
+            \item $\forall i, j \in \{1, 2, \ldots, m\} \quad \textrm{and} \quad
                         i \neq j, \quad\pi(g_{i}) \cap \pi(g_{j}) = \emptyset $
             \item For any other partitions  $h_{1}, h_{2}, \ldots, h_{m'}$ satisfy 1) and
                   2), $m \geq m'$

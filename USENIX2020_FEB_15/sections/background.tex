@@ -49,7 +49,7 @@ while(i>0){
     }
 }
         \end{lstlisting}
-\vspace*{-6pt}
+\vspace*{-9pt}
         \caption{Secret-dependent control-flow transfers}
         \label{fig:secret:cf}
     \end{minipage}
@@ -65,7 +65,7 @@ uint32_t a = *RK++ ^ \
 (FSb[(secret >>24)] << 24 );
 ...
         \end{lstlisting}
-\vspace*{-6pt}
+\vspace*{-9pt}
         \caption{Secret-dependent memory accesses}
         \label{fig:secret:da}
     \end{minipage}
@@ -134,7 +134,7 @@ sensitive information. It measures the amount of information in a system.
 Min-entropy describes the information leaks for a program with the most likely input. 
 For example, min-entropy can be used to describe the
 best chance of success in guessing one's password using the
-most common password, which is defined as
+most common password. %, which is defined as
 \begin{displaymath}
     \mathit{min\text{-}entropy} = - \log_2(p_{\mathit{max}})
 \end{displaymath}
@@ -162,7 +162,7 @@ if (t1 < 8)
 if (t2 > 0)                
     B();                   // branch 2
 \end{lstlisting}
-\vspace*{-6pt}
+\vspace*{-9pt}
     \caption{Side-channel leakage}
     \label{fig:side-channel}
 \end{figure}
@@ -175,9 +175,10 @@ question is how much information can be leaked from the above code if an
 attacker knows which branch is executed?
 
 \begin{table}[ht]
-    \centering
+    \centering\small\footnotesize
     \caption{The distribution of observation}\label{shtable}
-    \resizebox{\columnwidth}{!}{
+    \vspace*{-9pt}
+%    \resizebox{\columnwidth}{!}{
     \begin{tabular}{l|cccc}
         \hline
         %Observation (o)     & $\emptyset$ & ${\{1\}}$ & ${\{2\}}$ & ${\{1, 2\}}$ \\ \hline
@@ -188,7 +189,7 @@ attacker knows which branch is executed?
         Possibility (p)     & 0.5016      & 0.0003    & 0.4980    & 0.0002       \\
         \hline
     \end{tabular}
-        }
+%        }
 \end{table}
 
 
