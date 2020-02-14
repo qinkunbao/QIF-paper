@@ -81,9 +81,9 @@
 
 %\usepackage[compact]{titlesec}
 \usepackage{titlesec}
-\titlespacing*{\section}{0pt}{0.9\baselineskip}{0.5\baselineskip}
-\titlespacing*{\subsection}{0pt}{0.9\baselineskip}{0.5\baselineskip}
-\titlespacing*{\subsubsection}{0pt}{0.9\baselineskip}{0.5\baselineskip}
+\titlespacing*{\section}{0pt}{1.0\baselineskip}{0.5\baselineskip}
+\titlespacing*{\subsection}{0pt}{1.0\baselineskip}{0.5\baselineskip}
+\titlespacing*{\subsubsection}{0pt}{1.0\baselineskip}{0.5\baselineskip}
 
 \let\oldemptyset\emptyset
 \let\emptyset\varnothing
@@ -115,7 +115,8 @@ showlines=true
 \newtheorem{mydef}{Definition}
 \newtheorem{theorem}{Theorem}
 
-\renewcommand{\baselinestretch}{0.932}
+\renewcommand{\baselinestretch}{0.932}\selectfont
+\renewcommand{\baselinestretch}{0.93}\selectfont
 
 %-------------------------------------------------------------------------------
 \begin{document}
@@ -198,9 +199,11 @@ manual checks and by the developers.
 \input{sections/implementation}
 \input{sections/evaluation}
 \input{sections/discussion}
-\renewcommand{\baselinestretch}{1.0}%0.932}
+%\renewcommand{\baselinestretch}{1.0}\selectfont
 \input{sections/related_work}
 \input{sections/conclusion}
+
+\renewcommand{\baselinestretch}{1.0}\selectfont
 
 \clearpage
 \bibliographystyle{IEEEtran}
