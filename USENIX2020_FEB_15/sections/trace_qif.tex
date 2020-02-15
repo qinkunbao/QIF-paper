@@ -50,7 +50,8 @@ bit leakage.
 
 Both approaches fail to tell how much information is leaked during the execution
 precisely. The problem with existing methods is that they are static-based and
-input values are neglected by their approaches. They assume an attacker runs
+input values and real runtime information are neglected by their approaches. 
+They assume an attacker runs
 the program multiple times with many different or random sensitive inputs. As
 shown in Figure~\ref{fig:gap}(a), previous models, both Shannon entropy and max
 entropy, give an ``average'' estimate of the information leakage. However, it is
@@ -59,7 +60,7 @@ a side-channel attack happens, the adversary wants to retrieve the sensitive
 information, in which case the sensitive information is fixed (e.g., AES keys).
 The adversary will run the attack over and over again with fixed input and 
 guess the value bit by
-bit, as in Figure~\ref{fig:gap}(b). We want to have a
+bit (e.g., Kocher's timing attacks~\cite{kocher1996timing}), as in Figure~\ref{fig:gap}(b). We want to have a
 theory for dynamic analysis that if the theory says an attack leaks $x$ bits of
 secret information from a side-channel vulnerability, then $x$ should be useful
 in estimating the sensitive level of the vulnerability. However, the above
