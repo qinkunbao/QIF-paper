@@ -9,12 +9,12 @@ Python scripts that can report the leakage location in the source code with the
 debug information and the symbol information. A sample report can be found in
 the appendix.
 
-Our current implementation supports part of Intel 32-bit instructions,
+Our current implementation supports most Intel 32-bit instructions,
 including bitwise operations, control transfer, data movement, and logic
 instructions, which are essential in finding memory-based side-channel
 vulnerabilities. For other instructions that the current implementation does not
 support, the tool will use the real values to update the registers and memory
 cells. Therefore, the tool may miss some leakages but will not give us any new
-false positives with the implementation. As our method is architecture-independent,
+false positives. As our proposed method is architecture-independent,
 there is no fundamental difficulties to extend the tool to support 64-bit
-instructions. 
+architecture. 
