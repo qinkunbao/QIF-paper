@@ -83,8 +83,9 @@ letters to represent one element in the set (e.g., $a \in A$).
 
 We assume a program ($\beta$) has $K$ as the sensitive input. $K$ should be a
 finite set of keys. The program also takes known messages $M$ as the input. The
-model applies to most cryptosystems. For example, the AES encryption,
-$\beta$ is the encryption function. $K$ is AES key, and $M$ is messages to be
+model applies to most cryptosystems. During an AES encryption, for example, 
+$\beta$ is the encryption function. $K$ is the set containing all AES keys, 
+and $M$ is messages to be
 encrypted. During the execution, an adversary may have some observations ($O$)
 from the program. Examples of those observations include timing, CPU usages, and
 Electromagnetic signals (EM). In this paper, we consider secret-dependent
@@ -117,8 +118,9 @@ Now we present our metric to quantify the amount of leaked information from
 dynamic analysis.
 
 In information theory, the mutual information (MI) is a measure of the mutual
-dependence between the two variables. Here we use MI to describe the information
-dependence between $K$ and $O$, which is defined as:
+dependence between the two variables. Here we use MI to describe the
+dependence between original sensitive keys ($K$) and attackers' observations ($O$), 
+which is defined as:
 
 \begin{equation} \label{eq:1}
     I(K;O) = \sum_{k {\in} K}{\sum_{o {\in} O}{p(k, o)\log_2\frac{p(k, o)}{p(k)p(o)}}}
@@ -149,12 +151,12 @@ memory access patterns ($o$). We come to the simple slogan
 that
 \begin{align*}
      & \mathit{Information\ leakage} =                                         \\
-     & ~~~~~~ \mathit{Initial\ uncertainty} - \mathit{Remaining\ uncertainty}.
+     & ~~~~ \mathit{Initial\ uncertainty} - \mathit{Remaining\ uncertainty}.
 \end{align*}
 
-Now we compare Eq.~(\ref{eq:2}) with the above slogan, we find $H(K)$
+Next we compare the Eq.~(\ref{eq:2}) with the above slogan, we find $H(K)$
 is the $\mathit{Initial\ uncertainty}$ and $H(K|O)$ is $\mathit{Remaining\
-uncertainty}$. During a real attack, the observation ($o$) is known.  We
+uncertainty}$. During a real attack, the observation ($o$) is known.  Thus we
 have $H(K|O) = H(K|o)$.
 
 Therefore, we define the amount of leaked information as
@@ -162,8 +164,8 @@ Therefore, we define the amount of leaked information as
     Leakage = H(K;o) = H(K) - H(K|o)
 \end{displaymath}
 
-For a program ($\beta$) without knowing any domain information, all the sensitive
-input should appear equally. Therefore, for any $k \in K$, $p(k) =
+For a program ($\beta$) without knowing any domain information, all possible sensitive
+inputs should appear equally. Therefore, for any $k \in K$, $p(k) =
 \frac{1}{|K|}$. So we have
 $$H(K) = \sum_{k {\in} K}\frac{1}{|K|}\log_2{|K|} = \log_2{|K|}$$
 For any $k' \in K \setminus K^o$, $p(k'|o) = 0$. We get
@@ -182,11 +184,11 @@ For any $k' \in K \setminus K^o$, $p(k'|o) = 0$. We get
     We denote it as
     $$\beta(K^o, m) \rightarrow	o$$
 
-    The leakage $L_{\beta(k)\rightarrow o}$ based on the observation ($o$) is
+    The amount of leaked information $L_{\beta(k)\rightarrow o}$ based on the observation ($o$) is
     $$L_{\beta(k)\rightarrow o} = \log_2{|K|} - \log_2{|K^o|}$$
 \end{mydef}
 
-With the new definition, if an attacker observes that the code in
+With the definition, if an attacker observes that the code in
 Figure~\ref{fig:password-checker} runs the branch 1, then the $K^{o^{1}} =
 \{\mathrm{``password"}\}$. Therefore, the information leakage $L_{P(k)=o^{1}} =
 \log_2{2^{64}} - \log_2{1} = 64$ bits, which means the key is totally leaked. If
@@ -225,7 +227,7 @@ information in some attack scenarios.
 \end{table}
 \subsection{Our Conceptual Framework}
 \label{side-channel:condition}
-We now discuss how to model the observation (o), which is the direct information
+We now discuss how to model observations ($O$), which are the direct information
 that an adversary can get during the attack.
 
 During the execution, a program ($\beta$) have many temporary values ($t_i \in
@@ -246,10 +248,10 @@ $$\exists k_{i1}, k_{i2} \in K, \,f_i(\beta, k_{i1}, m) \neq f_i(\beta, k_{i2}, 
 
 An adversary can observe which branch the code executes, if the branch condition
 equals to $t_b$. We use the constraint $c_i : f_i(\beta, k, m) = t_b$ to model
-the observation on secret-dependent control-transfers.
+the observation ($o$) on secret-dependent control-transfers.
 
 \subsubsection{Secret-dependent Data Accesses}
-Similar to secret-dependent control transfers, a data access operation is
+Similar to secret-dependent control-flow transfers, a data access operation is
 secret-dependent if different input sensitive keys ($K$) can lead to different
 memory addresses. We use the model from CacheD~\cite{203878}. The low $L$ bits
 of the address are irrelevant in side-channels.
@@ -261,7 +263,7 @@ If the branch condition equals to $t_b$, we can use the constraint $c_i :
 f_i(\beta, k, m) >> L = t_b >> L$ to model the observation on secret-dependent
 control-transfers.
 
-With the above definitions, we can model an attacker's observation by math
+With the above definitions, we can model an attacker's observation by a series of math
 formulas. For example, in Figure~\ref{fig:side-channel}, if an attacker observes
 the code executes the branch 1, we have $c_5: k_1 + k_2 < 8$ to describe an
 attacker's knowledge and $K^{o5} = \{k_1,\, k_2\,|\, (k_1 + k_2) < 8\}$. If an
