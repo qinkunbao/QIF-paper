@@ -2,7 +2,7 @@
 \label{sec:scala}
 
 In \S\ref{sec:trace-qif}, we propose an advanced information leakage definition for
-realistic attack scenarios, model two types of address-based side-channel
+realistic attack scenarios to model two types of address-based side-channel
 leakages as math formulas, and quantify them by calculating the number of input
 keys ($K^o$) that satisfy those math formulas. Intuitively, we can use
 traditional symbolic execution to capture math formulas and model counting
@@ -58,7 +58,7 @@ First, transferring machine instructions into IR is time-consuming. For example,
 REIL IR~\cite{dullien2009reil}, adopted in CacheS~\cite{236338}, has multiple
 transform processes, from binary to VEX IR, BAP IR, and finally REIL IR\@. As IR
 can also introduce additional conditional jump instructions, in order to
-precisely identify secret-dependent control-flows, it alos need to rule out
+precisely identify secret-dependent control-flows, it also need to rule out
 conditional jump instructions introduced by IR.
 Second, IR increases the total number of instructions. For example, x86
 instruction \textit{test eax, eax} transfers into 18 REIL IR instructions. If we
