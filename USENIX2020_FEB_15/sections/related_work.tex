@@ -12,7 +12,7 @@ information
 quantification~\cite{biondi2018scalable,10.1007/978-3-642-31424-7_40,McCamantE2008,5207642,Phan:2012:SQI:2382756.2382791,Chattopadhyay:2017:QIL:3127041.3127044}, 
 and model counting~\cite{wei2005new, gomes2007sampling, gomes2006model, kroc2008leveraging, Chattopadhyay:2017:QIL:3127041.3127044}.
 Here we only present the closely related work to ours.
-Due to space limit, we do not include side channel attack work.
+Due to space limit, we do not include side-channel attacks work.
 
 \subsection{Detection and Mitigation}
 
@@ -28,7 +28,7 @@ indicate the sensitive level of side-channel vulnerabilities.
 CacheSym~\cite{Brotzman19Casym} introduces a static cache-aware symbolic
 reasoning technique to cover multiple paths for the target program. Still, their
 approaches cannot assess the sensitive level for each side-channel
-vulnerability.
+vulnerability does not scale to real-world crypto libraries.
 
 The dynamic approach, usually with taint analysis and symbolic execution,
 can perform a very precise analysis. CacheD~\cite{203878} takes a concrete

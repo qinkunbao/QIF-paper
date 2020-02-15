@@ -108,25 +108,26 @@ aspects:
 
 \subsection{Evaluation Result Overview} \label{sec:eval_overview}
 Table~\ref{table:over_result} shows the overview of evaluation results. \tool{} finds
-883 leakages in total from real-world crypto system libraries. Among those 883
+883 leakages in total from real-world crypto libraries. Among those 883
 leak points, 205 of them are leaked due to secret-dependent control-flow
 transfers and 678 of them are leaked due to secret-dependent memory accesses.
 
 \tool{} also identifies that most side-channel
 vulnerabilities leak very little information in practice, which confirms our
-initial assumptions.  Without our tool, developers will not be able to
-distinguish those ``vulnerabilities'' from severe ones and ignore others for sure easily.
+initial assumptions.  
 However, we do find some vulnerabilities that \tool{} reports with more severe
 leakages. Some of them have been confirmed by existing research that those
 vulnerabilities can be exploited to realize real attacks.
+Without our tool, developers will not be able to
+distinguish those ``vulnerabilities'' from severe ones and ignore others for sure easily.
 
-All tested symmetric encryption implementations in OpenSSL and mbed TLS\@ have significant
+All symmetric encryption implementations in OpenSSL and mbed TLS\@ have significant
 leakages due to the lookup table to speed up the
 computation. Every leakages found during the evaluation belong to the type of
 secret-dependent memory accesses. \tool{} finds several leakage sites for both 
 implementations of DES and AES in
 OpenSSL and mbed TLS\@. \tool{} confirms that all those leakages come from table
-lookups. mbed TLS 2.15 and 2.5 have the same implementation of DES and AES so
+lookups. mbed TLS 2.15 and 2.5 have the same implementation of both DES and AES, so
 they have the same leakage report. One proper fix would be a scalar bit-sliced
 implementation. However, we do not see the bit-sliced implementation of AES and
 DES in various versions of OpenSSL and mbed TLS\@. However, we find the new
@@ -188,7 +189,7 @@ number of instructions. For example, when we test~\tool{} on AES from OpenSSL
 0.9.7, ~\tool{} is over %more than
 100x faster than CacheD.
 
-Since DATA~\cite{217537} compares several execution traces to identify
+Since DATA~\cite{217537} need to compare several execution traces to identify
 side-channel leakages, \tool{} also outperforms DATA in terms of performance.
 For example, it takes 234 minutes for DATA to analysis the RSA of implementation
 in OpenSSL 1.1.0f. \tool{} only spends 34 minutes according to Table~\ref{table:over_result}.
@@ -310,17 +311,17 @@ As presented in Figure~\ref{fig:rsa},
 OpenSSL 0.9.7 has several severe leaks from
 function \textsf{bn\_sqr\_comba8}, which is a main 
 component of the OpenSSL big number implementation.
-The value of the function parameter \textbf{a} is derived from
-the secret key. 
 Shown in Figure~\ref{fig:old_sqr2}, it has a 
 secret-dependent control flow at line 8.
+The value of the function parameter \textbf{a} is derived from
+the secret key. 
 As function \textsf{bn\_sqr\_comba8}
 calls the macro (\textsf{sqr\_add\_c2}) multiple times, 
-and the code will leak some information each times.
+and the code can leak some information each times.
 \tool{} thinks the vulnerability is quite serious. 
 The vulnerability has been patched in OpenSSL 1.1.1. Seen in 
-Figure~\ref{fig:new_sqr2}, control-flows transfers are replaced
-with bitwise operations. So there is no leaks in the function
+Figure~\ref{fig:new_sqr2}, control-flows transfers are replaced. 
+So there is no leaks in the function
 \textsf{sqr\_add\_c2} in OpenSSL 1.1.1. We also mention
 that even line 4 and 9 in Figure~\ref{fig:old_sqr2} both have if branches.
 However, it is not a secret-dependent control-flow transfers because
@@ -334,9 +335,9 @@ Developers are more reluctant to fix them.
 For example, OpenSSL 0.9.7 adopts a fixed windows version of 
 function \textsf{BN\_mod\_exp\_mont\_constime} to replace original function
 \textsf{BN\_mod\_exp\_mont}.
-However, \tool{} detects a minor vulnerability in the function that can
+\tool{} detects a minor vulnerability in the original function that can
 leaks the last bit of the big number \textbf{m}. In the updated version,
-developers make the fixed windows become the default option and rewrite part of the 
+developers make the fixed windows become the default option and rewrite most parts of the 
 function. However, the vulnerability still exits in OpenSSL 1.1.1,
 despite the vulnerability is blunt. Details of the 
 vulnerability can been seen in Appendix\S~\ref{appendix:minor:vul}.
@@ -392,8 +393,8 @@ Table \ref{tab:RSAOpenSSL1.1.1}.
 \subsubsection{Monocypher}\label{eval:mono}
 Monocypher is a small, easy to use cryptographic library with a
 comparable performance as LibSodium~\cite{libsodium} and NaCl~\cite{bernstein2012security}. 
-We choose four ciphers from the library that are 
-designed to be more side-channel resistant.
+We choose four ciphers that are 
+designed to be more side-channel resistant from the library.
 Because those ciphers have no 
 data flow from secrets to branch conditions and load addresses.
 Therefore, Monocypher should be safe under our threat models. 
