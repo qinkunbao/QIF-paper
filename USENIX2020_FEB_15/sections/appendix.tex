@@ -205,7 +205,7 @@ Shown in Table~\ref{tab:RSAOpenSSL1.1.1}, \tool{} discovers a series
 of side-channel vulnerabilities in the up-to-date version of OpenSSL library. 
 However, many of them are negligible quantified by \tool{}.
 Here we present a unknown vulnerability. Despite the following
-vulnerability leaks through the same code patterns as the vulnerability shown
+vulnerability leaks through the same code patterns at line 3 as the vulnerability shown
 in \S\ref{appendix:minor:vul}, \tool{} shows the following code can leak
 around 15 bits from the original key.
 \label{appendix:unknown}
@@ -219,16 +219,16 @@ while (!BN_is_bit_set(B, shift)) { /* note that 0 < B */
             goto err;
     }
     ...
-    if (!BN_rshift1(X, X))
+    if (!BN_rshift1(X, X))  // It causes the leak severe!
         goto err;
+    ...
 }
-
 \end{lstlisting}
     \vspace*{-6pt}
     \caption{Unknown sensitive secret-dependent branch leaks from function 
              \textsf{int\_bn\_mod\_inverse} in OpenSSL 1.1.1. Same as the example
              in \S\ref{appendix:minor:vul}, the code can leak the last digit from
-             big number \textbf{X}. However, the leak is more sensitive because of the 
+             big number \textbf{X}. However, the leak is more severe because of the 
              function \textsf{BN\_rshift1}. Each time function \textsf{BN\_rshift1}
              will shift \textbf{X} right by one and places the result in \textbf{X}. Therefore,
              an attacker can infer multiple bits of \textbf{X} by observing the branch at line 3.}
