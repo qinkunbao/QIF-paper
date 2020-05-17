@@ -1,0 +1,64 @@
+\section{Discussions and Limitations}
+While recent works have reported lots
+of potential side-channel vulnerabilities, we find most of them are not patched by
+developers because they do not think those vulnerabilities are severe enough.
+However, side-channels are inevitable in software. In fact, many of them
+are easily spotted but it is hard to fix all of them. They need a
+tool that can automatically estimate the sensitive level of each vulnerabilities.
+Second, addressing old vulnerabilities may also introduce new leakage
+sites. Our evaluation result confirms that many of them are not 
+severe and can be safely ignored. So software engineers can focus on
+``severe'' leakages. For example, our tool will report that 
+the modular exponentiation using square and multiply algorithms can
+leak much information than a key validation function.
+
+\tool{} can be used by software developers to find sensitive vulnerabilities
+and reason about countermeasures.
+\tool{} estimates the amount of leaked information for each side-channels
+in particular executions. \tool{} is useful for software
+engineers to tests programs and fix vulnerabilities.
+\tool{} works on native x86 execution traces. The design, which is very
+precise in terms of true leakages compared to other static source code
+method~\cite{197207,BacelarAlmeida:2013:FVS:2483313.2483334}, can omit
+leakages on other traces. However, as the tool is intended for debugging and testing.
+we think it is software engineers' responsibilty to select the input and trigger the 
+path in which they are interested.
+
+We use the amount of leaked information to represent the sensitive level of each
+side-channel vulnerability. Although imperfect, \tool{} produces a reasonable
+measurement for each leaks. For example, the simple modular exponentiation is notoriously
+famous for various side-channel attacks~\cite{kocher1996timing}. During the execution, the single 
+leak points will be executed multiple times and each times it leak one different bit.
+Therefore, \tool{} reports the vulnerability can leak the whole key. However, not every
+leak point inside a loop is serious. Because very often the leakages may leaks the same
+bit in the original key and each leaks are not independent. \tool{} can capture the most 
+fine-grained information by
+modeling each leak during the execution 
+as a math formula and uses the conjunction of those formulas to describe the total effect.
+
+%% At the early stage of the
+%% project, we hope to find some sensitive leakages but are neglected by
+%% communities for years. But somehow every sensitive leakages identified by
+%% \tool{} are known to people before. We think the main reason is that we only
+%% test famous crypto algorithms in well-known crypto libraries. Those code bases
+%% have been studied for years. So it is unlikely to have unknown sensitive
+%% leakages.
+%% We leave the task of applying \tool{} on other libraries and
+%% non-crypto libraries in the future.
+%
+
+%\tool{} works on the native x86 instructions, while some existing
+%works~\cite{197207,BacelarAlmeida:2013:FVS:2483313.2483334} find side-channels
+%vulnerabilities from source code level or intermediate languages (e.g., VEX,
+%REIL). Apart from the scalability issues for IR implementations, \tool{} is
+%designed to work on the native x86 instructions for the following
+%considerations. First, compliers can introduce or mitigate side channels
+%vulnerabilities. For example, the GCC compiler may or may not translate the $!$
+%operator into conditional branches. If the branch is secret-dependent, the
+%attacker could learn some sensitive information. However, source-based methods
+%fail to know how those the machine code looks like, which leads to false
+%positives or false negatives.  
+%Second, we find many crypto libraries have lots of inlined assembly code. In
+%general, it is hard to convert assembly code into source code or IR.
+
+
