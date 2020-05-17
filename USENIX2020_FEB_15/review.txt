@@ -1,0 +1,468 @@
+USENIX Security '20 Winter Paper #74 Reviews and Comments
+===========================================================================
+Paper #74 Abacus: Precise, Scalable, and Fine-grained Side-channel
+Information Leakage Quantification for Production Software
+
+
+Review #74A
+===========================================================================
+
+Review recommendation
+---------------------
+3. Major revision
+
+Writing quality
+---------------
+2. Needs improvement
+
+Reviewer interest
+-----------------
+3. I would definitely go to this talk and tell my students or colleagues to
+   read this paper
+
+Reviewer expertise
+------------------
+3. Knowledgeable
+
+Paper summary
+-------------
+The paper presents a method for scalable side-channel analysis on production software, dubbed Abacus.
+It combines dynamic trace recording with symbolic execution to collect constraints on potential leakage.
+To reduce analysis time of the collected constraints, the paper applies approximate model counting via monte-carlo sampling.
+An initial discussion on quantification of side-channel leakage clarifies how to properly compute leakage metrics that are practically relevant, as opposed to previous work.
+
+Strengths
+---------
+* The paper addresses an open problem of precise and automated quantification of side-channel leakage for production software
+* Application of sampling to reduce the cost of side-channel analysis is an interesting idea and seems to work in practice
+* The presented definition of the amount of leakage is more useful than those used by static approaches.
+* The evaluation was done across multiple versions of the same libraries
+
+Weaknesses
+----------
+* Abacus does not address non-deterministic behavior which makes it less applicable to state-of-the-art programs that use blinding (e.g. OpenSSL ECDSA).
+* The presented method seems to introduce false positives, contrary to the claims. In general, I see some overstatements, especially about precision. Also, the evaluation of Abacus' precision is insufficient.
+* Some important details are missing. 
+* Grammar needs improvement
+* Discussion of responsible disclosure is missing. Though, I suspect there were no relevant vulnerabilities discovered which were not already reported by others.
+
+Detailed comments for authors
+-----------------------------
+I appreciate the work done with Abacus as a step forward in automating side-channel analysis. Please consider making the tool available online. Especially, many other tools in this field are put online by the authors to promote further research (e.g., CacheAudit, DATA, MicroWalk ...).
+
+For acceptance, there are some issues that need to be addressed, though.
+* Abacus reported a seemingly impossible side-channel vulnerability in Appendix E, which leaks whether the public modulus is even or not. To my understanding, it shall be impossible to trigger this *vulnerability* by sampling the private key. It seems that either the underlying sampling method looses precision, or the symbolic execution was imprecise, or that some non-determinism was involved (e.g., randomness). Since precision is the main selling point of Abacus, this definitely needs to be addressed in the paper before being accepted for publication. It might well be that Abacus does not reach full precision, which is ok in my opinion, but the paper should be consistently clear about it.
+* Regarding precision, the paper states that sampling introduces an error of 1 bit at max (with 95% confidence). However, this only relates to sampling a single constraint. I am missing a discussion on how this error sums up to a whole formula with multiple sampled constraints. Also, the evaluation should reflect this cumulative error for each leakage point, especially since precision is a main goal of Abacus. Related to that: the statement that "[...] we do not need to have a very precise result  [...] since the information is defined with a logarithmic function" is only intuitive for a high number of solutions. It starts to fail the smaller the number of solutions becomes. 
+* I am missing an evaluation on the absolute precision of Abacus. It should be doable to benchmark Abacus against some side-channel vulnerabilities for which the ground truth leakage in bits is known.
+* Section 7: I do not buy the claim that Abacus "[...] is very precise [...] compared to [...] [42,43]". It is an estimation-based approach, whereas [42,43] give formal guarantees. Maybe the comparison is unlucky because [42] does not attempt to quantify the amount of leakage but prove its absence. Probably, the paper should distinguish precision in terms of false positives vs. precision in terms of the number of bits leaked.
+* It is unclear how Abacus gets informed about what the secret is. Does the developer need to annotate the secret in the source code or the binary, or via a wrapper program/script? Also, how is the secret propagated? (Taint tracking, etc.) How does the symbolic execution engine know which instructions are affected by the secret key? Was the same method used as for CacheD? Please give more details.
+
+Smaller issues:
+* I like the discussion about leakage quantification in Section 2.2 and Section 3.3. Yet, I would expect more than one citation in Section 3.3. E.g., Chattopadhyay [33] at least mentions the same issue of max-entropy, although not fleshed out in full detail.
+* The introduction could give the impression that model counting with sampling is a novel contribution of the paper. The enlighting discussion about related work in Section 8.3 comes a bit late. Please consider adding one or two references in the Intro already. 
+* Section 7: It is unclear how Abacus reports that the RSA vulnerability can leak the whole key. The highest number reported in Table 4 is 17.2 bits. Did Abacus collapse multiple invocations of the same leak (e.g., leakage in a loop) into one leakage metric? I could not find this being mentioned in the paper. I rather suspect there was human interpretation involved, which is totally ok. But if so, please re-phrase this statement.
+* In Section 2.1 the discussion about different leakage granularities is missing (cf. byte address side-channel vs cache-line side-channel). Examples for sub-cache-line attacks are CacheBleed by Yarom et.al. and CopyCat by Moghimi et.al. This bites back in the threat model where the leakage granularity is not specified, and in Section 3.4.2 where the choice of L is unclear. Which granularity was used for the evaluation?
+* Section 2.2: The Shannon entropy should use log2(p(k)) instead of log2(k)
+* Section 3.1 Figure 4: While the leakaged information can be as large as 64 bits, this only occurs with probability 2^-64 via random guessing, making the vulnerability uncritical. On the other hand, strcmp likely leaks the number of matched characters. Maybe there's a better example here?
+* The example in Figure 3 is illustrative but misses integer overflows/underflows. Table 1: The number of solutions do not sum up to 65536.
+* For the evaluation it is unclear whether the reported execution times are single-core, or whether multi-processing was used on the 8-core Xeon CPU.
+* In Section 6.2, a comparison between other tools is given. I have the following requests:
+  i) Abacus is compared against CacheD but not against the more recent CacheS, which is capable of detecting control-flow leaks. Please also compare against CacheS [19].
+  ii) Abacus is compared against DATA, however, in a hasty way. DATA takes 55min for difference detection, which is comparable to Abacus' 34min for symbolic execution. DATA takes 61min for leakage detection in non-deterministic programs. Abacus can only analyze deterministic programs. DATA takes another 94min for leakage classification, which is somewhat comparable to Abacus' Monte Carlo sampling, which takes 501min! Please clarify these distinctions more thoroughly.
+  iii) During leakage classification, DATA uses leakage models (domain knowledge) that also might report how many bits are leaked for each vulnerability, depending on the chosen leakage model. The strength of Abacus is that it does not need such domain knowledge. Out of interest, did Abacus find the two RSA vulnerabilities reported by DATA?
+* Section 8.1: MicroWalk [17] can very well detect secret-dependent memory accesses. Please clarify this.
+* In section 6.1. the authors state that they could not see a bit-sliced AES implementation in OpenSSL. Depending on the build configuration, OpenSSL provides an AES bit-sliced implementation, which was analyzed in [16].
+* Please fix Algorithm 1: In its current description, I find it completely unclear why and how this algorithm computes the *maximum* independent partition, and not any other partition.
+  In particular: i) The initial value of G and g_j is missing, and g_xi_i is unspecified.
+  ii) if G starts empty, nothing will be inserted. There needs to be an insertion after the loop (line 11)
+  iii) It is unclear how xi_i is inserted in G. Is a new entry in G created? Or is xi_i appended to an existing entry?
+  Also, please re-check Algorithm 2 for semantic errors.
+* It seems that Algorithm 2 line 18 should have 8*(1-p)/p as terminating condition, following formulas on page 8, bottom right.
+* Section 6.3.1: Appendix 10 does not exist
+* Please reference Figure 13 in Appendix F, and make sure that all Figures are at least referenced once.
+* The leakage presented in Figure 13 is not new and was discussed in [a,b].
+* The paper has quite a few grammatical errors, especially in Section 6 and 7. There are good grammar checkers available, e.g., https://www.grammarly.com/
+
+[a] https://doi.org/10.13154/tches.v2019.i4.213-242
+[b] https://doi.org/10.1145/3196494.3196524
+
+Requested changes
+-----------------
+* Give proper reasoning why Abacus is precise. This should include i) a discussion why the used symbolic execution method is precise (currently missing), ii) why sampling is precise (how do errors accumulate when more than one constraint is sampled...) and iii), some controlled experiments for which the amount of actual leakage is known as a ground truth.
+* See the other points mentioned above
+
+Questions for authors' response
+-------------------------------
+* Please shed some more light on above issues with respect to Abacus' precision.
+* Please elaborate on responsible disclosure of sensitive vulnerabilities.
+* Do the authors plan to make the tool (not only the reports) publicly available?
+
+
+
+Review #74B
+===========================================================================
+
+Review recommendation
+---------------------
+3. Major revision
+
+Writing quality
+---------------
+3. Adequate
+
+Reviewer interest
+-----------------
+3. I would definitely go to this talk and tell my students or colleagues to
+   read this paper
+
+Reviewer expertise
+------------------
+3. Knowledgeable
+
+Paper summary
+-------------
+This paper presents Abacus a tool for finding side-channel leaks in crypto code
+that quantifies the amount of information is actually leaked. Compared to
+previous approaches, the quantification is not simply Shannon entropy or max
+entropy, but a more meaningful information leakage. In particular the
+information leakage is something closer to attacker knowledge definitions used
+in information flow control systems. This definition is interesting because it
+serves as a proxy for how serious a leak actually is and can thus guide
+developers to fixing (or not) a particular leak.
+
+The authors evaluate their tool on several benchmarks, including
+implementations of DES, AES, and RSA from several libraries and the core
+primitives from Monocypher.
+
+Strengths
+---------
++ New definition of information leakage
++ Mathematical details relatively accessible
+
+Weaknesses
+----------
+- Missing design/implementation details
+- Paper boasts practical but evaluates on relatively standard primitives
+
+Detailed comments for authors
+-----------------------------
+Overall this is a nice paper. I found most parts easy enough to understand, but
+the core details of the tool need to be made more accessible to the USENIX
+Security audience. In particular, it would be good to use crypto example not
+simple examples where the leakage is obvious. It's good to have one that's
+simple, but to trust that this approach works something more complicated would
+go a long way.
+
+My biggest concern with this paper is that it's really boasting about being
+practical, but the examples are classical DES, AES, and RSA primitives. This is
+frankly not that interesting; we have tools that work on these and the paper
+has not shown any more evidence that developers care about the leaks Abacus
+finds. Since you have a tool that scales to lots of code why not go beyond
+crypto primitives to check modes that have previously been buggy or even go
+beyond crypto?
+
+I would like to see an evaluation that goes beyond the standard known culprits.
+
+
+- Certain attacks (e.g., on ECDSA) are easier to carry out when certain bits
+  are leaked. As far as I can tell your model would not capture this; isn't
+  this another notion of "serious" leak?
+
+- Theorem 1: I'm having a hard time understanding where the partitions are
+  actually empty for a reasonable symmetric primitive. Some intuition for why
+  this works would be great. I can see it for the password checking example,
+  but after a single round this seems nonintuitive for real crypto.
+
+- Are you using QSYM? How are you doing the symbolic execution? I found lots of
+  missing details here and have no clue how to reproduce the work.
+
+  For example, I am still confused by "symbolic execution on each instruction"
+  and "only symbolically executes the instruction that might be affected by the
+  input key" How is not modeling the rest of the environment not leading huge
+  to false positives? And as I asked above, how is this not basically every
+  instruction after like one round?
+
+- How do you know what's secret? This was not clarified.
+
+- You assert that developers ignore leaks that are not severe but somehow take
+  severe ones into account. I think you should support this with evidence. My
+  experience with another TLS implementation is the contrary.
+
+- pg 10: timeout indicating severe leakage: can you explain why that's the case?
+
+
+Minor
+
+- Pg 4: for a single run isn't it actually 1 bit that's leaked?
+
+- Other relevant paper to your definition of leakage:
+   
+@InProceedings{AskarovC12,
+  author = 	 {Aslan Askarov and Stephen Chong},
+  title = 	 {Learning is Change in Knowledge: Knowledge-based Security for Dynamic Policies},
+  booktitle =	 {Proceedings of the 25th {IEEE} Computer Security Foundations Symposium},
+  year = 	 2012,
+  month = 	 jun,
+  pages =	 {308--322},
+  publisher =    {IEEE Press},
+  address = 	 {Piscataway, NJ, USA}
+}
+
+- Related work on mitigation is missing more relevant papers like ct-verif and
+  IODINE (both USENIX Security) on the software and hardware side, respectively.
+
+Requested changes
+-----------------
+- Extend evaluation or tone down practicality
+- Add implementation details
+- Make writing more widely approachable
+
+
+
+Response by Qinkun Bao <qub14@ist.psu.edu>
+---------------------------------------------------------------------------
+We thank reviewers for their constructive comments.
+
+### Reviewer A: 
+
+(1)
+Abacus reaches full precision if the number of estimated leaked bits equals Definition 1. According to the threat model, the length of the secret is known, so the only estimated value is the number of possible secrets under the attacker’s observation ($|K^o|$).
+
+When secrets are loaded into the memory, Abacus starts to interpret each instruction symbolically. We only treat secrets as symbols ($s$). For other variables, we use concrete values ($c$) from execution. We then run symbolic execution on every instruction because we do not know which instruction may or may not be affected by secrets until we run it. For example, we have an add instruction. If both operands are concrete values (the instruction is not affected by the secret key), we just run an integer add (considering overflow). If one operand is a symbol, but the other one is a concrete value, we get a new symbol represented as a formula ($c + s$). If both operands are symbols, we can also get a new symbol ($s_i + s_j$). Abacus may lose precision from the memory model it uses in theory. However, we do not find false positives caused by the imprecise memory model during the evaluation. 
+
+Samplings can also introduce imprecision but with a probabilistic guarantee. Constraints with different inputs are independent. So the sum of errors still satisfies CLT. That is what we did for Algorithm 1. For Algorithm 2, we use the conjunction of those constraints to estimate errors. In other words, we are dealing with one constraint in Algorithm 2, although our method can ensure we have a high possibility to get a point that satisfies the constraint. 
+
+(2)
+Could you please share with us those benchmarks whose leakage in bits is known?  We wrote many small programs like the examples in the paper, Abacus passes tests for those programs by manual checks. 
+
+(3)
+We didn’t inform developers about those issues before the submission. After we received your comments, we informed both OpenSSL and mbedTLS developers of our found vulnerabilities. We are waiting for their response.
+
+(4)
+Yes, we are happy to make Abacus open source when the paper is published.
+
+(5)
+Appendix E reports two vulnerabilities. For OpenSSL 0.9.7, it leaks one-bit from rsa->q passed by function RSA_eay_mod_exp (line 763). For OpenSSL 1.1.1, it leaks one-bit from rsa->n because we mistakenly include n as secret for that version in the early setting. We didn't mark n as secrets in other versions of RSA in the following experiment. When we remove the annotation of n, Abacus does not report it is a leak for OpenSSL 1.1.1. Thanks for catching the error.
+
+
+### Reviewer B: 
+
+(6)
+We evaluate Abacus on classical crypto primitives to follow recent works (e.g., CacheD, MicroWalk and CacheS). We agree that it is interesting to extend the work to other applications. We are going to address the problem from the following aspects:
+
+* Extend the evaluation on more crypto primitives. Since Reviewer A and Reviewer B both mention ECDSA, we did a quick run on ECDSA. We found some known vulnerabilities in mbedTLS, including one just fixed two months ago! We will include the results in the revision.
+
+* We have some results for wget and some media libraries. We plan to report these results in our future work.
+
+* We are going to tone down the selling point “practicality”.
+
+(7)
+We will release the tool so everyone can reproduce the result. Some details are omitted to meet the page-limit. We’d be happy to elaborate more in the future revision.
+
+- We build a dynamic symbolic execution engine from scratch. The implementation is conceptually similar to CacheD but we do not use taint analyses and domain knowledge to simplify the analysis because symbolically interpreting can be as fast as applying taint rules on each instruction. 
+
+- Secrets. Developers should tell Abacus which variables are the secret. It can be done either by adding an annotation on the source code or telling Pin tool the address and the length of secrets.
+
+(8)
+We will polish the whole paper and add citations to the literature pointed out.
+
+
+
+Review #74C
+===========================================================================
+
+Review recommendation
+---------------------
+2. Reject and resubmit
+
+Writing quality
+---------------
+2. Needs improvement
+
+Reviewer interest
+-----------------
+2. I might go to a talk about this
+
+Reviewer expertise
+------------------
+3. Knowledgeable
+
+Paper summary
+-------------
+The paper presents Abacus - a framework for identifying code locations vulnerable to microarchitectural side channel attacks.  It offers two main contributions over past works.  The first is improved performance, both in execution time and in coverage.  The second is the ability to estimate the size of the leakage.
+
+Strengths
+---------
+* Important research area
+* Improved performance
+
+Weaknesses
+----------
+* I am not convinced of the correctness and the relevance of the estimation of leakage size
+
+Detailed comments for authors
+-----------------------------
+Thank you for submitting your work to USENIX Security.  I find that the paper addresses an important problem, but I am not sure that the estimate of leakage is relevant or that it is correct.  Part of the issue is that I am not very clear about how the amount of leakage is determined.  However, more importantly, I think that the amount of leakage at each point is a wrong measure.
+
+**Determining Leakage**  
+From the description in Section 3, it seems that the calculated leakage depends on the observation.  For example, Table 2 presents the calculated leakage for each possible observation.  The section does not discuss the amount of leakage from a code location independent of the observation - e.g. how much information leaks from Line 5 of Fig 3.   As such, I do not understand how the number of leaked bits presented, e.g. in Table 11, are calculated.  That is, when the paper claims that Line 200 in bn_lib.c leaks 15.6 bits, what does that mean?  There is no observation there. 
+
+**Correctness**  
+The suggested approach may fail to recognize some leakage.  One cause is the definition of leakage as something that depends on the secret key.  This will fail to detect the leakage when the probability of leakage is small. Examples include cache-based Bleichenbacher attacks on RSA [A], or special group elements in ECC [B].
+
+**Relevance**  
+I am not convinced that the information on the number of bits leaking from a location is even relevant.  There are many cases where leaks of a single or a low number of bits can be augmented to complete key break.  See, for examples, [C],[D],[E]
+
+**Other**  
+The numbers in Tables 1 and 2 are incorrect.  First, the number of solutions does not adds up to 65536.  Second, because t1 and t2 are uint8_t, their values are always in the range [0-255].  In particular, the function B is executed in 255 out of 256 cases.
+
+Ignoring the 6 LSBs means that Abacus cannot protect against attacks with sub-cache-line granularity, such as [26]
+
+**Typos and minor errors**  
+* The paper contains a large number of minor errors in English.  I suggest having it proofread.  I only mark some of them
+* Abstract: Side-channel allows --> Side-channel allow  (or A side-channel allows)
+* Abstract: fined-grained --> fine-grained
+* Abstract (and other places): Mbed TLS --> mbedTLS
+* Introduction: 2,246 potential leakage site --> sites
+* Introduction: We systematically exam --> examine
+* Introduction: Also, we also --> We also
+* Section 2.1: it requires the attacker and the victim share the same memory address space --- the attacker and victim only need to share some memory not the address space.  Also, "....to share ..."
+* Section 2.2: according to the cache associativity, the low 6 bits of the address is irrelevant --- cache associativity has nothing to do with that.
+* Section 3.1: the password checker will take an 8-byte char array --- It needs at least 9 bytes to store "password", including the terminating NUL character
+* Section 3.4.2: If the branch condition --- in secret-dependent data accesses there need not be a branch
+* Section 4.1.1: Interprete --> Interpreted
+* Section 4.1.1: I am not convinced we can simply assume that the timing of symbolic execution is constant per instruction across multiple instruction sets.
+* Section 5.2: If there are no fundamental difficulties in supporting 64-bit architectures, why not do that?
+* Section 6: use use
+* Bad capitalization in multiple references, including [5] Rsa --> RSA, [21] rsa-->RSA, crt-->CRT, and many more
+* [18] - asterisks near authors; names
+* [20], [55]: Kopf --> Köpf
+* [11] = [27], [22] = [28]
+
+**References**  
+[A] E. Ronen et al. "The 9 Lives of Bleichenbacher’s CAT:New Cache ATtacks on TLS Implementations", SP 2019
+[B] D. Genkin et al. "May the Fourth Be With You: A Microarchitectural Side Channel Attack on Several Real-World Applications of Curve25519", CCS 2017
+[C] O. Acıiçmez and W. Schindler, "A Vulnerability in RSA Implementations Due to Instruction Cache Analysis and Its Demonstration on OpenSSL", CT-RSA 2008
+[D] N. Benger et al. " "Ooh Aah... Just a Little Bit" : A small amount of side channel can go a long way", CHES 2014
+[E] I. Dinur and A. Shamir. "Side Channel Cube Attacks on Block Ciphers"ePrint 2009/127, 2009.
+
+Requested changes
+-----------------
+Better identify the limitations of the approach.
+
+Better motivate the relevance of measuring the leakage.
+
+
+
+Review #74D
+===========================================================================
+
+Review recommendation
+---------------------
+2. Reject and resubmit
+
+Writing quality
+---------------
+4. Well-written
+
+Reviewer interest
+-----------------
+3. I would definitely go to this talk and tell my students or colleagues to
+   read this paper
+
+Reviewer expertise
+------------------
+4. Expert
+
+Paper summary
+-------------
+The paper proposes an automatic tool that kind find side channel leakage in cryptographic code.  Moreover, using mutual information calculations this tool aims at providing realistic upper bounds on the amount of leakage, to allow the users to decide if this leakage should be fixed or not.
+
+Strengths
+---------
+* The paper tries to address an important problem. Side-channels mitigation can be very costly, and it is hard for developers to find the right trade-off between performance and security. 
+* The paper is well written and easy to follow.
+
+Weaknesses
+----------
+* I think that information-theoretic approach such as mutual information is not suitable to understand the severity of side channels in crypto, and might only be suitable for simple examples like password checks.  
+
+* The paper uses random secret values as inputs to branches to find dependents. However, this will miss many real-world examples with very low random probability but are trivially accessible to attackers.
+
+Detailed comments for authors
+-----------------------------
+* I think that mutual information is not a useful metric for side channels. For example, given a single plaintext and ciphertext for AES128 I have all the necessary information to recover the key without any leakage. The real question is do I have an efficient algorithm to do it.
+For example, if I leak 1 bit of information for each random nonce used for every 256 bits ECDSA signature,  it is not exploitable. However, if the leakage grows to 4 bits, using lattices, it is easy to recover the secret key. 
+
+* I think that the solution for C3 challenge of constraint solving is not suitable for many cases. For example, a common vulnerability was an optimization for big number multiplication, which skipped a part of the calculation if a 32bit value was 0. This branch will not be found by using random values but can be reached by an attacker in many scenarios.
+
+I find the example given in section 2.2 misleading. In most examples I can think of, branches that are based only on key values (e.g., group element exponentiation) the distribution is uniform.  Nonuniform distribution of branches, usually occurs when a user or attacker-controlled data is incorporated (e.g., Lucky13 and Bleichenbacher).  In the first case, all entropy metrics are the same. In the second case, the entropy calculation is misleading because the attacker's goal is to find the best strategy to repeatedly run the attack to learn as much information as possible (as is mentioned in section 3).
+
+"Hence according to the cache associativity, the low 6 bits of the address is irrelevant in causing those cached-based side-channels." - This might not always be true—for example, the Cachebleed attack.
+
+
+Minor:
+"let alone hte majority..."
+"could be much severe"
+
+Requested changes
+-----------------
+* Compare your work with similar trace-based papers such as "Big Numbers - Big Troubles: Systematically Analyzing Nonce Leakage in (EC)DSA Implementations"
+
+* Provide concrete examples of known attacks, where the knowledge of the number of bits leaked can be used to decide if leakage should be fixed or not, and how your approach is better for those specific use cases.
+
+
+
+Review #74E
+===========================================================================
+
+Review recommendation
+---------------------
+2. Reject and resubmit
+
+Writing quality
+---------------
+4. Well-written
+
+Reviewer interest
+-----------------
+2. I might go to a talk about this
+
+Reviewer expertise
+------------------
+3. Knowledgeable
+
+Paper summary
+-------------
+The paper presents Abacus, a framework for finding side channel attacks in cryptographic libraries. After arguing that previous techniques are only able to give an upper bound on side channel leakage, the paper shows a framework based on symbolic execution to find microarchitectural side channels. Next, the authors use random testing and SAT solving to evaluate the number of bits leaked from the side channel. Finally, the paper contains an evaluation of Abacus on several cryptographic libraries, showing several missed side-channel vulnerabilities.
+
+Strengths
+---------
++ The paper is very well written and clearly explains the problem and its solution. 
++ The use of the Monte Carlo algorithm to approximate the leakage is novel, I consider that to be the paper’s main contribution. 
++ The paper shows leakage of many cryptographic libraries. The fact that Abacus identified previously undetected leakage in recent cryptographic libraries further adds strength to the paper’s result.
+
+Weaknesses
+----------
+-	The paper only evaluates for cache channels, there are plenty of other channels out there (EM, power, Rowhammer, Transient execution) and while the paper mentions some of them, no evaluation is shown.
+-	The case for why quantifying the leakage is important is not convincing. I do not find the triage motiviatio the paper mentions as sufficient. 
+-	I suspect that some of the vulnerabilities found are on code that does not run in practice (eg., Table-based AES). 
+-	Despite claiming to find vulnerabilities in current versions of cryptographic libraries, the paper does not demonstrate that the vulnerability found by Abacus can be exploited.
+-	Abacus only considers the most basic cryptographic primitive (AES, RSA) and ignores vulnerabilities in the protocol layer above it.
+
+Detailed comments for authors
+-----------------------------
+First of all, the paper is very well written and very clearly explains the problem considered. I think that mitigating side channel attacks is important, and the paper takes a first step in this direction by helping developers to find them. I also like the use of the Monte Carlo algorithm to estimate the number of bits that might leak, but I am worried that such an approach might miss hard-to-find cases, such as those the use chosen inputs to trigger the attack. Next, the fact that the authors evaluate multiple libraries is nice, and ads strength to the paper’s result. Finally, the fact that Abacus found previously undetected leakage in modern versions of OpenSSL is concerning, and is further contribution.
+
+The above said, I do have concerns regarding the paper’s results. First and foremost, while the authors mention many libraries, they test only three (OpenSSL, MbedTLS and Monocyper), and do not mention the letter version of OpenSSL 1.1.1. Given the argument of automatic detection, I expected to see more libraries tested here. Next, while I understand the problem of #SAT being hard complexity wise, I am worried that the Monte-Carlo approach taken might miss many vulnerabilities, especially those that require chosen inputs. 
+
+Moreover, the vulnerabilities identified with Abacus are a bit blunt and well known, which limits the paper’s impact. I also suspect that the authors ran analysis and counted vulnerabilities in code that does not actually ran as, to the best of my knowledge, there is no scenario that a modern 64-bit machine will run a table based AES or leaky RSA. Finally, the paper argues that Abacus had identified previously-unknown leakage in OpenSSL 1.1.1. Assuming this is the latest version (e.g., 1.1.1g, as the letter version is consistently omitted), showing an end-to-end key extraction attack on a used cryptographic primitive (e.g., not DES) using code that is actually running will make the paper much stronger.
+
+Requested changes
+-----------------
+For the next version, please improve the following:
+1.	Argue why a precise quantification (in terms of the number of bits leaked) is impotent. The current arguments in the paper are not convincing.
+2.	Evaluate Abacus on more libraries as opposed to just OpenSSL, MbedTLS and Monocypher. The paper mentions WolfSSL and others
+3.	For the vulnerabilities that were found, please make sure these have scenarios where the code is actually running as opposed to legacy code that is not actually used.
+4.	Given that Abacus identified previously unknown leakage, please show end-to-end attack or argue otherwise how the key can be extracted.
+5.	Consider discussing vulnerabilities beyond the pure cryptographic primitives, such as side channel attacks on TLS in general, for example side-channel visible padding oracles.
