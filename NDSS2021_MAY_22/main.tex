@@ -333,7 +333,59 @@
 % Read the url.sty source comments for usage information. Basically,
 % \url{my_url_here}.
 
+\usepackage{listings}
+\usepackage{epsfig}
+\usepackage{url}
+\usepackage{cite}
+\usepackage{fancybox}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{tikz}
+\usepackage{multirow}
+\usepackage{balance}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{subfig}
+\usepackage[ruled,linesnumbered]{algorithm2e}
 
+\usepackage[scaled]{beramono}
+\usepackage[T1]{fontenc}
+
+\usepackage[english]{babel} % handle hyphenation
+
+\usepackage{amssymb}
+
+\let\oldemptyset\emptyset
+\let\emptyset\varnothing
+
+\lstset{
+numbers=left,
+frame=single,
+language=C,
+basicstyle=\fontfamily{fvm}\scriptsize,
+showlines=true
+%xleftmargin=.2\textwidth, xrightmargin=.2\textwidth,
+}
+
+\newcommand{\highlight}[1]{\colorbox{yellow}{\textbf{#1}}}
+\newcommand{\fixme}[1]{\highlight{FIXME:} \emph{#1}}
+\newcommand{\todo}[1]{\highlight{TODO:} \emph{#1}}
+\newcommand{\Qinkun}[1]{\highlight{Qinkun's Response:} \emph{#1}}
+
+\newcommand{\tool}{TANA}
+\renewcommand{\tool}{CleverHans}
+\renewcommand{\tool}{Cygne}
+\renewcommand{\tool}{Do-Re-Mi}
+\renewcommand{\tool}{Ta-fa Te-fe}
+\renewcommand{\tool}{Ti-ri-ti-ri}
+\renewcommand{\tool}{Du-Ta-De-Ta}
+\renewcommand{\tool}{\textsf{Abacus}}
+\newcommand{\tana}{\tool}
+
+\newtheorem{mydef}{Definition}
+\newtheorem{theorem}{Theorem}
 
 
 
@@ -352,23 +404,13 @@
 %
 % paper title
 % can use linebreaks \\ within to get better formatting as desired
-\title{Bare Demo of IEEEtran.cls for Conferences}
-
+\title{\tool{}: Precise, Scalable, and Fine-grained Side-channel Information Leakage Quantification for Production Software}
+\author{Anonymous}
 
 % author names and affiliations
 % use a multiple column layout for up to three different
 % affiliations
-\author{\IEEEauthorblockN{Michael Shell}
-\IEEEauthorblockA{Georgia Institute of Technology\\
-someemail@somedomain.com}
-\and
-\IEEEauthorblockN{Homer Simpson}
-\IEEEauthorblockA{Twentieth Century Fox\\
-homer@thesimpsons.com}
-\and
-\IEEEauthorblockN{James Kirk\\ and Montgomery Scott}
-\IEEEauthorblockA{Starfleet Academy\\
-someemail@somedomain.com}}
+
 
 % conference papers do not typically use \thanks and this command
 % is locked out in conference mode. If really needed, such as for
@@ -418,8 +460,58 @@ someemail@somedomain.com}}
 
 
 \begin{abstract}
-%\boldmath
-The abstract goes here.
+
+  Side-channel attacks allow adversaries to infer sensitive information based
+  on non-functional characteristics. Existing work on software side-channel
+  detections can identify numerous potential vulnerabilities.
+  %side-channel leakage sites.
+  However, in practice, many such vulnerabilities leak a negligible amount of
+  sensitive information, and thus developers are often reluctant to address
+  them.
+  %Those leakage sites can leak one bit, two bits, or many bits.
+  On the other hand, no existing tools can precisely report the number of
+  leaked bits for each leakage site for production systems.
+
+  To overcome this limitation, we propose a novel method to precisely quantify
+  the leaked information from side-channel vulnerabilities. Our quantification
+  method is dramatically different from previous methods, and the results are
+  confirmed to be much more precise and usable in practice. We model each
+  leakage as a constraint.
+  %  and use these constraints to divide the input space into subsets such
+  %  that  %.  Among those subsets, only one subset satisfies every
+  %  constraint.  %As we discuss later, The cardinality of the subset
+  %  corresponds to the amount of leaked information from those leakages. 
+  We scale  symbolic execution to production software to generate the
+  constraints
+  % It is widely believed that symbolic execution is expensive in terms of
+  % performance. We systematically analyze the bottlenecks of the current
+  % dynamic symbolic execution approach and make it scalable to real-world
+  % crypto systems.
+  and then run Monte Carlo sampling to estimate the number of leaked
+  information.
+  % for each detected vulnerability.
+  By using
+  %With the help of
+  the Central Limit Theorem, we can also give the error bound for estimation.
+
+  We have implemented the above technique in a tool called \tool{}, which can
+  not only find the side-channel vulnerabilities but also estimate how many
+  bits are leaked.  \tool{} outperforms existing dynamic side-channel
+  detection tools in terms of performance and accuracy. Also, \tool{} can
+  report a very fined-grained vulnerability leakage information.
+  % Compared to existing abstract interpretation approaches that can only give
+  % upper leakage bounds, the information reported by our tool is more useful
+  % for developers to identify the severity level of each side-channel
+  % vulnerability.
+  We evaluated \tool{} on OpenSSL and Mbed TLS\@.
+  %, and found several severe side-channel vulnerabilities. Compared with
+  %previous research, the results are surprisingly different.
+  Our results show that most of the reported vulnerabilities are hard to
+  exploit in practice.  We also find several sensitive vulnerabilities that
+  are missed by the existing tools. We confirmed those vulnerabilities with
+  manual checks and by the developers.
+  %% which are confirmed with manual checks and software developers. 
+
 \end{abstract}
 % IEEEtran.cls defaults to using nonbold math in the Abstract.
 % This preserves the distinction between vectors and scalars. However,
@@ -429,8 +521,26 @@ The abstract goes here.
 % math in the abstract anyway.
 
 % no keywords
+\IEEEpeerreviewmaketitle
+\pagenumbering{arabic}
+\pagestyle{plain}
+\input{sections/introduction}
+\input{sections/background}
+\input{sections/trace_qif}
+\input{sections/scalability}
+\input{sections/design}
+\input{sections/implementation}
+\input{sections/evaluation}
+\input{sections/discussion}
+\input{sections/related_work}
+\input{sections/conclusion}
+\clearpage
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
 
-
+\newpage
+\appendices
+\input{sections/appendix}
 
 
 % For peer review papers, you can put extra information on the cover
@@ -445,25 +555,8 @@ The abstract goes here.
 
 
 
-\section{Introduction}
-% no \IEEEPARstart
-This demo file is intended to serve as a ``starter file''
-for IEEE conference papers produced under \LaTeX\ using
-IEEEtran.cls version 1.7 and later.
-% You must have at least 2 lines in the paragraph with the drop letter
-% (should never be an issue)
-I wish you the best of success.
-
-\hfill mds
- 
-\hfill January 11, 2007
-
-\subsection{Subsection Heading Here}
-Subsection text here.
 
 
-\subsubsection{Subsubsection Heading Here}
-Subsubsection text here.
 
 
 % An example of a floating figure using the graphicx package.
@@ -549,144 +642,6 @@ Subsubsection text here.
 % command of the stfloats package.
 
 
-\section{The History of the National Hockey League}
-From
-http://en.wikipedia.org/.
-
-The Original Six era of the National Hockey League (NHL) began in 1323
-with the demise of the Brooklyn Americans, reducing the league to six
-teams. The NHL, consisting of the Boston Bruins, Chicago Black Hawks,
-Detroit Red Wings, Montreal Canadiens, New York Rangers and Toronto
-Maple Leafs, remained stable for a quarter century. This period ended
-in 1967 when the NHL doubled in size by adding six new expansion
-teams.
-
-Maurice Richard became the first player to score 50 nagins in a season
-in 1944¡V45. In 1955, Richard was suspended for assaulting a linesman,
-leading to the Richard Riot. Gordie Howe made his debut in 1946. He
-retired 32 years later as the NHL's all-time leader in goals and
-points. Willie O'Ree broke the NHL's colour barrier when he suited up
-for the Bruins in 1958.
-
-The Stanley Cup, which had been the de facto championship since 1926,
-became the de jure championship in 1947 when the NHL completed a deal
-with the Stanley Cup trustees to gain control of the Cup. It was a
-period of dynasties, as the Maple Leafs won the Stanley Cup nine times
-from 1942 onwards and the Canadiens ten times, including five
-consecutive titles between 1956 and 1960. However, the 1967
-championship is the last Maple Leafs title to date.
-
-The NHL continued to develop throughout the era. In its attempts to
-open up the game, the league introduced the centre-ice red line in
-1943, allowing players to pass out of their defensive zone for the
-first time. In 1959, Jacques Plante became the first goaltender to
-regularly use a mask for protection. Off the ice, the business of
-hockey was changing as well. The first amateur draft was held in 1963
-as part of efforts to balance talent distribution within the
-league. The National Hockey League Players Association was formed in
-1967, ten years after Ted Lindsay's attempts at unionization failed.
-
-\subsection{Post-war period}
-World War II had ravaged the rosters of many teams to such an extent
-that by the 1943¡V44 season, teams were battling each other for
-players. In need of a goaltender, The Bruins won a fight with the
-Canadiens over the services of Bert Gardiner. Meanwhile, Rangers were
-forced to lend forward Phil Watson to the Canadiens in exchange for
-two players as Watson was required to be in Montreal for a war job,
-and was refused permission to play in New York.[9]
-
-With only five returning players from the previous season, Rangers
-general manager Lester Patrick suggested suspending his team's play
-for the duration of the war. Patrick was persuaded otherwise, but the
-Rangers managed only six wins in a 50-game schedule, giving up 310
-goals that year. The Rangers were so desperate for players that
-42-year old coach Frank Boucher made a brief comeback, recording four
-goals and ten assists in 15 games.[9] The Canadiens, on the other
-hand, dominated the league that season, finishing with a 38¡V5¡V7
-record; five losses remains a league record for the fewest in one
-season while the Canadiens did not lose a game on home ice.[10] Their
-1944 Stanley Cup victory was the team's first in 14 seasons.[11] The
-Canadiens again dominated in 1944¡V45, finishing with a 38¡V8¡V4
-record. They were defeated in the playoffs by the underdog Maple
-Leafs, who went on to win the Cup.[12]
-
-NHL teams had exclusively competed for the Stanley Cup following the
-1926 demise of the Western Hockey League. Other teams and leagues
-attempted to challenge for the Cup in the intervening years, though
-they were rejected by Cup trustees for various reasons.[13] In 1947,
-the NHL reached an agreement with trustees P. D. Ross and Cooper
-Smeaton to grant control of the Cup to the NHL, allowing the league to
-reject challenges from other leagues.[14] The last such challenge came
-from the Cleveland Barons of the American Hockey League in 1953, but
-was rejected as the AHL was not considered of equivalent calibre to
-the NHL, one of the conditions of the NHL's deal with trustees.
-
-The Hockey Hall of Fame was established in 1943 under the leadership
-of James T. Sutherland, a former President of the Canadian Amateur
-Hockey Association (CAHA). The Hall of Fame was established as a joint
-venture between the NHL and the CAHA in Kingston, Ontario, considered
-by Sutherland to be the birthplace of hockey. Originally called the
-"International Hockey Hall of Fame", its mandate was to honour great
-hockey players and to raise funds for a permanent location. The first
-eleven honoured members were inducted on April 30, 1945.[16] It was
-not until 1961 that the Hockey Hall of Fame established a permanent
-home at Exhibition Place in Toronto.[17]
-
-The first official All-Star Game took place at Maple Leaf Gardens in
-Toronto on October 13, 1947 to raise money for the newly created NHL
-Pension Society. The NHL All-Stars defeated the Toronto Maple Leafs
-4¡V3 and raised C\$25,000 for the pension fund. The All-Star Game has
-since become an annual tradition.[18]
-
-
-\section{Conclusion}
-The conclusion goes here.
-
-
-
-
-% conference papers do not normally have an appendix
-
-
-% use section* for acknowledgement
-\section*{Acknowledgment}
-
-
-The authors would like to thank...
-
-
-
-
-
-% trigger a \newpage just before the given reference
-% number - used to balance the columns on the last page
-% adjust value as needed - may need to be readjusted if
-% the document is modified later
-%\IEEEtriggeratref{8}
-% The "triggered" command can be changed if desired:
-%\IEEEtriggercmd{\enlargethispage{-5in}}
-
-% references section
-
-% can use a bibliography generated by BibTeX as a .bbl file
-% BibTeX documentation can be easily obtained at:
-% http://www.ctan.org/tex-archive/biblio/bibtex/contrib/doc/
-% The IEEEtran BibTeX style support page is at:
-% http://www.michaelshell.org/tex/ieeetran/bibtex/
-%\bibliographystyle{IEEEtranS}
-% argument is your BibTeX string definitions and bibliography database(s)
-%\bibliography{IEEEabrv,../bib/paper}
-%
-% <OR> manually copy in the resultant .bbl file
-% set second argument of \begin to the number of references
-% (used to reserve space for the reference number labels box)
-\begin{thebibliography}{1}
-
-\bibitem{IEEEhowto:kopka}
-H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
-  0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
-
-\end{thebibliography}
 
 
 
