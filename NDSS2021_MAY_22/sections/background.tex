@@ -23,8 +23,8 @@ attacker preloads the cache set with its own data and waits until the victim
 executes the program. If the victim accesses the cache set and evicts part of
 the data, the attacker will experience a slow measurement. 
 While Flush+Reload targets a
-single cache line, it requires the attacker and the victim share the same memory
-address space. During the ``flush'' stage, the attacker flushes the ``monitored
+single cache line, it requires the attacker and victim share some memory. 
+During the ``flush'' stage, the attacker flushes the ``monitored
 memory'' from the cache and also waits for the victim to access the memory,
 who will load the sensitive information to the cache line. In the next phase,
 the attacker reloads the ``monitored memory''. By measuring the time difference
@@ -79,10 +79,10 @@ if a program shows different patterns in
 control transfers or data accesses when the program processes different
 sensitive inputs, the program could possibly have side channels vulnerabilities.
 Different kinds of side-channels can be exploited to retrieve information in
-various granularities. For example, many cache channels can observe cache
-accesses at the level of a cache line. For most CPU, one cache line holds 64
-bytes of data. Hence according to the cache associativity, the low 6 bits of the
-address is irrelevant in causing those cached-based side-channels.
+various granularities. For example, cache channels can observe cache
+accesses at the level of cache sets, cache lines or other granularities. 
+Other kinds of side-channels like controlled-channel attack~\cite{7163052},
+can observe the memory access at the level of memory pages.
 
 %\lstinputlisting[language=c, 
 %                 numbers=left,

@@ -31,7 +31,7 @@ central problem is eliminating these two code patterns.
 Recent
 works~\cite{203878,217537,Wichelmann:2018:MFF:3274694.3274741,Brotzman19Casym,236338,182946},
 find plenty of side-channel vulnerabilities. For example,
-DATA~\cite{217537} reports 2,246 potential leakage site for the RSA
+DATA~\cite{217537} reports 2,246 potential leakage sites for the RSA
 implementation in OpenSSL\@. 
 %After some inspections, 1,510 leakages are dismissed. But it
 %still leaves 460 data-access leakages and 278 control-flow leakages. 
@@ -39,7 +39,7 @@ However, we find most of the reported vulnerabilities are not fixed because
 of the following reasons.
 First, many side-channels vulnerable implementations have better performance.
 Those vulnerabilities are well-known for years. For example,
-Symmetric encryptions like AES and DES still uses lookup tables (T-tables), which
+Symmetric encryptions like AES and DES uses lookup tables (T-tables), which
 is fast but notoriously known to be vulnerable to side channels.
 As for asymmetric encryptions, most implementations of RSA, adopt the CRT optimization,
 which is faster but vulnerable to fault attacks~\cite{aumuller2002fault}.
@@ -89,7 +89,7 @@ provide fine-grained information but is usually believed to be an expensive
 operation in terms of performance. Therefore, existing dynamic symbolic
 execution works~\cite{203878,236338,Brotzman19Casym} either only analyze
 small programs or apply some domain knowledge~\cite{203878} to simplify the analysis. We
-systematically exam the bottleneck of the trace-oriented symbolic execution and optimize it
+examine the bottleneck of the trace-oriented symbolic execution and optimize it
 to be scalable to real-world cryptosystems.
 
 We apply the above technique and build a tool called \tool{},
@@ -143,8 +143,8 @@ how much information is leaked and which byte in the original sensitive buffer
 is leaked. We also test \tool{} on side-channel free algorithms. \tool{} has no
 false positives.
 Although some of the analyzed crypto libraries have a number of
-side-channels, they actually leak very little information. Also, we also show the
-of widely deployed software countermeasures can mitigate side channels.
+side-channels, they actually leak very little information. Also, we show the
+widely deployed software countermeasures can mitigate side channels.
 \tool\ also discovers new vulnerabilities. With the help of \tool{}, we confirm
 that those vulnerabilities are severe.
 
