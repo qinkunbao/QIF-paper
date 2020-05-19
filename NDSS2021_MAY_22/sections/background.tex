@@ -149,13 +149,13 @@ To illustrate how these definitions work, we consider the following code
 fragment.
 
 \begin{figure}[h!]
-    \centering
-    \begin{lstlisting}[xleftmargin=.03\textwidth,xrightmargin=.01\textwidth]
-uint_8 key[2], t1, t2;
+\centering
+\begin{lstlisting}[xleftmargin=.03\textwidth,xrightmargin=.01\textwidth]
+uint8_t key[2], t1, t2;
 get_key(key);              // 0 <= key[0], key[1] < 256
 t1 = key[0] + key[1];
 t2 = key[0] - key[1];
-if (t1 < 8) 
+if (t1 < 2) 
     A();                   // branch 1
 if (t2 > 0)                
     B();                   // branch 2
@@ -175,7 +175,7 @@ attacker knows which branch is executed?
 \begin{table}[ht]
     \centering\small\footnotesize
     \caption{The distribution of observation}\label{shtable}
-    \vspace*{-9pt}
+    \vspace*{-0pt}
 %    \resizebox{\columnwidth}{!}{
     \begin{tabular}{l|cccc}
         \hline
