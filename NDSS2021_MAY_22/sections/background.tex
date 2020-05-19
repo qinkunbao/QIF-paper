@@ -10,9 +10,7 @@ metrics.
 Side channels can leak sensitive information
 unconsciously through different execution behaviors caused by shared 
 hardware components (e.g., CPU cache, TLB, and
-DRAM) in modern computer systems~\cite{ge2018survey,szefer2019survey}. Depending
-on the layer causing side-channels, we can classify them into the following
-types of side-channel attacks.
+DRAM) in modern computer systems~\cite{ge2018survey,szefer2019survey}. 
 
 For example, cached-based
 side-channels~\cite{yarom2017cachebleed,191010,184415,7163050,Osvik2006,liu2015last,yarom2014flush+}
@@ -32,7 +30,7 @@ brought by cache hit and miss, the attacker can further infer the sensitive info
 Some other types of side-channels target different hardware
 layers other than CPU cache. For example, the controlled-channel
 attack~\cite{7163052}, where an attacker works in the kernel space, can infer
-sensitive data in the shielding systems by observing the page fault sequences
+sensitive data in shielding systems by observing the page fault sequences
 after restricting some code and data pages.
 
 \begin{figure}[]
@@ -80,7 +78,7 @@ control transfers or data accesses when the program processes different
 sensitive inputs, the program could possibly have side channels vulnerabilities.
 Different kinds of side-channels can be exploited to retrieve information in
 various granularities. For example, cache channels can observe cache
-accesses at the level of cache sets, cache lines or other granularities. 
+accesses at the level of cache sets~\cite{liu2015last}, cache lines~\cite{184415} or other granularities. 
 Other kinds of side-channels like controlled-channel attack~\cite{7163052},
 can observe the memory access at the level of memory pages.
 
@@ -125,7 +123,7 @@ information $K$ is considered as a random variable.
 Let $k$ be one of the possible
 value of $K$. The Shannon entropy $H(K)$ is defined as
 \begin{displaymath}
-    H(K) = - \sum_{k {\in} K}p(k)\log_2(k)
+    H(K) = - \sum_{k {\in} K}p(k)\log_2(p(k))
 \end{displaymath}
 
 Shannon entropy can be used to quantify the initial uncertainty about the
