@@ -12,8 +12,8 @@ works~\cite{182946,Wichelmann:2018:MFF:3274694.3274741 } define information
 leakage using max entropy or Shannon entropy.  If zero bit of
 information leakage is reported, the program is secure. However, it is not
 useful in practice if their tools report the program leaks some information.
-Because their reported result is the ``average'' leakage, while in an attack
-scenario, the leakage could be much severe.
+Because their reported result is the ``average'' leakage, while in a real attack
+scenario, the leakage could be severer.
 %Moreover, those metrics does not apply to static method.
 
 
@@ -269,9 +269,9 @@ of the address are irrelevant in side-channels.
 We consider a data access is secret-dependent if:
 $$\exists k_{i1}, k_{i2} \in K, \,f_i(\beta, k_{i1}, m) >> L \neq f_i(\beta, k_{i2}, m) >> L$$
 
-If the branch condition equals to $t_b$, we can use the constraint $c_i :
+If the memory access equals to $t_b$, we can use the constraint $c_i :
 f_i(\beta, k, m) >> L = t_b >> L$ to model the observation on secret-dependent
-control-transfers.
+data accesses.
 
 With the above definitions, we can model an attacker's observation by a series of math
 formulas. For example, in Figure~\ref{fig:side-channel}, if an attacker observes

@@ -2,12 +2,11 @@
 While recent works have reported lots
 of potential side-channel vulnerabilities, we find most of them are not patched by
 developers because they do not think those vulnerabilities are severe enough.
-However, side-channels are inevitable in software. In fact, many of them
-are easily spotted but it is hard to fix all of them. They need a
-tool that can automatically estimate the sensitive level of each vulnerabilities.
-Second, addressing old vulnerabilities may also introduce new leakage
-sites. Our evaluation result confirms that many of them are not 
-severe and can be safely ignored. So software engineers can focus on
+However, side-channels are inevitable in software and it is hard to fix all of them. 
+Addressing old vulnerabilities may also introduce new leakage
+sites. They need a
+tool that can automatically estimate the sensitive level of each vulnerability.
+So software engineers can focus on
 ``severe'' leakages. For example, our tool will report that 
 the modular exponentiation using square and multiply algorithms can
 leak much information than a key validation function.
@@ -15,13 +14,14 @@ leak much information than a key validation function.
 \tool{} can be used by software developers to find sensitive vulnerabilities
 and reason about countermeasures.
 \tool{} estimates the amount of leaked information for each side-channels
-in particular executions. \tool{} is useful for software
+in one particular execution. \tool{} is useful for software
 engineers to tests programs and fix vulnerabilities.
 \tool{} works on native x86 execution traces. The design, which is very
 precise in terms of true leakages compared to other static source code
 method~\cite{197207,BacelarAlmeida:2013:FVS:2483313.2483334}, can omit
-leakages on other traces. However, as the tool is intended for debugging and testing.
-we think it is software engineers' responsibilty to select the input and trigger the 
+leakages on other traces. The amount of leaked information also depends on the secret key.
+However, as the tool is intended for debugging and testing.
+we think it is software engineers' responsibility to select the input key and trigger the 
 path in which they are interested.
 
 We use the amount of leaked information to represent the sensitive level of each
