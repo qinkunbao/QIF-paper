@@ -188,6 +188,16 @@ For any $k' \in K \setminus K^o$, $p(k'|o) = 0$. We get
     $$L_{\beta(k)\rightarrow o} = \log_2{|K|} - \log_2{|K^o|}$$
 \end{mydef}
 
+The above definition can be understood easily with the below example. Suppose an attacker
+wants to guess a 128-bit encryption key from a program,
+without any domain knowledge, 
+he can find the key by performing exhaustive search over $O(2^{128})$ possible keys. 
+The program has a side-channel leakage site. After the program finishes execution, the
+attacker get some leaked information and only need to find the key by performing 
+exhaustive search over $O(2^{120})$ possible keys. Then we can say that 4 bits of the information
+is leaked. In this example, $2^{128}$ is the size of $K$ and $2^{120}$ is the size of $K^o$.
+
+
 With the definition, if an attacker observes that the code in
 Figure~\ref{fig:password-checker} runs the branch 1, then the $K^{o^{1}} =
 \{\mathrm{``password"}\}$. Therefore, the information leakage $L_{P(k)=o^{1}} =
