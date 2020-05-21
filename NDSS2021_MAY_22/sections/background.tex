@@ -115,7 +115,7 @@ we get $-\log(\frac{1}{256}) = 8$ bits information, which is exactly the size
 of a char variable in the C program.
 
 Existing works on information leakage quantification typically use Shannon
-entropy~\cite{Wichelmann:2018:MFF:3274694.3274741},
+entropy~\cite{clark2007static,Wichelmann:2018:MFF:3274694.3274741},
 min-entropy~\cite{10.1007/978-3-642-00596-1_21}, and max-entropy~\cite{182946,
 Doychev:2017:RAS:3062341.3062388}. In these frameworks, the input sensitive
 information $K$ is considered as a random variable.
@@ -145,8 +145,9 @@ Max-entropy is defined solely on the number of possible observations.
 As it is easy to compute, most recent works~\cite{182946,Doychev:2017:RAS:3062341.3062388} use max-entropy as the definition of
 the amount of leaked information.
 
-To illustrate how these definitions work, we consider the following code
-fragment.
+To illustrate how these definitions work, we consider the code
+fragment in Figure~\ref{fig:side-channel}. It has two secret-dependent
+control-flows, A and B.
 
 \begin{figure}[h!]
 \centering
@@ -155,22 +156,22 @@ uint8_t key[2], t1, t2;
 get_key(key);              // 0 <= key[0], key[1] < 256
 t1 = key[0] + key[1];
 t2 = key[0] - key[1];
-if (t1 < 2){               // branch 1
-    A();    
+if (t1 < 4){               // leakage site A
+    foo();    
 }                          
-if (t2 > 0){               // branch 2     
-    B();    
+if (t2 > 0){               // leakage site B     
+    doo();    
 }                          
 \end{lstlisting}
-\vspace*{-9pt}
+\vspace*{-1pt}
     \caption{Side-channel leakage}
     \label{fig:side-channel}
 \end{figure}
-In this paper we assume an attacker can observe whether branch 1 and branch 2 are
-executed or not. Therefore, an attacker can have four different observations
-depending on the value of $\mathit{key}$: $\emptyset$ for neither branch 1 nor
-branch 2 is executed, $\{1\}$ for only branch 1 is executed, $\{2\}$ for only branch 2 is
-executed, and $\{1, 2\}$ for both branch 1 and branch 2 are executed. Now the
+In this paper we assume an attacker can observe the secret-dependent control-flows in Figure~\ref{fig:side-channel}.
+Therefore, an attacker can have two different observations for each leak site
+depending on the value of the $\mathit{key}$: $A$ for function \textsf{foo} is executed, 
+$\neg A$ for function \textsf{foo} is not executed, $B$ for function \textsf{doo} is
+executed, and $\neg B$ for function \textsf{doo} is not executed. Now the
 question is how much information can be leaked from the above code if an
 attacker knows which branch is executed?
 
@@ -179,51 +180,50 @@ attacker knows which branch is executed?
     \caption{The distribution of observation}\label{shtable}
     \vspace*{-0pt}
 %    \resizebox{\columnwidth}{!}{
-    \begin{tabular}{l|cccc}
+    \begin{tabular}{l|cc|cc}
         \hline
-        %Observation (o)     & $\emptyset$ & ${\{1\}}$ & ${\{2\}}$ & ${\{1, 2\}}$ \\ \hline
-        %Number of Solutions &  32876 & 20 & 32634 & 16 \\ \hline
-        %Possibility (p)     & 0.5016 & 0.0003 & 0.4980  & 0.0002   \\
-        Observation ($o$)   & $\emptyset$ & ${\{1\}}$ & ${\{2\}}$ & ${\{1, 2\}}$ \\ \hline
-        Number of Solutions & 32876       & 20        & 32634     & 16           \\ \hline
-        Possibility (p)     & 0.5016      & 0.0003    & 0.4980    & 0.0002       \\
+
+        Observation ($o$)   & $A$ & $\neg A$ & $B$ & $\neg B$ \\ \hline
+        Number of Solutions & 65526       & 10        & 32768     & 32768           \\ \hline
+        Possibility (p)     & 0.9998      & 0.0002    & 0.5    & 0.5       \\
         \hline
     \end{tabular}
 %        }
 \end{table}
 
-
 Assuming $\mathit{key}$ is uniformly distributed, we can calculate the corresponding
 possibility by counting the number of possible inputs. Table~\ref{shtable}
-describes the probability of each observation. The three types of leakage metrics are
-calculated as follows.
+describes the probability of each observation. We use the above three types of 
+leakage metrics to calculate the amount of leaked information for leak A and leak B.
 
 \vspace{3pt}
 \textbf{Min Entropy.}
-As $p_{\mathit{max}} = 0.5016$, with the definition, min-entropy equals to
-\begin{displaymath}
-    \mathit{min\text{-}entropy} = -\log_2{0.5016} = 0.995\ \mathrm{bits}
-\end{displaymath}
+As $p_{A\mathit{max}} = 0.9998$ and $p_{B\mathit{max}} = 0.5$, 
+with the definition, min-entropy equals to
+\begin{align*}
+    \mathit{min\text{-}entropy_A} & = -\log_2{0.9998} = 0.000\ \mathrm{bits} \\
+    \mathit{min\text{-}entropy_B} & = -\log_2{0.5} = 1.000\ \mathrm{bits}
+\end{align*}
 
 \textbf{Max Entropy.}
-Depending on the value of key, the code can run four different branches which
-corresponding to four different observations. Therefore, with the max entropy
-definition, the leakage equals to
+Depending on the value of key, the code can run two different branches for each leakage site. 
+Therefore, with the max entropy
+definition, both leakage sites leak
 
 \begin{displaymath}
-    \mathit{max\text{-}entropy} = -\log_2{4} = 2.000\ \mathrm{bits}
+    \mathit{max\text{-}entropy} = -\log_2{2} = 1.000\ \mathrm{bits}
 \end{displaymath}
 
-\vspace{3pt}
 \textbf{Shannon Entropy.}
-Based on Shannon entropy, the leakage equals to
+Based on Shannon entropy, the respective amount of information in A and B equals to
 {\footnotesize
 \begin{align*}
-    \mathit{Shannon\text{-}entropy} & = -(0.5016*\log_{2}0.5016      \\
-                                    & \qquad+ 0.0003*\log_{2}0.0003  \\
-                                    & \qquad+ 0.4980*\log_{2}0.4980  \\
-                                    & \qquad+ 0.0002*\log_{2}0.0002) \\
-                                    & = 1.006\ \mathrm{bits}
+    \mathit{Shannon\text{-}entropy_A} & = -(0.9998*\log_{2}0.9998      \\
+                                    & \qquad+ 0.0002*\log_{2}0.0002  \\
+                                    & = 0.000\ \mathrm{bits}         \\
+    \mathit{Shannon\text{-}entropy_B} & = -(0.5*\log_{2}0.5      \\
+                                    & \qquad+ 0.5*\log_{2}0.5  \\
+                                    & = 1.000\ \mathrm{bits}                             
 \end{align*}
 }
 In the next section, we will show that these measures work well only
