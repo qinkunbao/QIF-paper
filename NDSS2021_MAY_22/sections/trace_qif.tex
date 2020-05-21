@@ -7,7 +7,7 @@ After that, we introduce the abstract of our model and math notations for the
 rest of the paper and propose our method.
 
 \subsection{Problem Setting}
-Existing static-based side-channel quantification
+Existing static side-channel quantification
 works~\cite{182946,Wichelmann:2018:MFF:3274694.3274741 } define information
 leakage using max entropy or Shannon entropy.  If zero bit of
 information leakage is reported, the program is secure. However, it is not
@@ -21,10 +21,10 @@ scenario, the leakage could be severer.
     \centering
     \begin{lstlisting}[xleftmargin=.03\textwidth,xrightmargin=.01\textwidth]
 char key[9] = input();
-if(strcmp(key, "password")){
-    pass();     //branch 1
+if(strcmp(key, "password")){  // leakage site C
+    pass();                   // branch 1
 }else{
-    fail();     //branch 2
+    fail();                   // branch 2
 }
 \end{lstlisting}
 \vspace*{-9pt}
@@ -33,7 +33,7 @@ if(strcmp(key, "password")){
 \end{figure}
 
 We consider a dummy password checker shown in Figure~\ref{fig:password-checker}.
-The password checker will take an 8-byte char array as the input and check if
+The password checker will take an 8-byte char array (exclude \textsf{NULL} character) as the input and check if
 the input is the correct password. If an attacker knows the code executes branch
 $\{{1\}}$ by side-channel attacks, he can infer the password equals to
 ``password'', in which case the attacker can entirely retrieve the password.
@@ -188,11 +188,11 @@ For any $k' \in K \setminus K^o$, $p(k'|o) = 0$. We get
     $$L_{\beta(k)\rightarrow o} = \log_2{|K|} - \log_2{|K^o|}$$
 \end{mydef}
 
-The above definition can be understood easily with the below example. Suppose an attacker
+The above definition can be understood in an intuitive way. Suppose an attacker
 wants to guess a 128-bit encryption key from a program,
 without any domain knowledge, 
 he can find the key by performing exhaustive search over $O(2^{128})$ possible keys. 
-The program has a side-channel leakage site. After the program finishes execution, the
+However, the program has a side-channel leakage site. After the program finishes execution, the
 attacker get some leaked information and only need to find the key by performing 
 exhaustive search over $O(2^{120})$ possible keys. Then we can say that 4 bits of the information
 is leaked. In this example, $2^{128}$ is the size of $K$ and $2^{120}$ is the size of $K^o$.
@@ -211,7 +211,12 @@ Figure~\ref{fig:side-channel}. As the size of input sensitive information is
 usually public. The problem of quantifying the leaked information has been
 transferred into the problem of estimating the size of input key $|K^o|$ under
 the condition $o \in O$. The result is shown in Table~\ref{shtable2}. We can see
-that some branches or traces leak much more information than some others. In
+that some branches (e.g., A) or traces leak much more information than some others. 
+Those kinds of branches can be vulnerable when an attacker's data is incorporate. 
+For example, the code will skip some of the calculation if the value is 0 in big 
+number multiplication.
+
+In
 contrast, an \emph{average} estimate based on random secret input information is around
 1 bit, as shown in \S\ref{sec:background_leak} and Table~\ref{shtable}, is
 not very useful in practice as an attacker is able to get much more leaked
@@ -231,7 +236,6 @@ information in some attack scenarios.
         Leaked Information (bits) & 0.0         & 14.7      & 1.0       & 1.0         \\
         \hline
     \end{tabular}
-%     }
 \end{table}
 \subsection{Our Conceptual Framework}
 \label{side-channel:condition}
