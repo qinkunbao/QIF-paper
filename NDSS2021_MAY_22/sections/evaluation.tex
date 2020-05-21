@@ -345,13 +345,13 @@ vulnerability can been seen in Appendix\S~\ref{appendix:minor:vul}.
 \begin{figure}
     \centering
     \begin{lstlisting}[xleftmargin=.02\textwidth,xrightmargin=.01\textwidth]
-# define mul_add_c2(a,b,c0,c1,c2) \
-    t=(BN_ULLONG)a*b; \
-    tt=(t+t)&BN_MASK; \
-    if (tt < t) c2++; \
-    t1=(BN_ULONG)Lw(tt); \
-    t2=(BN_ULONG)Hw(tt); \
-    c0=(c0+t1)&BN_MASK2;  \
+# define mul_add_c2(a,b,c0,c1,c2)                    \
+    t=(BN_ULLONG)a*b;                                \
+    tt=(t+t)&BN_MASK;                                \
+    if (tt < t) c2++;                                \
+    t1=(BN_ULONG)Lw(tt);                             \
+    t2=(BN_ULONG)Hw(tt);                             \
+    c0=(c0+t1)&BN_MASK2;                             \
     if ((c0 < t1) && (((++t2)&BN_MASK2) == 0)) c2++; \
     c1=(c1+t2)&BN_MASK2; if ((c1) < t2) c2++;
 \end{lstlisting}
