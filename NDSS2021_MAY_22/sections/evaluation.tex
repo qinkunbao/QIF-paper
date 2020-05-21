@@ -92,7 +92,8 @@ under Ubuntu 14.04. Although we use use symbol information to track back leakage
 sites into the source code, our tool can work on stripped binaries as well. We
 develop a Pin tool based on Intel Pin (version 3.7) to record the execution
 trace. We run our experiments on a 2.90GHz Intel Xeon(R) E5-2690 CPU with 128GB
-RAM memory. During our evaluation process, we are interested in the following
+RAM memory. The execution time is calculated on a single-core.
+During our evaluation process, we are interested in the following
 aspects:
 \begin{enumerate}
     \item  \textbf{Identifying side-channels leakages.}
@@ -115,22 +116,22 @@ transfers and 678 of them are leaked due to secret-dependent memory accesses.
 \tool{} also identifies that most side-channel
 vulnerabilities leak very little information in practice, which confirms our
 initial assumptions.  
-However, we do find some vulnerabilities that \tool{} reports with more severe
+However, we do find some vulnerabilities that \tool{} reports with severe
 leakages. Some of them have been confirmed by existing research that those
 vulnerabilities can be exploited to realize real attacks.
 Without our tool, developers will not be able to
 distinguish those ``vulnerabilities'' from severe ones and ignore others for sure easily.
 
 All symmetric encryption implementations in OpenSSL and mbedTLS\@ have significant
-leakages due to the lookup table to speed up the
-computation. Every leakages found during the evaluation belong to the type of
+leakages due to the lookup table implementation. 
+Every leakages found during the evaluation belong to the type of
 secret-dependent memory accesses. \tool{} finds several leakage sites for both 
 implementations of DES and AES in
 OpenSSL and mbedTLS\@. \tool{} confirms that all those leakages come from table
 lookups. mbedTLS 2.15 and 2.5 have the same implementation of both DES and AES, so
 they have the same leakage report. One proper fix would be a scalar bit-sliced
 implementation. However, we do not see the bit-sliced implementation of AES and
-DES in various versions of OpenSSL and mbedTLS\@. However, we find the new
+DES in various versions of mbedTLS\@. However, we find the new
 implementation of OpenSSL instead uses typical four 1K tables. It only uses one 1K
 of the tables. This implementation is rather easy but does somehow decrease the total
 amount of leaked information as the quantification result shown in the next
@@ -151,8 +152,8 @@ for each leakage site, \tool{} will stop once 1) it has 95\% confidence
 possibility that the error of estimated leaked information is less than 1 bit,
 which gives us confidence on the leakage quantification with the \emph{precision guarantee}, 
 or 2) it cannot reach the termination condition after 10 minutes. In
-the latter case, it means the number of satisfying keys is very small and the
-leakage is quite severe. \emph{That is, timeout indicates severe leakage.}
+the latter case, it means \tool{} cannot estimate the amount of leakage with a
+probabilistic guarantee.
 \label{loc:timeout}
 We manually check those leakage sites and find most of them are quite severe.
 We will present the details in the subsequent sections.
@@ -193,7 +194,7 @@ Since DATA~\cite{217537} need to compare several execution traces to identify
 side-channel leakages, \tool{} also outperforms DATA in terms of performance.
 For example, it takes 234 minutes for DATA to analysis the RSA of implementation
 in OpenSSL 1.1.0f. \tool{} only spends 34 minutes according to Table~\ref{table:over_result}.
-Also, DATA reports report 278 control-flow and 460 data leaks. Among those leakages,
+Also, DATA reports report 278 control-flow and 460 memory-access leaks. Among those leakages,
 they found two vulnerabilities. On the contrary, \tool{} can report how many bits is
 actually leaked for each vulnerability, which eases the pain to identify real sensitive leaks.
 
@@ -221,7 +222,7 @@ actually leaked for each vulnerability, which eases the pain to identify real se
 \subsubsection{Symmetric Ciphers: DES and AES}\label{eval:sym}
 We test both DES and AES ciphers from mbedTLS and OpenSSL. Both cipher
 implementations apply lookup tables, which can
-speed up the calculation, but can also introduce additional side-channels
+speed up the performance, but can also introduce additional side-channels
 as well. During our evaluation, we find mbedTLS 2.5 and 2.15.1 have the same
 implementation of AES\@ and DES\@. Therefore, our tool also provides the same 
 leakage report for both
@@ -240,7 +241,7 @@ have leakages that can leak can around 10 bits.)
 We find that OpenSSL 1.1.1 version 
 instead uses the 1KB lookup tables with 32 bit entries like older versions, it uses a 
 tables with 8 bit entries. In other words, our tools shows that lookup tables with smaller 
-entries will leak less amount of information. Our tool also suggests a smaller lookup
+entries will leak less amount of information. Our tool suggests a smaller lookup
 table can mitigate side-channels vulnerabilities. For example, Shown in Appendix~\ref{mbedtls_aes},
 \tool{} identify seven leakages from function \textsf{mbedtls\_internal\_aes\_decrypt}.
 However, \tool{} reports leakage 1, 2, 3 leak more information
@@ -269,13 +270,13 @@ patching the vulnerability CVE-2016-0702.
 \tool{} find OpenSSL 1.1.1 version has significantly less amount of 
 leaked information compared to other versions.
 We check the changelog of OpenSSL 1.1.1 and find it claims
-the new RSA implementation adopted ``numerous side-channel attack mitigation.'', 
+the new RSA implementation adopts ``numerous side-channel attack mitigation'', 
 which proves the effectiveness of our quantifying method.
 
 \begin{figure*}
     \centering
     \vspace*{-9pt}
-    \hspace*{-8pt}
+    \hspace*{-4pt}
     \subfloat[RSA OpenSSL 0.9.7]{
         \includegraphics[width=.19\linewidth]{./figures/result/RSA-openssl-0-9-7.pdf}
         \label{fig:rsa-1}
@@ -298,8 +299,7 @@ which proves the effectiveness of our quantifying method.
     }
     \caption{RSA implementations in different versions of OpenSSL\@. 
         We round the number of leaked information into the nearest integer. 
-        The mark $*$ means timeout,
-        which indicates more severe leakages (see \S\ref{loc:timeout}).}
+        The mark $*$ means timeout (see \S\ref{loc:timeout}).}
     \label{fig:rsa}
     \vspace*{-12pt}
 \end{figure*}
@@ -322,7 +322,7 @@ and the code can leak some information each times.
 The vulnerability has been patched in OpenSSL 1.1.1. Seen in 
 Figure~\ref{fig:new_sqr2}, control-flows transfers are replaced. 
 So there is no leaks in the function
-\textsf{sqr\_add\_c2} in OpenSSL 1.1.1. We also mention
+\textsf{sqr\_add\_c2} in OpenSSL 1.1.1. We mention
 that even line 4 and 9 in Figure~\ref{fig:old_sqr2} both have if branches.
 However, it is not a secret-dependent control-flow transfers because
 most compilers will use \emph{add with carry} instruction to remove the branch.
@@ -330,8 +330,8 @@ Besides, branches can also be compiled to non-branch machine instructions
 like conditional moves. Therefore, simple code reviews are not accurate
 enough to detect side-channels. 
 
-On the other hand, for those vulnerabilities that leak less information. 
-Developers are more reluctant to fix them. 
+On the other hand, for those vulnerabilities that leak less information,
+developers are more reluctant to fix them. 
 For example, OpenSSL 0.9.7 adopts a fixed windows version of 
 function \textsf{BN\_mod\_exp\_mont\_constime} to replace original function
 \textsf{BN\_mod\_exp\_mont}.
@@ -362,7 +362,6 @@ vulnerability can been seen in Appendix\S~\ref{appendix:minor:vul}.
 \end{figure}
 
 
-
 \begin{figure}
     \centering
     \begin{lstlisting}[xleftmargin=.02\textwidth,xrightmargin=.01\textwidth]
@@ -387,21 +386,19 @@ side-channel leakages. One of the vulnerabilities has the similar leaked
 branch as the one in \S~\ref{appendix:minor:vul}. However, as the branch
 is inside a loop and a bit shift function causes the branch leak different
 bits from the sensitive buffer. The vulnerability is far severe by our tool.
-Deatails of the leak can be found in Appendix \S\ref{unknown:leak} and 
+Details of the leak can be found in Appendix \S\ref{unknown:leak} and 
 Table \ref{tab:RSAOpenSSL1.1.1}.
 
 \subsubsection{Monocypher}\label{eval:mono}
 Monocypher is a small, easy to use cryptographic library with a
 comparable performance as LibSodium~\cite{libsodium} and NaCl~\cite{bernstein2012security}. 
 We choose four ciphers that are 
-designed to be more side-channel resistant from the library.
+designed to be side-channel resistant from the library.
 Because those ciphers have no 
 data flow from secrets to branch conditions and load addresses.
 Therefore, Monocypher should be safe under our threat models. 
- %However, we are still interested in those vulnerabilities caused
- %by compiler optimizations and implementations.
 We analyze those ciphers with \tool{}, and it reports no leaks from the
 implementation.
-This indicates that \tool\ can be used for countermeasure confirmation.
+This indicates that \tool{} can be used for countermeasure confirmation.
 
 
