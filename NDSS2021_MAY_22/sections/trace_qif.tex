@@ -189,12 +189,12 @@ For any $k' \in K \setminus K^o$, $p(k'|o) = 0$. We get
 \end{mydef}
 
 The above definition can be understood in an intuitive way. Suppose an attacker
-wants to guess a 128-bit encryption key from a program,
-without any domain knowledge, 
-he can find the key by performing exhaustive search over $O(2^{128})$ possible keys. 
+wants to guess a 128-bit encryption key from a program. 
+Without any domain knowledge, 
+he can find the key by performing exhaustive search over $2^{128}$ possible keys. 
 However, the program has a side-channel leakage site. After the program finishes execution, the
 attacker get some leaked information and only need to find the key by performing 
-exhaustive search over $O(2^{120})$ possible keys. Then we can say that 4 bits of the information
+exhaustive search over $2^{120}$ possible keys. Then we can say that 8 bits of the information
 is leaked. In this example, $2^{128}$ is the size of $K$ and $2^{120}$ is the size of $K^o$.
 
 
