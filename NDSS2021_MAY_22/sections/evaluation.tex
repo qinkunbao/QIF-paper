@@ -335,7 +335,7 @@ enough to detect side-channels.
 On the other hand, for those vulnerabilities that leak less information,
 developers are more reluctant to fix them. 
 For example, OpenSSL 0.9.7 adopts a fixed windows version of 
-function \textsf{BN\_mod\_exp\_mont\_constime} to replace original function
+function \textsf{BN\_mod\_exp\_mont\_consttime} to replace original function
 \textsf{BN\_mod\_exp\_mont}.
 \tool{} detects a minor vulnerability in the original function that can
 leaks the last bit of the big number \textbf{m}. In the updated version,
