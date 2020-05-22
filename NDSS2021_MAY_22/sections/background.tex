@@ -23,7 +23,7 @@ the data, the attacker will experience a slow measurement.
 While Flush+Reload targets a
 single cache line, it requires the attacker and victim share some memory. 
 During the ``flush'' stage, the attacker flushes the ``monitored
-memory'' from the cache and also waits for the victim to access the memory,
+memory'' from the cache and waits for the victim to access the memory,
 who will load the sensitive information to the cache line. In the next phase,
 the attacker reloads the ``monitored memory''. By measuring the time difference
 brought by cache hit and miss, the attacker can further infer the sensitive information.

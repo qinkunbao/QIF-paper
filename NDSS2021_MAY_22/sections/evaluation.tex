@@ -86,6 +86,9 @@ resists to most side-channel attacks.
 Monocypher is designed to have no 
 secrets dependent indices and no secret dependent branches. Therefore,
 Monocypher should be secure under our threat model.
+We mark variables and buffers that store the secret. 
+It can be done either by adding an annotation on the source code 
+or telling Pin tool the address and the length of secrets.
 
 We build the source code into 32-bit x86 Linux executables with GCC 8.0
 under Ubuntu 14.04. Although we use use symbol information to track back leakage
