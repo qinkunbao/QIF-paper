@@ -40,22 +40,17 @@ as a math formula and by using the conjunction of those formulas to describe the
 \tool{} reaches full precision if the number of estimated leaked bits 
 equals to Definition~\ref{def}. According to the threat model, the 
 length of the secret is known, so the only estimated value is the number
- of possible secrets under the attacker's observation ($|K^o|$). 
- During the symbolic execution, \tool{} may lose precision from the 
- memory model it uses in theory. However, we do not find false positives 
- caused by the imprecise memory model during the evaluation. 
- During the symbolic execution, for each constraint it generates,
- the tool will check the correctness of the constraint by giving 
- the constraint real values (the value of sensitive keys). Sampling 
- can also introduce imprecision but with a probabilistic guarantee, 
- as long as the sampling can terminate under the Central Limit Theorem (CLT) condition in probability theory. 
- However, during the evaluation, we find that \tool{} cannot estimate 
- the amount of leakage for some leakage sitesin a reasonable time, 
- which means the number of $K^o$ is very small. According to Definition~\ref{def}, 
- it means the leakage is very severe.
- %% However, the problem is not that simple. 
- %% Let's say $|K^o|$ equals to 1.If we have an efficient algorithm to 
- %% find the item in $K^o$,then it is a truly severe leakage. 
- %% We can recover the whole key. If the constraint is very complex
- %% (e.g., a constraint that maps the plaintext and ciphertext for AES-128), 
- %% then it is not a leak at all.
+of possible secrets under the attacker's observation ($|K^o|$). 
+During the symbolic execution, \tool{} may lose precision from the 
+memory model it uses in theory. However, we do not find false positives 
+caused by the imprecise memory model during the evaluation. 
+During the symbolic execution, for each constraint it generates,
+the tool will check the correctness of the constraint by giving 
+the constraint real values (the value of sensitive keys). Sampling 
+can also introduce imprecision but with a probabilistic guarantee, 
+as long as the sampling can terminate under the Central Limit Theorem (CLT) condition in probability theory. 
+However, during the evaluation, we find that \tool{} cannot estimate 
+the amount of leakage for some leakage sitesin a reasonable time, 
+which means the number of $K^o$ is very small. According to Definition~\ref{def}, 
+it means the leakage is very severe.
+

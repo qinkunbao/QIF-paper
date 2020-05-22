@@ -8,7 +8,7 @@
         DF represents secret-dependent data-flow transfers. A summary of vulnerabilities 
         with the amount of leaked information can be found in Appendix \S\ref{sec:result-table}.
     }\label{table:over_result}
-    \vspace*{-9pt}
+    \vspace*{-5pt}
     \newlength{\x}
     \newlength{\y}
     \settowidth{\x}{~~}
@@ -105,7 +105,7 @@ aspects:
           systems? (\S\ref{sec:eval_overview} and \S\ref{eval:scala})
     \item  \textbf{Quantifying side-channel leakages.}
           Can \tool{} precisely report the number of leaked bits in crypto
-          libraries? Are the numbers of leaked bits reported by \tool{} useful
+          libraries? Is the number of leaked bits reported by \tool{} useful
           to justify the severity levels of each side-channel vulnerability?
           (\S\ref{eval:sym}, \S\ref{eval:asym}, \S\ref{eval:mono})
 \end{enumerate}
@@ -118,14 +118,14 @@ transfers and 678 of them are leaked due to secret-dependent memory accesses.
 
 \tool{} also identifies that most side-channel
 vulnerabilities leak very little information in practice, which confirms our
-initial assumptions.  
-However, we do find some vulnerabilities that \tool{} reports with severe
+initial assumption.  
+However, we do find some vulnerabilities that \tool{} report with severe
 leakages. Some of them have been confirmed by existing research that those
 vulnerabilities can be exploited to realize real attacks.
 Without our tool, developers will not be able to
 distinguish those ``vulnerabilities'' from severe ones and ignore others for sure easily.
 
-All symmetric encryption implementations in OpenSSL and mbedTLS\@ have significant
+Symmetric encryption implementations in OpenSSL and mbedTLS\@ have significant
 leakages due to the lookup table implementation. 
 Every leakages found during the evaluation belong to the type of
 secret-dependent memory accesses. \tool{} finds several leakage sites for both 
@@ -133,7 +133,7 @@ implementations of DES and AES in
 OpenSSL and mbedTLS\@. \tool{} confirms that all those leakages come from table
 lookups. mbedTLS 2.15 and 2.5 have the same implementation of both DES and AES, so
 they have the same leakage report. One proper fix would be a scalar bit-sliced
-implementation. However, we do not see the bit-sliced implementation of AES and
+implementation. We do not see the bit-sliced implementation of AES and
 DES in various versions of mbedTLS\@. However, we find the new
 implementation of OpenSSL instead uses typical four 1K tables. It only uses one 1K
 of the tables. This implementation is rather easy but does somehow decrease the total
@@ -190,8 +190,7 @@ vulnerabilities. The table~\ref{eval:cacheD} shows that
 \tool{} is three times faster than CacheD. As the time of symbolic execution
 grow quadratically, \tool{} is much faster than CacheD when analyzing the same
 number of instructions. For example, when we test~\tool{} on AES from OpenSSL
-0.9.7, ~\tool{} is over %more than
-100x faster than CacheD.
+0.9.7, ~\tool{} is over 100x faster than CacheD.
 
 Since DATA~\cite{217537} need to compare several execution traces to identify
 side-channel leakages, \tool{} also outperforms DATA in terms of performance.
