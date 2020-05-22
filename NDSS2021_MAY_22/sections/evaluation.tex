@@ -49,6 +49,7 @@
         RSA                & OpenSSL 1.0.2k           & 36                     & 27                  & 9                    & 15,285,210  & 14.2 & 40 ~~     & 714   ~~        \\
         RSA                & OpenSSL 1.1.0f           & 31                     & 22                  & 9                    & 16,390,750  & 17.2 & 34 ~~     & 490 ~~          \\
         RSA                & OpenSSL 1.1.1            & 4                      &  0                  & 0                    & 18,207,016  & 1.0  & 8 ~~      & 53 ~~           \\
+
         Total              &                          & 886                    & 219                 & 667                  & 139,733,961 &      & 214m \foo & 2,861m \foo     \\\hline
     \end{tabular}
 %    }
@@ -254,25 +255,29 @@ which proves the effectiveness of our quantifying method.
 \begin{figure*}
     \centering
     \vspace*{-9pt}
-    \hspace*{-4pt}
-    \subfloat[RSA OpenSSL 0.9.7]{
-        \includegraphics[width=.19\linewidth]{./figures/result/RSA-openssl-0-9-7.pdf}
+    \hspace*{-15pt}
+    \subfloat[OpenSSL 0.9.7]{
+        \includegraphics[width=.16\linewidth]{./figures/result/RSA-openssl-0-9-7.pdf}
         \label{fig:rsa-1}
     }
-    \subfloat[RSA OpenSSL 1.0.2f]{
-        \includegraphics[width=.19\linewidth]{./figures/result/RSA-openssl-1-0-2f.pdf}
+    \subfloat[OpenSSL 1.0.2f]{
+        \includegraphics[width=.16\linewidth]{./figures/result/RSA-openssl-1-0-2f.pdf}
         \label{fig:rsa-2}
     }
-    \subfloat[RSA OpenSSL 1.0.2k]{
-        \includegraphics[width=.19\linewidth]{./figures/result/RSA-openssl-1-0-2k.pdf}
+    \subfloat[OpenSSL 1.0.2k]{
+        \includegraphics[width=.16\linewidth]{./figures/result/RSA-openssl-1-0-2k.pdf}
         \label{fig:rsa-3}
     }
-    \subfloat[RSA OpenSSL 1.1.0f]{
-        \includegraphics[width=.19\linewidth]{./figures/result/RSA-openssl-1-1-0f.pdf}
+    \subfloat[OpenSSL 1.1.0f]{
+        \includegraphics[width=.16\linewidth]{./figures/result/RSA-openssl-1-1-0f.pdf}
         \label{fig:rsa-4}
     }
-    \subfloat[RSA OpenSSL 1.1.1]{
-        \includegraphics[width=.19\linewidth]{./figures/result/RSA-openssl-1-1-1.pdf}
+    \subfloat[OpenSSL 1.1.1]{
+        \includegraphics[width=.16\linewidth]{./figures/result/RSA-openssl-1-1-1.pdf}
+        \label{fig:rsa-5}
+    }
+    \subfloat[OpenSSL 1.1.1g]{
+        \includegraphics[width=.16\linewidth]{./figures/result/RSA-openssl-1-1-1.pdf}
         \label{fig:rsa-5}
     }
     \caption{RSA implementations in different versions of OpenSSL\@. 
