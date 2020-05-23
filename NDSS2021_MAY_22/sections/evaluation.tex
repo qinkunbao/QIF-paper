@@ -41,13 +41,13 @@
         Poly1305           & Monocypher 3.0           & 0                      & 0                   & 0                    & 1,213,937   & 0    & 15 ~~   & 0           ~~  \\
         Argon2i            & Monocypher 3.0           & 0                      & 0                   & 0                    & 4,595,142   & 0    & 37 ~~   & 0           ~~  \\
         Ed25519            & Monocypher 3.0           & 0                      & 0                   & 0                    & 5,713,619   & 0    & 271 ~~  & 0           ~~  \\
-        ECDSA              & mbedTLS 2.5              & 6                      &    6                & 0                    &  4,214,946   & 12.0  &  48 ~~  &   79       ~~  \\ 
-        ECDSA              & mbedTLS 2.15             &   4                   &   4                 & 0                    &  4,192,558  & 11.7  & 102 ~~  & 1741     ~~         \\   
-        ECDSA              & OpenSSL 1.0.2f           &  5                    & 4                   & 1                    &  8,248,322   & 8.8    & 101 ~~    & 163 ~~           \\   
-        ECDSA              & OpenSSL 1.0.2k           &  5                    & 4                   & 1                    &  8,263,599    &  8.4  & 100 ~~     & 158 ~~            \\   
-        ECDSA              & OpenSSL 1.1.0f           &  5                    & 4                   & 1                    &  6,100,465     &   8.4   & 76 ~~     & 118 ~~                  \\  
-        ECDSA              & OpenSSL 1.1.1            & 0                      &  0                   &    0               &  10,244,076    &  0    &  121 ~~    & 121 ~~                 \\  
-        ECDSA              & OpenSSL 1.1.1g           & 0                      &  0                   &  0                 &  9,266,191       & 0      & 102 ~~     & 161 ~~        \\  
+        ECDSA              & mbedTLS 2.5              & 6                      &    6                & 0                    &  4,214,946   & 12.0  &  48 ~~  &   31      ~~  \\ 
+        ECDSA              & mbedTLS 2.15             &   4                   &   4                 & 0                    &  4,192,558  & 11.7  & 102 ~~  & 1639     ~~         \\   
+        ECDSA              & OpenSSL 1.0.2f           &  5                    & 4                   & 1                    &  8,248,322   & 8.8    & 101 ~~    & 62 ~~           \\   
+        ECDSA              & OpenSSL 1.0.2k           &  5                    & 4                   & 1                    &  8,263,599    &  8.4  & 100 ~~     & 58 ~~            \\   
+        ECDSA              & OpenSSL 1.1.0f           &  5                    & 4                   & 1                    &  6,100,465     &   8.4   & 76 ~~     & 42 ~~                  \\  
+        ECDSA              & OpenSSL 1.1.1            & 0                      &  0                   &    0               &  10,244,076    &  0    &  121 ~~    & 0 ~~                 \\  
+        ECDSA              & OpenSSL 1.1.1g           & 0                      &  0                   &  0                 &  9,266,191       & 0      & 102 ~~     & 59 ~~        \\  
 
 
                            &                          &                        &                     &                      &             &      & minutes   & minutes         \\\cline{8-9}
@@ -61,7 +61,7 @@
         RSA                & OpenSSL 1.1.1g           & 8                      &  8                  & 0                    & 18,536,796  & 10.0  & 5 ~~      & 780 ~~           \\
 
 
-        Total              &                          & 886                    & 219                 & 667                  & 139,733,961 &      & 214m \foo & 2,861m \foo     \\\hline
+        Total              &                          & 896                    & 233                 & 663                  & 139,733,961 &      & 228m \foo & 3,672m \foo     \\\hline
     \end{tabular}
 %    }
 \end{table*}
@@ -100,9 +100,9 @@ aspects:
 
 \subsection{Evaluation Result Overview} \label{sec:eval_overview}
 Table~\ref{table:over_result} shows the overview of evaluation results. \tool{} finds
-883 leakages in total from real-world crypto libraries. Among those 883
-leak points, 205 of them are leaked due to secret-dependent control-flow
-transfers and 678 of them are leaked due to secret-dependent memory accesses.
+883 leakages in total from real-world crypto libraries. Among those 896
+leak points, 233 of them are leaked due to secret-dependent control-flow
+transfers and 663 of them are leaked due to secret-dependent memory accesses.
 
 \tool{} also identifies that most side-channel
 vulnerabilities leak very little information in practice, which confirms our
