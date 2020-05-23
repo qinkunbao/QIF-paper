@@ -1,0 +1,18 @@
+\begin{table}[h!]
+\centering\tiny\scriptsize
+\caption{Leakages in ECDSA implemented by mbedTLS 2.5}\label{tab:t_ECDSALibgcrypt2.5-nonce}
+%\resizebox{\columnwidth}{!}{
+\begin{tabular}{lrlrr}
+\hline
+\textbf{File} & \textbf{Line No.} & \textbf{Function} & \textbf{\# Leaked Bits} & \textbf{Type} \\\hline
+bignum.c& 369&mbedtls\_mpi\_bitlen&7.5 &CF\\
+bignum.c& 1167&mpi\_mul\_hlp&1.8 &CF\\
+bignum.c& 861&mbedtls\_mpi\_cmp\_mpi&1.1 &CF\\
+bignum.c& 862&mbedtls\_mpi\_cmp\_mpi&0.8 &CF\\
+bignum.c& 861&mbedtls\_mpi\_cmp\_mpi&1.8 &CF\\
+bignum.c& 862&mbedtls\_mpi\_cmp\_mpi&12.0 &CF\\
+\hline
+\end{tabular}
+%}
+\renewcommand{\baselinestretch}{1.0}\selectfont
+\end{table}
