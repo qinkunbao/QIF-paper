@@ -84,9 +84,9 @@
 \DecMargin{1em}
 }
 
-
 \section{AES Lookup Tables Leakage}
 
+%\vspace*{1pt}
 \begin{figure}[h!]
     \centering
     \begin{lstlisting}[xleftmargin=.01\textwidth,xrightmargin=.01\textwidth]
@@ -155,12 +155,10 @@ if (bits == 0)
     \vspace*{-6pt}
 \end{figure}
 
-
-
 \begin{figure}[h]
     \centering
     \begin{lstlisting}[xleftmargin=.02\textwidth,xrightmargin=.01\textwidth]
-int BN_mod_exp_mont(BIGNUM *rr, 
+int BN_mod_exp_mont_consttime(BIGNUM *rr, 
 const BIGNUM *a, const BIGNUM *p,
 const BIGNUM *m, BN_CTX *ctx, BN_MONT_CTX *in_mont)
 {
@@ -173,10 +171,9 @@ bits = BN_num_bits(p);
 if (bits == 0) 
 ...
 }
-
 \end{lstlisting}
     \vspace*{-6pt}
-    \caption{\textsf{BN\_mod\_exp\_mont} in OpenSSL 1.1.1}
+    \caption{\textsf{BN\_mod\_exp\_mont\_consttime} in OpenSSL 1.1.1}
     \label{appen:fig:exp_new}
     \vspace*{-6pt}
 \end{figure}
@@ -223,7 +220,7 @@ while (!BN_is_bit_set(B, shift)) { /* note that 0 < B */
 
 Here we present the detailed experimental results.
 Due to space limitation, we select the representative implementations of
-AES, DES, and RSA in
+AES, DES, RSA, and ECDSA in
 mbedTLS 2.5,
 OpenSSL 1.1.0f,  and
 OpenSSL 1.1.1.  
