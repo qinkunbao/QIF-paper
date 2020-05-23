@@ -87,7 +87,7 @@
 \section{AES Lookup Tables Leakage}
 
 %\vspace*{1pt}
-\begin{figure}[h!]
+\begin{figure}[h]
     \centering
     \begin{lstlisting}[xleftmargin=.01\textwidth,xrightmargin=.01\textwidth]
 int mbedtls_internal_aes_encrypt( mbedtls_aes_context *ctx,
@@ -119,6 +119,7 @@ return( 0 );
     \label{mbedtls_aes}
     \vspace*{-9pt}
 \end{figure}
+
 
 \section{Minor side-channels vulnerability}
 \label{appendix:minor:vul}
@@ -179,38 +180,66 @@ if (bits == 0)
 \end{figure}
 
 \section{Unknown Leaks in OpenSSL 1.1.1}\label{unknown:leak}
-Shown in Table~\ref{tab:RSAOpenSSL1.1.1}, \tool{} discovers a series
+Shown in Table~\ref{tab:RSAOpenSSL1.1.1g}, \tool{} discovers a series
 of side-channel vulnerabilities in the up-to-date version of OpenSSL library. 
 However, many of them are negligible quantified by \tool{}.
-Here we present a unknown vulnerability. Despite the following
-vulnerability leaks through the same code patterns at line 3 as the vulnerability shown
-in \S\ref{appendix:minor:vul}, \tool{} shows the following code can leak
-around 15 bits from the original key.
-\label{appendix:unknown}
+Here we present a few vulnerabilitites in Figure~\ref{fig:unknown1} and Figure~\ref{fig:unknown2}. 
+
 \begin{figure}[h]
 \centering
 \begin{lstlisting}[xleftmargin=.02\textwidth,xrightmargin=.01\textwidth]
-while (!BN_is_bit_set(B, shift)) { /* note that 0 < B */
-    shift++;
-    if (BN_is_odd(X)) {
-        if (!BN_uadd(X, X, n))
-            goto err;
-    }
-    ...
-    if (!BN_rshift1(X, X))  // It causes the leak severe!
-        goto err;
-    ...
+BN_ULONG bn_sub_words(BN_ULONG *r, const BN_ULONG *a, 
+const BN_ULONG *b, int n)
+{
+BN_ULONG t1, t2;
+int c = 0;
+... 
+while (n) {
+    t1 = a[0];
+    t2 = b[0];
+    r[0] = (t1 - t2 - c) & BN_MASK2;
+    if (t1 != t2)         // leakage         
+        c = (t1 < t2);
+    a++;
+    b++;
+    r++;
+    n--;
+}
+return c;
+}
+\end{lstlisting}
+        \vspace*{-6pt}
+        \caption{Unknown sensitive secret-dependent branch leaks from function 
+                 \textsf{bn\_sub\_words} in OpenSSL 1.1.1g.}
+        \label{fig:unknown1}
+        \vspace*{-6pt}
+ \end{figure}
+
+\begin{figure}[h]
+\centering
+\begin{lstlisting}[xleftmargin=.02\textwidth,xrightmargin=.01\textwidth]
+int bn_div_fixed_top(BIGNUM *dv, BIGNUM *rm, 
+const BIGNUM *num,
+const BIGNUM *divisor, BN_CTX *ctx)
+{
+... 
+t2 = (BN_ULLONG) d1 *q;
+for (;;) {
+    if(t2 <= ((((BN_ULLONG) rem) << BN_BITS2) | n2)) //leakage
+        break;
+    q--;
+    rem += d0;
+    if (rem < d0)
+        break;      /* don't let rem overflow */
+    t2 -= d1;
+}
+... 
 }
 \end{lstlisting}
     \vspace*{-6pt}
     \caption{Unknown sensitive secret-dependent branch leaks from function 
-             \textsf{int\_bn\_mod\_inverse} in OpenSSL 1.1.1. Same as the example
-             in \S\ref{appendix:minor:vul}, the code can leak the last digit from
-             big number \textbf{X}. However, the leak is more severe because of the 
-             function \textsf{BN\_rshift1}. Each time function \textsf{BN\_rshift1}
-             will shift \textbf{X} right by one and places the result in \textbf{X}. Therefore,
-             an attacker can infer multiple bits of \textbf{X} by observing the branch at line 3.}
-    \label{fig:unknown}
+             \textsf{bn\_div\_fixed\_top} in OpenSSL 1.1.1g.}
+    \label{fig:unknown2}
     \vspace*{-6pt}
 \end{figure}
 
@@ -248,7 +277,7 @@ but not exactly zero. See \S\ref{sssec:errest} for the details of error estimate
  \input{figures/form/latex/RSA-openssl-1-1-1g.tex}
 
  \input{figures/form/latex/ECDSA-openssl-1-1-0f.tex}
- \input{figures/form/latex/ECDSA-mbedTLS-2.5.tex}
+ %\input{figures/form/latex/ECDSA-mbedTLS-2.5.tex}
 
  \input{figures/form/latex/ECDSA-mbedTLS-2.15.1.tex}
 
