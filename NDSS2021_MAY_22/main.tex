@@ -387,6 +387,7 @@ showlines=true
 \newtheorem{mydef}{Definition}
 \newtheorem{theorem}{Theorem}
 
+\renewcommand{\baselinestretch}{0.998}\selectfont
 
 
 % *** Do not adjust lengths that control margins, column widths, etc. ***
@@ -476,8 +477,7 @@ showlines=true
   attacker's observation of each leakage site as a constraint.  
   We scale symbolic execution to production software to generate the
   constraints and then run Monte Carlo sampling to estimate the number of leaked
-  bits for each vulnerability. 
-  By using the Central Limit Theorem, we can also give the error bound for estimation.
+  bits for each vulnerability. By using the Central Limit Theorem, we can also give the error bound for estimation.
   
   We have implemented the above technique in a tool called \tool{}, which can
   not only find the side-channel vulnerabilities but also estimate how many
@@ -488,7 +488,7 @@ showlines=true
   Our results show that most of the reported vulnerabilities are hard to
   exploit in practice.  We also find several sensitive vulnerabilities that
   are missed by the existing tools. We confirm those vulnerabilities with
-  manual checks and by the developers.  
+  manual checks and by the developers.
 \end{abstract}
 % IEEEtran.cls defaults to using nonbold math in the Abstract.
 % This preserves the distinction between vectors and scalars. However,
@@ -511,7 +511,6 @@ showlines=true
 \input{sections/discussion}
 \input{sections/related_work}
 \input{sections/conclusion}
-\clearpage
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
 

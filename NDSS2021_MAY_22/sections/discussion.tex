@@ -14,7 +14,7 @@ leak more information than a key validation function.
 \tool{} can be used by software developers to find sensitive vulnerabilities
 and reason about countermeasures.
 \tool{} estimates the amount of leaked information for each side-channel leakage
-in one particular execution. \tool{} is useful for software
+in one execution trace. \tool{} is useful for software
 engineers to test programs and fix vulnerabilities.
 \tool{} works on native x86 execution traces. The design, which is very
 precise in terms of true leakages compared to other static source code
@@ -36,6 +36,11 @@ bit in the original key and those leaks are not independent. \tool{} can capture
 fine-grained information by
 modeling each leak during the execution 
 as a math formula and by using the conjunction of those formulas to describe the total effect.
+There could be multiple leakage sites in the program. While some leakages are independent,
+some other leakage sites are dependent. Some leakage sites (e.g, square and multiply) can leak one particular bit 
+of the original key, but some leakage sites leak one bit from several bytes in the original
+key. Those constraints can precisely model the relationship between the key buffers
+and leakage sites.
 
 \tool{} reaches full precision if the number of estimated leaked bits 
 equals to Definition~\ref{def}. According to the threat model, the 
@@ -50,7 +55,7 @@ the constraint real values (the value of sensitive keys). Sampling
 can also introduce imprecision but with a probabilistic guarantee, 
 as long as the sampling can terminate under the Central Limit Theorem (CLT) condition in probability theory. 
 However, during the evaluation, we find that \tool{} cannot estimate 
-the amount of leakage for some leakage sitesin a reasonable time, 
+the amount of leakage for some leakage sites in a reasonable time, 
 which means the number of $K^o$ is very small. According to Definition~\ref{def}, 
 it means the leakage is very severe.
 

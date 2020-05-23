@@ -85,8 +85,9 @@
 }
 
 \section{AES Lookup Tables Leakage}
-
-%\vspace*{1pt}
+\label{appendix:mbedtls_aes}
+Shown in Figure~\ref{fig:lookuptable}, usually a smaller look up table 
+leaks less amount of information.
 \begin{figure}[h]
     \centering
     \begin{lstlisting}[xleftmargin=.01\textwidth,xrightmargin=.01\textwidth]
@@ -116,7 +117,7 @@ return( 0 );
 \end{lstlisting}
     \vspace*{-6pt}
     \caption{Function \textsf{mbedtls\_internal\_aes\_encrypt}}
-    \label{mbedtls_aes}
+    \label{fig:lookuptable}
     \vspace*{-9pt}
 \end{figure}
 

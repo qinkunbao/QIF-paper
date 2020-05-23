@@ -232,7 +232,7 @@ We find that OpenSSL 1.1.1 version
 instead uses the 1KB lookup tables with 32 bit entries like older versions, it uses a 
 tables with 8 bit entries. In other words, our tools shows that lookup tables with smaller 
 entries will leak less amount of information. Our tool suggests a smaller lookup
-table can mitigate side-channels vulnerabilities. For example, Shown in Appendix~\ref{mbedtls_aes},
+table can mitigate side-channels vulnerabilities. For example, Shown in Appendix~\ref{appendix:mbedtls_aes},
 \tool{} identify seven leakages from function \textsf{mbedtls\_internal\_aes\_decrypt}.
 However, \tool{} reports leakage 1, 2, 3 leak more information
 compared to leakage 4, 5, 6, 7. 
