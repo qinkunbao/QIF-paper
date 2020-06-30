@@ -1,0 +1,247 @@
+\section{Background and Threat Model}
+In this section, we first present an introduction to address-based side-channel
+attacks and show many of them are caused by two specific side-channel
+vulnerabilities: secret-dependent control-flow transfers and secret-dependent
+memory accesses. Therefore, we will focus on identifying and quantifying those
+leakages in the paper. After that, we discuss existing information leakage quantification 
+metrics.
+
+\subsection{Address-based Side-channels}
+Side channels can leak sensitive information
+unconsciously through different execution behaviors caused by shared 
+hardware components (e.g., CPU cache, TLB, and
+DRAM) in modern computer systems~\cite{ge2018survey,szefer2019survey}. 
+
+For example, cached-based
+@inproceedings{liu2015last,
+side-channels~\cite{yarom2017cachebleed,191010,184415,,Osvik2006,liu2015last,184415}
+rely on the time difference between cache misses and cache hits. We introduce two
+common attack strategies, namely Prime+Probe~\cite{liu2015last} and
+Flush+Reload~\cite{184415}. Prime+Probe targets a single cache set. An
+attacker preloads the cache set with its own data and waits until the victim
+executes the program. If the victim accesses the cache set and evicts part of
+the data, the attacker will experience a slow measurement. 
+While Flush+Reload targets a
+single cache line, it requires the attacker and victim share some memory. 
+During the ``flush'' stage, the attacker flushes the ``monitored
+memory'' from the cache and waits for the victim to access the memory,
+who will load the sensitive information to the cache line. In the next phase,
+the attacker reloads the ``monitored memory''. By measuring the time difference
+brought by cache hit and miss, the attacker can further infer the sensitive information.
+Some other types of side-channels target different hardware
+layers other than CPU cache. For example, the controlled-channel
+attack~\cite{7163052}, where an attacker works in the kernel space, can infer
+sensitive data in shielding systems by observing the page fault sequences
+after restricting some code and data pages.
+
+\begin{figure}[]
+
+    \noindent\begin{minipage}{0.45\linewidth}
+        \noindent
+        \begin{lstlisting}[numbers = none]
+unsigned long long r;
+int secret[32];
+...
+while(i>0){
+    r = (r * r) % n;
+    if(secret[--i] == 1)
+        r = (r * x) % n;   
+}
+        \end{lstlisting}
+\vspace*{-9pt}
+        \caption{Secret-dependent control-flow transfers}
+        \label{fig:secret:cf}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\linewidth}
+        \begin{lstlisting}[numbers = none]
+static char Fsb[256] = {...}
+... 
+uint32_t a = *RK++ ^ \ 
+(FSb[(secret)) ^
+(FSb[(secret >> 8)] << 8 ) ^
+(FSb[(secret >>16)] << 16 ) ^
+(FSb[(secret >>24)] << 24 );
+...
+        \end{lstlisting}
+\vspace*{-9pt}
+        \caption{Secret-dependent memory accesses}
+        \label{fig:secret:da}
+    \end{minipage}
+\vspace*{-12pt}
+\end{figure}
+
+The key intuition is that above side-channel attacks happen when a
+program accesses different memory addresses if the program has different
+sensitive inputs. As shown in Figure~\ref{fig:secret:cf} and Figure~\ref{fig:secret:da}, 
+if a program shows different patterns in
+control transfers or data accesses when the program processes different
+sensitive inputs, the program could possibly have side channels vulnerabilities.
+Different kinds of side-channels can be exploited to retrieve information in
+various granularities. For example, cache channels can observe cache
+accesses at the level of cache sets~\cite{liu2015last}, cache lines~\cite{184415} or other granularities. 
+Other kinds of side-channels like controlled-channel attack~\cite{7163052},
+can observe the memory access at the level of memory pages.
+
+%\lstinputlisting[language=c, 
+%                 numbers=left,
+%                 caption={Sample code shows secret-dependent memory access and 
+%                          secret-dependent control-flow transfer.},
+%                 captionpos=b,
+%                 label={code:background},
+%                 frame=single,
+%                 basicstyle=\fontsize{7}{9}\selectfont\ttfamily]
+%                 {sample_code/background.c}
+
+%For example, the above code~\ref{code:background} show a simple encryption
+%function that has the two kinds of side-channels. At line 11, depending on the
+%value of a key, the code will access the different entry in the predefined
+%table. At the line 13, the code will do a series of computation and determine
+%if the code in the if branch is executed or not. Such vulnerabilities are
+%called the memory-based side-channles. We identify and quantify the leakage of
+%the two kinds of vulnerabilities in the paper.
+
+\subsection{Exisiting Information Leakage Quantification}\label{sec:background_leak}
+
+Given an event $e$ that occurs with the probability $p(e)$, we receive
+\begin{displaymath}
+    I = - \log_2p(e)
+\end{displaymath}
+bits of information by knowing the event $e$ happens according to information theory~\cite{shannon1948mathematical}. 
+Considering a char variable $a$
+with one byte storage size in a C program, its value ranges from 0 to 255.
+Assume $a$ has a uniform distribution. If we observe that
+$a$ equals $1$, the probability of this observation is $\frac{1}{256}$. So 
+we get $-\log(\frac{1}{256}) = 8$ bits information, which is exactly the size
+of a char variable in the C program.
+
+Existing works on information leakage quantification typically use Shannon
+entropy~\cite{clark2007static,Wichelmann:2018:MFF:3274694.3274741},
+min-entropy~\cite{10.1007/978-3-642-00596-1_21}, and max-entropy~\cite{182946,
+Doychev:2017:RAS:3062341.3062388}. In these frameworks, the input sensitive
+information $K$ is considered as a random variable.
+
+Let $k$ be one of the possible
+value of $K$. The Shannon entropy $H(K)$ is defined as
+\begin{displaymath}
+    H(K) = - \sum_{k {\in} K}p(k)\log_2(p(k))
+\end{displaymath}
+
+Shannon entropy can be used to quantify the initial uncertainty about the
+sensitive information. It measures the amount of information in a system.
+
+Min-entropy describes the information leaks for a program with the most likely input. 
+For example, min-entropy can be used to describe the
+best chance of success in guessing one's password using the
+most common password. %, which is defined as
+\begin{displaymath}
+    \mathit{min\text{-}entropy} = - \log_2(p_{\mathit{max}})
+\end{displaymath}
+
+Max-entropy is defined solely on the number of possible observations.
+%It is equal to $-\log_2{n}$.
+\begin{displaymath}
+    \mathit{max\text{-}entropy} = -\log_2{n}
+\end{displaymath}
+As it is easy to compute, most recent works~\cite{182946,Doychev:2017:RAS:3062341.3062388} use max-entropy as the definition of
+the amount of leaked information.
+
+To illustrate how these definitions work, we consider the code
+fragment in Figure~\ref{fig:side-channel}. It has two secret-dependent
+control-flows, A and B.
+
+\begin{figure}[h!]
+\centering
+\begin{lstlisting}[xleftmargin=.03\textwidth,xrightmargin=.01\textwidth]
+uint8_t key[2], t1, t2;
+get_key(key);              // 0 <= key[0], key[1] < 256
+t1 = key[0] + key[1];
+t2 = key[0] - key[1];
+if (t1 < 4){               // leakage site A
+    foo();    
+}                          
+if (t2 > 0){               // leakage site B     
+    doo();    
+}                          
+\end{lstlisting}
+\vspace*{-1pt}
+    \caption{Side-channel leakage}
+    \label{fig:side-channel}
+\end{figure}
+In this paper we assume an attacker can observe the secret-dependent control-flows in Figure~\ref{fig:side-channel}.
+Therefore, an attacker can have two different observations for each leak site
+depending on the value of the $\mathit{key}$: $A$ for function \textsf{foo} is executed, 
+$\neg A$ for function \textsf{foo} is not executed, $B$ for function \textsf{doo} is
+executed, and $\neg B$ for function \textsf{doo} is not executed. Now the
+question is how much information can be leaked from the above code if an
+attacker knows which branch is executed?
+
+\begin{table}[ht]
+    \centering\small\footnotesize
+    \caption{The distribution of observation}\label{shtable}
+    \vspace*{-0pt}
+%    \resizebox{\columnwidth}{!}{
+    \begin{tabular}{l|cc|cc}
+        \hline
+
+        Observation ($o$)   & $A$ & $\neg A$ & $B$ & $\neg B$ \\ \hline
+        Number of Solutions & 65526       & 10        & 32768     & 32768           \\ \hline
+        Possibility (p)     & 0.9998      & 0.0002    & 0.5    & 0.5       \\
+        \hline
+    \end{tabular}
+%        }
+\end{table}
+
+Assuming $\mathit{key}$ is uniformly distributed, we can calculate the corresponding
+possibility by counting the number of possible inputs. Table~\ref{shtable}
+describes the probability of each observation. We use the above three types of 
+leakage metrics to calculate the amount of leaked information for leak A and leak B.
+
+\vspace{3pt}
+\textbf{Min Entropy.}
+As $p_{A\mathit{max}} = 0.9998$ and $p_{B\mathit{max}} = 0.5$, 
+with the definition, min-entropy equals to
+\begin{align*}
+    \mathit{min\text{-}entropy_A} & = -\log_2{0.9998} = 0.000\ \mathrm{bits} \\
+    \mathit{min\text{-}entropy_B} & = -\log_2{0.5} = 1.000\ \mathrm{bits}
+\end{align*}
+
+\textbf{Max Entropy.}
+Depending on the value of key, the code can run two different branches for each leakage site. 
+Therefore, with the max entropy
+definition, both leakage sites leak
+
+\begin{displaymath}
+    \mathit{max\text{-}entropy} = -\log_2{2} = 1.000\ \mathrm{bits}
+\end{displaymath}
+
+\textbf{Shannon Entropy.}
+Based on Shannon entropy, the respective amount of information in A and B equals to
+{\footnotesize
+\begin{align*}
+    \mathit{Shannon\text{-}entropy_A} & = -(0.9998*\log_{2}0.9998      \\
+                                    & \qquad+ 0.0002*\log_{2}0.0002)  \\
+                                    & = 0.000\ \mathrm{bits}         \\
+    \mathit{Shannon\text{-}entropy_B} & = -(0.5*\log_{2}0.5      \\
+                                    & \qquad+ 0.5*\log_{2}0.5)        \\
+                                    & = 1.000\ \mathrm{bits}                             
+\end{align*}
+}
+In the next section, we will show that these measures work well only
+theoretically in a static analysis setting. 
+Generally, they do not apply to dynamic analysis or real
+settings. We will present that the static or theoretical results could be
+dramatically different from the real world, and we do need a better method to
+quantify the information leakage from a practical point of view.
+
+\subsection{Threat Model}
+We consider an attacker shares the same hardware resource with the victim.
+The attacker attempts to retrieve sensitive information via memory-based
+side-channel attacks. The attacker has no direct access to the memory or cache
+but can probe the memory or cache at each program point. In reality, the
+attacker will face many possible obstacles, including the noisy observations,
+limited observations on the memory or cache. However, for this project, we assume
+the attacker can have noise-free observations like previous works~\cite{203878,182946,Brotzman19Casym}. 
+The threat model captures most of the cache-based and memory-based side-channel attacks. 
+We only consider the deterministic program for the project and assume an attacker 
+has access to the source code of the target program.

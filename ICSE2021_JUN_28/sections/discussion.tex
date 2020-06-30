@@ -1,0 +1,61 @@
+\section{Discussions and Limitations}
+While recent works have reported lots
+of potential side-channel vulnerabilities, we find most of them are not patched by
+developers because they do not think those vulnerabilities are severe enough.
+However, side-channels are inevitable in software and it is hard to fix all of them. 
+Addressing old vulnerabilities may also introduce new leakage
+sites. We need a
+tool that can automatically estimate the sensitivity level of each vulnerability.
+So software engineers can focus on
+``severe'' leakages. For example, our tool will report that 
+the modular exponentiation using square and multiply algorithms can
+leak more information than a key validation function.
+
+\tool{} can be used by software developers to find sensitive vulnerabilities
+and reason about countermeasures.
+\tool{} estimates the amount of leaked information for each side-channel leakage
+in one execution trace. \tool{} is useful for software
+engineers to test programs and fix vulnerabilities.
+\tool{} works on native x86 execution traces. The design, which is very
+precise in terms of true leakages compared to other static source code
+method~\cite{197207,BacelarAlmeida:2013:FVS:2483313.2483334}, can omit some
+leakages on other traces. The amount of leaked information also depends on the secret key.
+However, as the tool is intended for debugging and testing.
+we think it is software engineers' responsibility to select the input key and trigger the 
+path in which they are interested. For the crypto software, this is typically not
+a problem since virtually all keys follow the same or similar computational paths.
+
+We use the amount of leaked information to represent the sensitivity level of each
+side-channel vulnerability. Although imperfect, \tool{} produces a reasonable
+measurement for each leak. For example, the simple modular exponentiation is notoriously
+famous for various side-channel attacks~\cite{kocher1996timing}. During the execution, the single 
+leak points will be executed multiple times and each time it leaks one different bit.
+Therefore, \tool{} reports that the vulnerability can leak the whole key. However, not every
+leak point inside a loop is severe. Because very often the leakages may leak the same
+bit in the original key and those leaks are not independent. \tool{} can capture the most 
+fine-grained information by
+modeling each leak during the execution 
+as a math formula and by using the conjunction of those formulas to describe the total effect.
+There could be multiple leakage sites in the program. While some leakages are independent,
+some other leakage sites are dependent. Some leakage sites (e.g, square and multiply) can leak one particular bit 
+of the original key, but some leakage sites leak one bit from several bytes in the original
+key. Those constraints can precisely model the relationship between the key buffers
+and leakage sites.
+
+\tool{} reaches full precision if the number of estimated leaked bits 
+equals to Definition~\ref{def}. According to the threat model, the 
+length of the secret is known, so the only estimated value is the number
+of possible secrets under the attacker's observation ($|K^o|$). 
+During the symbolic execution, \tool{} may lose precision from the 
+memory model it uses in theory. However, we do not find false positives 
+caused by the imprecise memory model during the evaluation. 
+During the symbolic execution, for each constraint it generates,
+the tool will check the correctness of the constraint by giving 
+the constraint real values (the value of sensitive keys). Sampling 
+can also introduce imprecision but with a probabilistic guarantee, 
+as long as the sampling can terminate under the Central Limit Theorem (CLT) condition in probability theory. 
+However, during the evaluation, we find that \tool{} cannot estimate 
+the amount of leakage for some leakage sites in a reasonable time, 
+which means the number of $K^o$ is very small. According to Definition~\ref{def}, 
+it means the leakage is very severe.
+
