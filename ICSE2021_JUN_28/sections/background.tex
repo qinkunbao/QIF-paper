@@ -1,13 +1,13 @@
 \section{Background and Threat Model}
 In this section, we first present an introduction to address-based side-channel
-attacks and show many of them are caused by two specific side-channel
-vulnerabilities: secret-dependent control-flow transfers and secret-dependent
+attacks and show many of them are caused by two specific vulnerable patterns: 
+secret-dependent control-flow transfers and secret-dependent
 memory accesses. Therefore, we will focus on identifying and quantifying those
 leakages in the paper. After that, we discuss existing information leakage quantification 
 metrics.
 
 \subsection{Address-based Side-channels}
-Side channels can leak sensitive information
+Side channels leak sensitive information
 unconsciously through different execution behaviors caused by shared 
 hardware components (e.g., CPU cache, TLB, and
 DRAM) in modern computer systems~\cite{ge2018survey,szefer2019survey,191010,184415,Osvik2006,liu2015last,184415}. 
@@ -74,7 +74,7 @@ program accesses different memory addresses if the program has different
 sensitive inputs. As shown in Figure~\ref{fig:secret:cf} and Figure~\ref{fig:secret:da}, 
 if a program shows different patterns in
 control transfers or data accesses when the program processes different
-sensitive inputs, the program could possibly have side channels vulnerabilities.
+sensitive inputs, the program could possibly have side-channel vulnerabilities.
 Different kinds of side-channels can be exploited to retrieve information in
 various granularities. For example, cache channels can observe cache
 accesses at the level of cache sets~\cite{liu2015last}, cache lines~\cite{184415} or other granularities. 
@@ -107,10 +107,10 @@ Given an event $e$ that occurs with the probability $p(e)$, we receive
 \end{displaymath}
 bits of information by knowing the event $e$ happens according to information theory~\cite{shannon1948mathematical}. 
 Considering a char variable $a$
-with one byte storage size in a C program, its value ranges from 0 to 255.
-Assume $a$ has a uniform distribution. If we observe that
-$a$ equals $1$, the probability of this observation is $\frac{1}{256}$. So 
-we get $-\log(\frac{1}{256}) = 8$ bits information, which is exactly the size
+with one byte size in a C program, its value ranges from 0 to 255.
+If we observe that $a$ equals $1$, without any domain knowledge, 
+the probability of this observation is $\frac{1}{256}$. 
+So we get $-\log(\frac{1}{256}) = 8$ bits information, which is exactly the size
 of a char variable in the C program.
 Existing works on information leakage quantification typically use Shannon
 entropy~\cite{clark2007static,Wichelmann:2018:MFF:3274694.3274741},
@@ -153,18 +153,17 @@ uint8_t key[2], t1, t2;
 get_key(key);              // 0 <= key[0], key[1] < 256
 t1 = key[0] + key[1];
 t2 = key[0] - key[1];
-if (t1 < 4){               // leakage site A
-    foo();    
-}                          
-if (t2 > 0){               // leakage site B     
-    bar();    
-}                          
+if (t1 < 4)                // leakage site A
+    foo();                             
+if (t2 > 0)                // leakage site B     
+    bar();                             
 \end{lstlisting}
 \vspace*{-1pt}
     \caption{Side-channel leakage}
     \label{fig:side-channel}
 \end{figure}
-In this paper we assume an attacker can observe the secret-dependent control-flows in Figure~\ref{fig:side-channel}.
+In this paper we assume an attacker can observe the secret-dependent control-flows in 
+Figure~\ref{fig:side-channel}.
 Therefore, an attacker can have two different observations for each leak site
 depending on the value of the $\mathit{key}$: $A$ for function \textsf{foo} is executed, 
 $\neg A$ for function \textsf{foo} is not executed, $B$ for function \textsf{bar} is

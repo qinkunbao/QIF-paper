@@ -20,11 +20,10 @@ scenario, the leakage could be severer.
     \centering
     \begin{lstlisting}[xleftmargin=.03\textwidth,xrightmargin=.01\textwidth]
 char key[9] = input();
-if(strcmp(key, "password")){  // leakage site C
+if(strcmp(key, "password"))   // leakage site C
     pass();                   // branch 1
-}else{
+else
     fail();                   // branch 2
-}
 \end{lstlisting}
 \vspace*{1pt}
     \caption{A dummy password checker}
