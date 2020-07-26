@@ -26,8 +26,7 @@ keys~\cite{Osvik2006,Gullasch:2011:CGB:2006077.2006784,203878,10.1007/978-3-540-
 Regarding the root cause of software-based side channel attacks, many of them originate
 from two specific circumstances: data flow from secrets to load
 addresses and data flow from secrets to branch conditions. We refer to them as
- secret-dependent memory-accesses and control-flows, respectively. A
-central problem is eliminating these two code patterns. 
+ secret-dependent memory-accesses and control-flows, respectively. 
 Recent
 works~\cite{203878,217537,Wichelmann:2018:MFF:3274694.3274741,Brotzman19Casym,236338,182946},
 find plenty of side-channel vulnerabilities. For example,
@@ -35,13 +34,10 @@ DATA~\cite{217537} reports 2,246 potential leakage sites for the RSA
 implementation in OpenSSL\@. 
 %After some inspections, 1,510 leakages are dismissed. But it
 %still leaves 460 data-access leakages and 278 control-flow leakages. 
-However, we find most of the reported vulnerabilities are not fixed because
+However, we find many of the reported vulnerabilities are not fixed because
 of the following reasons.
-First, many vulnerable implementations have better performance and 
-are well-known for years. For example,
-symmetric encryptions like AES and DES use lookup tables (T-tables), which
-is fast but notoriously known to be vulnerable to side channels.
-As for asymmetric encryptions, many implementations of RSA, adopt the CRT optimization,
+First, many vulnerable implementations have better performance. For example,
+many implementations of RSA, adopt the CRT optimization,
 which is faster but vulnerable to fault attacks~\cite{aumuller2002fault}.
 Second, side-channels are numerous and it is hard to fix all these vulnerabilities,
 let alone the majority of them are negligible. 
@@ -62,49 +58,46 @@ environment. Although they are very precise in terms of true leakages, no
 existing tool can precisely assess the severity of vulnerabilities in production
 software. 
 
-To overcome these limitations, we propose a novel method to quantify information
-leakages precisely. Unlike previous works that only consider the
-``average'' information leakage, we study the problem based on real attack
-scenarios. The average information leakage model assumes the target program has
-\emph{variable} or \emph{random} sensitive information as inputs when an attack is
-launched. However, for real-world attacks, an adversary may run the target
-problem with the \emph{fixed} unknown sensitive information
-as the input. Therefore, the previous threat model cannot model real attack
-scenarios. In contrast, our method is more precise and fine-grained. 
-We quantify
-the amount of leaked information as the cardinality of the set of possible
-inputs based on an attacker's observation to each leakage site.
+To overcome these limitations, we propose a novel method to quantify information 
+leakages precisely. We quantify the number of leaked bits for each actual execution.
+%Unlike previous works that only consider the
+%``average'' information leakage, we study the problem based on real attack
+%scenarios. The average information leakage model assumes the target program has
+%\emph{variable} or \emph{random} sensitive information as inputs when an attack is
+%launched. However, for real-world attacks, an adversary may run the target
+%problem with the \emph{fixed} unknown sensitive information
+%as the input. Therefore, the previous threat model cannot model real attack
+%scenarios. In contrast, our method is more precise and fine-grained. 
+We quantify the amount of leaked information as the cardinality of the set of possible
+secrets based on an attacker's observation to each leakage site.
 Before an attack, an adversary has a large but finite input space. Every time
 when the adversary observes a leakage site, he can eliminate some potential
 inputs and reduce the size of the input space. The smaller the input space is,
 the more information is obtained. In an extreme case, if the size of the
 input space reduces to one, the adversary can uniquely determine the input, 
 which means all the secret information (e.g., the whole secret key) is
-leaked. By counting the number of distinct inputs~\cite{10.1007/11499107_24}, we can quantify the
-information leakage precisely.
+leaked. By counting the number of distinct inputs~\cite{10.1007/11499107_24}, 
+we can quantify the information leakage precisely.
 
 We use constraints generated from symbolic execution to model the relation 
-between the original sensitive input
-and the attacker's observations. Symbolic execution can
-provide fine-grained information but is usually believed to be an expensive
+between the original sensitive input and the attacker's observations. 
+Symbolic execution can provide fine-grained information but is usually believed to be an expensive
 operation in terms of performance. Therefore, existing dynamic symbolic
 execution works~\cite{203878,236338,Brotzman19Casym} either only analyze
 small programs or apply some domain knowledge~\cite{203878} to simplify the analysis. We
 examine the bottleneck of the trace-oriented symbolic execution and optimize it
 to be scalable to real-world cryptosystems.
 
-We apply the above technique and build a tool called \tool{}, 
-to discover potential information leakage sites as well as estimate how
-many bits they can leak for each leakage site. 
-First, we collect dynamic execution traces for each target
+We apply the above technique and build a tool called \tool{} to estimate how
+many bits it can leak for each leakage site. 
+First, we collect execution traces for each target
 libraries and then run symbolic execution on each instruction. In this way, we model
 each side-channel leakage as a logic formula. The sensitive input is divided into
 several independent bytes, and each byte is regarded as a unique and free symbol. Those
 formulas can precisely model side-channel vulnerabilities. Then we use the conjunction
 of those formulas to model the same leaks in the source code but appears in the different location of
 the execution trace file (e.g., leakages inside a loop).
-Finally, we introduce Monte Carlo
-sampling method to estimate the single and combined information leakage. 
+Finally, we introduce Monte Carlo sampling method to estimate the single and combined information leakage. 
 
 
 %Based on the fixed attack target, we classify the software-based side-channel
@@ -141,8 +134,7 @@ that \tool{} can precisely identify previously known vulnerabilities, reports
 how much information is leaked and which byte in the original sensitive buffer
 is leaked. We also test \tool{} on side-channel free algorithms. \tool{} has no
 false positives.
-Also, we show the
-widely deployed software countermeasures can mitigate side channels.
+Also, we show the widely deployed software countermeasures can mitigate side channels.
 Newer version of crypto libraries leak less amount of information 
 compared to previous versions.
 \tool\ also discovers new vulnerabilities. With the help of \tool{}, we confirm
@@ -154,15 +146,14 @@ In summary, we make the following contributions:
       \item We propose a novel method that can quantify fine-grained leaked
             information from side-channel vulnerabilities to match real attack
             scenarios. Our method is different from previous ones in that we
-            model real attack scenarios more precisely, while the previous
-            research only models the ``average'' or ``random'' case. 
+            model real attack scenarios under one real execution. 
             We transfer the information quantification problem into a counting
             problem and use the Monte Carlo sampling method to estimate the
             information leakage.
    
       \item We implement the proposed method into a tool and apply it
             on several real-world software. \tool{} successfully identifies
-            memory-related side-channel vulnerabilities and calculates the
+            previous unknown and known side-channel vulnerabilities and calculates the
             corresponding information leakage. 
             Our results are surprisingly different, much more useful in practice.
             The information leakage results

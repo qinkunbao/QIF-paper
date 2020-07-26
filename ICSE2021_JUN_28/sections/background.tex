@@ -10,31 +10,30 @@ metrics.
 Side channels can leak sensitive information
 unconsciously through different execution behaviors caused by shared 
 hardware components (e.g., CPU cache, TLB, and
-DRAM) in modern computer systems~\cite{ge2018survey,szefer2019survey}. 
+DRAM) in modern computer systems~\cite{ge2018survey,szefer2019survey,191010,184415,Osvik2006,liu2015last,184415}. 
 
-For example, cached-based
-side-channels~\cite{191010,184415,Osvik2006,liu2015last,184415}
-rely on the time difference between cache misses and cache hits. We introduce two
-common attack strategies, namely Prime+Probe~\cite{liu2015last} and
-Flush+Reload~\cite{184415}. Prime+Probe targets a single cache set. An
-attacker preloads the cache set with its own data and waits until the victim
-executes the program. If the victim accesses the cache set and evicts part of
-the data, the attacker will experience a slow measurement. 
-While Flush+Reload targets a
-single cache line, it requires the attacker and victim share some memory. 
-During the ``flush'' stage, the attacker flushes the ``monitored
-memory'' from the cache and waits for the victim to access the memory,
-who will load the sensitive information to the cache line. In the next phase,
-the attacker reloads the ``monitored memory''. By measuring the time difference
-brought by cache hit and miss, the attacker can further infer the sensitive information.
-Some other types of side-channels target different hardware
-layers other than CPU cache. For example, the controlled-channel
-attack~\cite{7163052}, where an attacker works in the kernel space, can infer
-sensitive data in shielding systems by observing the page fault sequences
-after restricting some code and data pages.
+%For example, cached-based
+%side-channels~\cite{191010,184415,Osvik2006,liu2015last,184415}
+%rely on the time difference between cache misses and cache hits. We introduce two
+%common attack strategies, namely Prime+Probe~\cite{liu2015last} and
+%Flush+Reload~\cite{184415}. Prime+Probe targets a single cache set. An
+%attacker preloads the cache set with its own data and waits until the victim
+%executes the program. If the victim accesses the cache set and evicts part of
+%the data, the attacker will experience a slow measurement. 
+%While Flush+Reload targets a
+%single cache line, it requires the attacker and victim share some memory. 
+%During the ``flush'' stage, the attacker flushes the ``monitored
+%memory'' from the cache and waits for the victim to access the memory,
+%who will load the sensitive information to the cache line. In the next phase,
+%the attacker reloads the ``monitored memory''. By measuring the time difference
+%brought by cache hit and miss, the attacker can further infer the sensitive information.
+%Some other types of side-channels target different hardware
+%layers other than CPU cache. For example, the controlled-channel
+%attack~\cite{7163052}, where an attacker works in the kernel space, can infer
+%sensitive data in shielding systems by observing the page fault sequences
+%after restricting some code and data pages.
 
 \begin{figure}[]
-
     \noindent\begin{minipage}{0.45\linewidth}
         \noindent
         \begin{lstlisting}[numbers = none]
@@ -113,7 +112,6 @@ Assume $a$ has a uniform distribution. If we observe that
 $a$ equals $1$, the probability of this observation is $\frac{1}{256}$. So 
 we get $-\log(\frac{1}{256}) = 8$ bits information, which is exactly the size
 of a char variable in the C program.
-
 Existing works on information leakage quantification typically use Shannon
 entropy~\cite{clark2007static,Wichelmann:2018:MFF:3274694.3274741},
 min-entropy~\cite{10.1007/978-3-642-00596-1_21}, and max-entropy~\cite{182946,
@@ -146,8 +144,7 @@ As it is easy to compute, most recent works~\cite{182946,Doychev:2017:RAS:306234
 the amount of leaked information.
 
 To illustrate how these definitions work, we consider the code
-fragment in Figure~\ref{fig:side-channel}. It has two secret-dependent
-control-flows, A and B.
+fragment in Figure~\ref{fig:side-channel}. It has two possible leakage sites, A and B.
 
 \begin{figure}[h!]
 \centering
@@ -160,7 +157,7 @@ if (t1 < 4){               // leakage site A
     foo();    
 }                          
 if (t2 > 0){               // leakage site B     
-    doo();    
+    bar();    
 }                          
 \end{lstlisting}
 \vspace*{-1pt}
@@ -170,8 +167,8 @@ if (t2 > 0){               // leakage site B
 In this paper we assume an attacker can observe the secret-dependent control-flows in Figure~\ref{fig:side-channel}.
 Therefore, an attacker can have two different observations for each leak site
 depending on the value of the $\mathit{key}$: $A$ for function \textsf{foo} is executed, 
-$\neg A$ for function \textsf{foo} is not executed, $B$ for function \textsf{doo} is
-executed, and $\neg B$ for function \textsf{doo} is not executed. Now the
+$\neg A$ for function \textsf{foo} is not executed, $B$ for function \textsf{bar} is
+executed, and $\neg B$ for function \textsf{bar} is not executed. Now the
 question is how much information can be leaked from the above code if an
 attacker knows which branch is executed?
 
@@ -182,7 +179,6 @@ attacker knows which branch is executed?
 %    \resizebox{\columnwidth}{!}{
     \begin{tabular}{l|cc|cc}
         \hline
-
         Observation ($o$)   & $A$ & $\neg A$ & $B$ & $\neg B$ \\ \hline
         Number of Solutions & 65526       & 10        & 32768     & 32768           \\ \hline
         Possibility (p)     & 0.9998      & 0.0002    & 0.5    & 0.5       \\
