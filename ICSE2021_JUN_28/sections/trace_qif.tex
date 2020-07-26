@@ -197,7 +197,6 @@ attacker get some leaked information and only need to find the key by performing
 exhaustive search over $2^{120}$ possible keys. Then we can say that 8 bits of the information
 is leaked. In this example, $2^{128}$ is the size of $K$ and $2^{120}$ is the size of $K^o$.
 
-
 With the definition, if an attacker observes that the code in
 Figure~\ref{fig:password-checker} runs the branch 1, then the $K^{o^{1}} =
 \{\mathrm{``password"}\}$. Therefore, the information leakage $L_{P(k)=o^{1}} =
@@ -209,8 +208,8 @@ We can also calculate the leaked information from the sample code in
 Figure~\ref{fig:side-channel}. As the size of input sensitive information is
 usually public. The problem of quantifying the leaked information has been
 transferred into the problem of estimating the size of input key $|K^o|$ under
-the condition $o \in O$. The result is shown in Table~\ref{shtable2}. We can see
-that some branches (e.g., A) or traces leak much more information than some others. 
+the condition $o \in O$. The result is shown in Table~\ref{shtable2}. 
+We can see that some branches (e.g., A) or traces leak much more information than some others. 
 Those kinds of branches can be vulnerable when an attacker's data is incorporate. 
 For example, the code will skip some of the calculation if the value is 0 in big 
 number multiplication.
@@ -247,12 +246,12 @@ i$ is a function that maps between $t_i$ and ($\beta$, $k$, $m$).
 
 In the paper, we consider two code patterns that can be exploited by an attacker,
 \emph{secret-dependent control transfers} and \emph{secret-dependent data
-accesses}. In other words, an adversary has observations based on control-flows
-and data accesses.
+accesses}. 
+%In other words, an adversary has observations based on control-flows and data accesses.
 
 \subsubsection{Secret-dependent Control Transfers}
 We think a control-flow is secret-dependent if different input sensitive keys
-($K$) can lead to different branch conditions. Therefore,
+($K$) can lead to different branch conditions. 
 We define a branch is secret-dependent if:
 $$\exists k_{i1}, k_{i2} \in K, \,f_i(\beta, k_{i1}, m) \neq f_i(\beta, k_{i2}, m)$$
 
