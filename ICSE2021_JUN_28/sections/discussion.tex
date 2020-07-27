@@ -22,7 +22,7 @@ method~\cite{197207,BacelarAlmeida:2013:FVS:2483313.2483334}, can omit some
 leakages on other traces. The amount of leaked information also depends on the secret key.
 However, as the tool is intended for debugging and testing.
 we think it is software engineers' responsibility to select the input key and trigger the 
-path in which they are interested. For the crypto software, this is typically not
+path in which they are interested. For crypto software, it is not  
 a problem since virtually all keys follow the same or similar computational paths.
 
 We use the amount of leaked information to represent the sensitivity level of each
@@ -33,8 +33,7 @@ leak points will be executed multiple times and each time it leaks one different
 Therefore, \tool{} reports that the vulnerability can leak the whole key. However, not every
 leak point inside a loop is severe. Because very often the leakages may leak the same
 bit in the original key and those leaks are not independent. \tool{} can capture the most 
-fine-grained information by
-modeling each leak during the execution 
+fine-grained information by modeling each leak during the execution 
 as a math formula and by using the conjunction of those formulas to describe the total effect.
 There could be multiple leakage sites in the program. While some leakages are independent,
 some other leakage sites are dependent. Some leakage sites (e.g, square and multiply) can leak one particular bit 
@@ -53,7 +52,8 @@ During the symbolic execution, for each constraint it generates,
 the tool will check the correctness of the constraint by giving 
 the constraint real values (the value of sensitive keys). Sampling 
 can also introduce imprecision but with a probabilistic guarantee, 
-as long as the sampling can terminate under the Central Limit Theorem (CLT) condition in probability theory. 
+as long as the sampling can terminate under the Central Limit Theorem (CLT) condition 
+in probability theory. 
 However, during the evaluation, we find that \tool{} cannot estimate 
 the amount of leakage for some leakage sites in a reasonable time, 
 which means the number of $K^o$ is very small. According to Definition~\ref{def}, 

@@ -79,11 +79,11 @@ It can be done either by adding an annotation on the source code
 or telling Pin tool the address and the length of secrets.
 For DES and AES, we mark symmetric keys as secrets. For RSA, we mark 
 private keys as secrets. For ECDSA, we mark nonces and 
-private keys as secrets. We use test cases of those libraries as executables.
+private keys as secrets. 
 
 
 We build the source code into 32-bit x86 Linux executables with GCC 8.0
-under Ubuntu 14.04. After secrets are loaded in the memory, 
+under Ubuntu 16.04. After secrets are loaded in the memory, 
 the pin tool start to collect the traces of each executable.
 Although we use use symbol information to track back leakage
 sites into the source code, our tool can work on stripped binaries as well. We
@@ -106,7 +106,7 @@ aspects:
 
 \subsection{Evaluation Result Overview} \label{sec:eval_overview}
 Table~\ref{table:over_result} shows the overview of evaluation results. \tool{} finds
-883 leakages in total from real-world crypto libraries. Among those 896
+896 leakages in total from real-world crypto libraries. Among those 896
 leak points, 233 of them are leaked due to secret-dependent control-flow
 transfers and 663 of them are leaked due to secret-dependent memory accesses.
 
@@ -125,8 +125,7 @@ Every leakage found during the evaluation belong to the type of
 secret-dependent memory accesses. \tool{} finds several leakage sites for both 
 implementations of DES and AES in
 OpenSSL and mbedTLS\@. \tool{} confirms that all those leakages come from table
-lookups. mbedTLS 2.15 and 2.5 have the same implementation of both DES and AES, so
-they have the same leakage report. One proper fix would be a scalar bit-sliced
+lookups. One proper fix would be a scalar bit-sliced
 implementation. We do not see the bit-sliced implementation of AES and
 DES in various versions of mbedTLS\@. However, we find the new
 implementation of OpenSSL instead uses typical four 1K tables. It only uses one 1K
@@ -226,7 +225,7 @@ versions. A sample of the generated report can be found in the Appendix~\ref{sec
 
 According to \tool{}, we find DES\@ implementations in both mbedTLS and OpenSSL have several
 sensitive information leakages in the key schedule function.
-However, leakages in OpenSSL are more severe. We do not see any mitigation
+We do not see any mitigation
 in the new version. We think it is not seen as worth the engineering
 efforts given the life cycles of DES\@.
 
@@ -234,7 +233,7 @@ efforts given the life cycles of DES\@.
 has less amount of leakages compared to other versions by our tools. 
 (e.g., the max leakage of AES in OpenSSL 1.1.1 is 4.4 bits, but other versions
 have leakages that can leak can around 10 bits.)
-We find that OpenSSL 1.1.1 version 
+We find that OpenSSL 1.1.1 
 instead uses the 1KB lookup tables with 32-bit entries like older versions, it uses a 
 table with 8-bit entries. In other words, our tools shows that lookup tables with smaller 
 entries will leak less amount of information. Our tool suggests a smaller lookup
@@ -253,7 +252,7 @@ We also evaluate \tool{} on RSA.  We find developers are more interested in
 fixing side-channel vulnerabilities for RSA implementations. 
 We test five versions of OpenSSL (0.9.7, 1.0.2f, 1.0.2k, 1.1.0f, 1.1.1). The
 result, as shown in Figure~\ref{fig:rsa}, indicates that the newer
-version of OpenSSL leaks less amount of information compared to the previous
+version of OpenSSL leaks less amount of information compared to previous
 versions. After version 0.9.7g, OpenSSL adopts a fixed-window \textsf{mod\_exp\_mont}
 implementation for RSA\@. With the new design, the sequence of squares and
 multiples and the memory access patterns are independent of the secret key.
@@ -317,16 +316,16 @@ The value of the function parameter \textbf{a} is derived from
 the secret key. 
 As function \textsf{bn\_sqr\_comba8}
 calls the macro (\textsf{sqr\_add\_c2}) multiple times, 
-and the code can leak some information each times.
+and the code can leak some information each time.
 \tool{} thinks the vulnerability is quite serious. 
 The vulnerability has been patched in OpenSSL 1.1.1. Seen in 
 Figure~\ref{fig:new_sqr2}, control-flows transfers are replaced. 
 So there is no leaks in the function
 \textsf{sqr\_add\_c2} in OpenSSL 1.1.1. We mention
 that even line 4 and 9 in Figure~\ref{fig:old_sqr2} both have if branches.
-However, it is not a secret-dependent control-flow transfers because
+However, it is not a leak site because
 most compilers will use \emph{add with carry} instruction to remove the branch.
-Besides, branches can also be compiled to non-branch machine instructions 
+Besides, branches can also be compiled into non-branch machine instructions 
 like conditional moves. Therefore, simple code reviews are not accurate
 enough to detect side-channels. 
 
@@ -382,7 +381,7 @@ vulnerability can been seen in Appendix\S~\ref{appendix:minor:vul}.
 \end{figure}
 
 Even for the up-to-date version of the library, \tool{} still finds several
-side-channel leakages. The vulnerability is severe by our tool.
+side-channel leakages.
 Details of the leak can be found in Appendix \S\ref{unknown:leak} and 
 Table \ref{tab:RSAOpenSSL1.1.1g}.
 
@@ -394,8 +393,7 @@ designed to be side-channel resistant from the library.
 Because those ciphers have no 
 data flow from secrets to branch conditions and load addresses.
 Therefore, Monocypher should be safe under our threat models. 
-We analyze those ciphers with \tool{}, and it reports no leaks from the
-implementation.
+We analyze those ciphers with \tool{}, and it reports no leaks.
 This indicates that \tool{} can be used for countermeasure confirmation.
 
 
