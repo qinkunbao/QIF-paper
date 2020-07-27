@@ -231,24 +231,23 @@ efforts given the life cycles of DES\@.
 
 \tool{} shows that the AES\@ in OpenSSL 1.1.1 
 has less amount of leakages compared to other versions by our tools. 
-(e.g., the max leakage of AES in OpenSSL 1.1.1 is 4.4 bits, but other versions
-have leakages that can leak can around 10 bits.)
 We find that OpenSSL 1.1.1 
 instead uses the 1KB lookup tables with 32-bit entries like older versions, it uses a 
-table with 8-bit entries. In other words, our tools shows that lookup tables with smaller 
-entries will leak less amount of information. Our tool suggests a smaller lookup
-table can mitigate side-channel vulnerabilities. For example, Shown in Appendix~\ref{appendix:mbedtls_aes},
-\tool{} identify seven leakages from function \textsf{mbedtls\_internal\_aes\_decrypt}.
-However, \tool{} reports leakage 1, 2, 3 leak more information
-compared to leakage 4, 5, 6, 7. 
-We check the source code and find leakage 1, 2,
-3 use secret to access the lookup table \textsf{RT0, RT1, RT2, RT3}, which is 8K
-each. On the contrary, leakage 4, 5, 6, 7 each access a smaller lookup table
-(2K).
+table with 8-bit entries. Our tool suggests a smaller lookup
+table can mitigate side-channel vulnerabilities. 
+
+%For example, Shown in Appendix~\ref{appendix:mbedtls_aes},
+%\tool{} identify seven leakages from function \textsf{mbedtls\_internal\_aes\_decrypt}.
+%However, \tool{} reports leakage 1, 2, 3 leak more information
+%compared to leakage 4, 5, 6, 7. 
+%We check the source code and find leakage 1, 2,
+%3 use secret to access the lookup table \textsf{RT0, RT1, RT2, RT3}, which is 8K
+%each. On the contrary, leakage 4, 5, 6, 7 each access a smaller lookup table
+%(2K).
 
 
 \subsubsection{Asymmetric Ciphers: RSA}\label{eval:asym}
-We also evaluate \tool{} on RSA.  We find developers are more interested in 
+We also evaluate \tool{} on RSA.  Developers are more interested in 
 fixing side-channel vulnerabilities for RSA implementations. 
 We test five versions of OpenSSL (0.9.7, 1.0.2f, 1.0.2k, 1.1.0f, 1.1.1). The
 result, as shown in Figure~\ref{fig:rsa}, indicates that the newer

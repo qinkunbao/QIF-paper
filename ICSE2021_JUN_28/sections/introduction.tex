@@ -26,7 +26,7 @@ keys~\cite{Osvik2006,Gullasch:2011:CGB:2006077.2006784,203878,10.1007/978-3-540-
 Regarding the root cause of software-based side channel attacks, many of them originate
 from two specific circumstances: data flow from secrets to load
 addresses and data flow from secrets to branch conditions. We refer to them as
- secret-dependent memory-accesses and control-flows, respectively. 
+secret-dependent memory-accesses and control-flows, respectively. 
 Recent
 works~\cite{203878,217537,Wichelmann:2018:MFF:3274694.3274741,Brotzman19Casym,236338,182946},
 find plenty of side-channel vulnerabilities. For example,
@@ -128,7 +128,7 @@ Finally, we introduce Monte Carlo sampling method to estimate the single and com
 %sites. Therefore, we introduce a monte carlo sampling method to estimate the
 %total information leakage.
 
-We apply \tool{} on both symmetric and asymmetric ciphers from real-world crypto
+We apply \tool{} on both symmetric and asymmetric ciphers in real-world crypto
 libraries, including OpenSSL, mbedTLS and Monocypher\@. The experimental result confirms
 that \tool{} can precisely identify previously known vulnerabilities, reports
 how much information is leaked and which byte in the original sensitive buffer
@@ -155,7 +155,7 @@ In summary, we make the following contributions:
             on several real-world software. \tool{} successfully identifies
             previous unknown and known side-channel vulnerabilities and calculates the
             corresponding information leakage. 
-            %Our results are surprisingly different, much more useful in practice.
+            Our results are surprisingly different, much more useful in practice.
             The information leakage results provide detailed information that can 
             help developers to fix the reported vulnerabilities.
 \end{itemize}
