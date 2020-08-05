@@ -1,0 +1,179 @@
+Dear Authors of paper #71,
+
+Thank you for contacting us and for submitting your work to NDSS.
+
+We would like to point out that NDSS is a very fair conference, which is
+why we decided to have three reviews already in the first round. The
+decision on your paper was reached based on a long online discussion
+between three reviewers. Unfortunately the last review was uploaded into
+the system after the notification time, which is why it was not included
+in the previous message. Please find all three reviews below.
+
+Regards,
+Farinaz Koushanfar and Ahmad-Reza Sadeghi
+NDSS 2021 Program Co-Chairs
+
+
+Review #71A
+===========================================================================
+
+Overall Recommendation
+----------------------
+4. Minor revision
+
+Writing Quality
+---------------
+4. Well-written
+
+Reviewer Confidence
+-------------------
+2. Passable confidence
+
+Paper Summary
+-------------
+This paper presents the design, implementation and evaluation of Abacus, a quantitative side-channel information leakage measurement tool. The basic idea is to figure out the cardinalities of two sets, all possible keys and keys deriving the same output for a specific message, then quantify how much uncertainty is reduced from the first set to the second. Abacus leverages various techniques to scale up its analysis, such as reducing instructions for symbolic execution, execution with random parameters for constraint solving, and Monte Carlo sampling as well as maximum independent partition of constraints.  The evaluation shows that Abacus is capable of identifying the program locations that leaks side-channel information and quantifying the number of bits exposed, and outperforms previous work.
+
+Strengths
+---------
+- Quantified side-channel leakage measurement
+- Comprehensive evaluation and case study
+- Scalability to real world applications
+- Comprehensive reasoning
+
+Weaknesses
+----------
+- Assumptions on uniformly distributed keys
+- Missing related work
+
+Detailed Comments for Authors
+-----------------------------
+Scalability is known to be hurdle for the real-world application of side-channel quantification. Abacus provides a solution that not only achieves statistically precise leakage quantification but also scales to real-world crypto libraries, which is interesting and important.
+
+Saying that, I do have a few concerns for the paper.
+
+1. In III.C, when deriving the formula, $H(K;o) = log_2|K^o|$, I guess that the left side should be $H(K|o)$, the remaining certainty, rather than $H(K;o)$. Besides, the prerequisite for such equation holds is that $p(k'|o)$ is distributed uniformly, which needs to be justified.
+
+2. The details of constraint solving has not been provided. The authors claims that they randomly select input parameters to test the satisfiability of a formula. But how are these formulas generated? Are they complete?
+
+3. In real-world address-based side-channel attacks, the granularity varies, which may need to be taken into consideration. The precision of address access pattern (e.g. in attack towards AES t-table access pattern) perceived by the attacker is dependent on the granularity of the attack.
+
+4. The title of Figure 7 is confusing. The authors state "RSA implementations in different versions of OpenSSL". But it's actually the distribution of the side channel leaks in the implementation.
+
+5. In evaluation (VI.A), the authors claim "Abacus finds 883 leakages", and then say "Among those 896 leak points". What's the difference between "leakage" and "leak point"? Besides, it is interesting to see how Abacus can be used to protect other private information,  such as financial data, medical records, not just secret keys. The authors may also provide the resolved constraints in the case study.
+
+6. When it comes to quantification of side channel leaks,  the authors may want to look at a few related studies, which are missing in the submission: most relevant ones such as
+"Static Evaluation of Noninterference using Approximate Model Counting",  and also a bit remote but still relevant studies on web applications such as "Automated Black-Box Detection of
+Side-Channel Vulnerabilities in Web Applications" and "Sidebuster: Automated detection and quantification of side-channel leaks in web application development".
+
+7. Minor Error
+In page 11, "However, it is not a secret-dependent control-ﬂow transfers because most compilers will use add with carry instruction to remove the branch", "transfers" should be "transfer".
+
+
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+
+Review #71B
+===========================================================================
+
+Overall Recommendation
+----------------------
+2. Leaning towards reject
+
+Writing Quality
+---------------
+3. Adequate
+
+Reviewer Confidence
+-------------------
+3. Sufficient confidence
+
+Paper Summary
+-------------
+The paper proposes Abacus, a tool that tries to identify side channel leakage sites in crypto libraries. In addition to finding the leakage sites, Abacus also attempts to estimate how many bits are leaked. The paper evaluates Abacus on the AES, DES, RSA and ECDSA implementations in various versions of OpenSSL and mbedTLS and on Monocypher. Abacus detects a significant number of leakage sites.
+
+Strengths
+---------
++ interesting analysis and design that target a real-world problem
++ evaluation against mainstream crypto libraries
++ The large number of leakage sites found by Abacus provides insight into the side channel problems in real-world crypto code.
+
+Weaknesses
+----------
+- The real-world impact and usefulness of Abacus and the new leakage measure are unclear.
+- Abacus only addresses a small piece of the overall side channel problem.
+- The design looks inherently heuristic.
+
+Detailed Comments for Authors
+-----------------------------
+The paper presents an interesting approach to finding software deficiencies that give rise to side channel leakage. Such deficiencies are a real problem, and a systematic way to eliminate them is highly desirable. Importantly, the paper presents an interesting analysis that allows Abacus to estimate how much information is leaked by each deficiency. Along the way to, the paper outlines several obstacles and describes how the design has overcome them.
+
+An important feature and apparent design goal of Abacus is the ability to handle real-world crypto libraries such as Open SSL. It is great to see the evaluation results (as summarized in Table V) for different versions of OpenSSL and mbedTLS across some of the most common crypto algorithms.
+
+On the other hand, the impact of all this is unclear. It does not appear that Abacus has found any side channel vulnerability that was not already known. Did Abacus anything new worthy of a CVE? The bulk of the hundreds of leakage sites reported in the evaluation are in obsolete older versions of OpenSSL and mbedTLS. The fact the developers eliminated them (presumably without the help of Abacus) indicates that the developers are reasonably aware of the side channel problems in their code. The fact that almost all leakage sites disappeared from OpenSSL between version 0.9.7 and version 1.1.1 (more than 200 as shown in Table V) makes it hard feel excited about the paper's story that developers are overwhelmed by the huge numbers of leakage sites in their code and that they need Abacus to triage them. The small number of leakage sites left in the most recent versions of the crypto libraries makes this claim even less compelling. Only the table implementations of AES still have a large number of leakage sites. But these table implementations are by definition leaky.
+
+Abacus has a number of limitations, and it is unclear if its design generalizes much beyond crypto libraries and the two types of side channels considered in the paper. Crypto code tends to have relatively simple control-flow graphs. Thus, the execution trace generation, symbolic execution and random guessing have an easy job. It is not clear if or how this will work on more general programs. In the side channel model, the attacker knows M, but she cannot determine M. That is, chosen plaintext or ciphertext attacks are not handled. Is there any way to handle speculative execution problems?
+
+The design looks inherently heuristic. We do not know how many leakage sites Abacus has missed. Given a new program (e.g., one with a more interesting CFG), it is hard to predict if or how well Abacus will work.
+
+How are the cases in which the Monte Carlo simulation does not terminate represented in Table V? In which cases did it not terminate, and what Monte Carlo run time is listed in the table?
+
+Theorem 1 looks too obvious to be a theorem.
+
+How is Challenge C2 a challenge if a tool that solves the problem (i.e., QSYM [38]) already exists?
+
+The solution to Challenge C3 is not impressive: random guessing. While this may happen to be faster for the problem at hand there is nothing profound here.
+
+It is not clear if or why the algorithm in Appendix A produces a Maximum Independent Partition. It is not even clear that it produces an independent partition. This does not seem to be a problem for Abacus, but it makes the claim on page 8 puzzling.
+
+While the paper is generally well written, it contains a considerable number of typos including in the formulas.
+
+
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+
+Review #71C
+===========================================================================
+
+Overall Recommendation
+----------------------
+2. Leaning towards reject
+
+Writing Quality
+---------------
+3. Adequate
+
+Reviewer Confidence
+-------------------
+2. Passable confidence
+
+Paper Summary
+-------------
+This paper presents Abacus, a new system to detect and quantify side-channel information leakage from crypto software. It makes improvement over the existing systems like CacheD in better coverage of leakage sites and smaller overhead. The system is evaluated on three crypto software, openssl, mbedTLS and Monocypher, regarding crypto algorithms including AES, DES, ECDSA, RSA, etc. Over 800 leakage sites were identified.
+
+Strengths
+---------
++ Good improvement over existing systems and tested on software with large codebase (over 20M instructions).
++ Using QYSM to replace the symbolic execution engine of existing work to remove the overhead caused by IR.
++ Significant engineering effort.
+
+Weaknesses
+----------
+- Comparison to existing works is not done well, making the contribution hard to discern.
+- It seems the paper is mainly doing dynamic analysis. Though symbolic execution is used, SMT solver is not used.
+- It's unclear what's the benefit of finer-grained leakage quantification.
+
+Detailed Comments for Authors
+-----------------------------
+This work falls into the large research area of side-channel analysis on software. There are some neat ideas, like the usage of Monte Carlo sampling to make leakage estimation more efficient, and using QYSM to address the performance issues of existing symbolic execution engines, but those improvement together doesn't seems to move the state-of-the-art significantly forward. In addition, some of the improvement lacks justification, which makes me hesitate to consider this paper to be accepted.
+
+The paper starts with a quite elaborative description about the metrics to measure information leakage. While I appreciate this tutorial and examples about pros and cons of different metrics, I feel this part might be too verbose. The authors describe an effort to address challenge C1 about precise quantification of leakage and introduce the usage of mutual information. It looks like conditional entropy which has been used by a prior work [A] (not cited). I don't know if this is a contribution the paper wants to claim, but if this is the case, the paper should tell better how this differs from the prior work. In addition, I feel the cons of the metrics described in Section II.B are quite obvious, so some space can be saved.
+
+On the other hand, quantifying the leakage lacks motivation of the proposed setting. It seems the paper considers any leakage site as a true positive without considering their actual leakage bits, so I'm wondering why bother to have a finer-grained assessment. A related work CaSym only counts TP and FP and it actually quite makes sense to me.
+
+The paper chooses CacheD to compare, but this work has been long ago. Why not uses CaSym (Oakland'19) as the target to compare? I found CaSym has a good modeling of cache and optimized symbolic execution after a quick read.
+
+While the paper claims to do symbolic execution, I'm confused after reading half about whether it's really symbolic execution, because it relies on dynamic execution to get the trace first and replaces SMT solver with random testing. To me, that gives up the coverage guarantee offered by symbolic execution. This should be better clarified.
+
+According to Table VI, when testing on RSA, Abacus is significantly slower. This needs to be explained in more details.
+
+[A] Sidebuster: Automated Detection and Quantification of Side-Channel Leaks in Web Application Development, CCS'10
