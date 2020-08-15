@@ -69,7 +69,7 @@ uint32_t a = *RK++ ^ \
 \vspace*{-12pt}
 \end{figure}
 
-The key intuition is that above side-channel attacks happen when a
+The key intuition is that many of those side-channel attacks happen when a
 program accesses different memory addresses if the program has different
 sensitive inputs. As shown in Figure~\ref{fig:secret:cf} and Figure~\ref{fig:secret:da}, 
 if a program shows different patterns in
@@ -108,7 +108,7 @@ Given an event $e$ that occurs with the probability $p(e)$, we receive
 bits of information by knowing the event $e$ happens according to information theory~\cite{shannon1948mathematical}. 
 Considering a char variable $a$
 with one byte size in a C program, its value ranges from 0 to 255.
-If we observe that $a$ equals $1$, without any domain knowledge, 
+If we observe $a$ equals $1$, without any domain knowledge, 
 the probability of this observation is $\frac{1}{256}$. 
 So we get $-\log(\frac{1}{256}) = 8$ bits information, which is exactly the size
 of a char variable in the C program.
@@ -194,20 +194,13 @@ leakage metrics to calculate the amount of leaked information for leak A and lea
 \vspace{3pt}
 \textbf{Min Entropy.}
 As $p_{A\mathit{max}} = 0.9998$ and $p_{B\mathit{max}} = 0.5$, 
-with the definition, min-entropy equals to
-\begin{align*}
-    \mathit{min\text{-}entropy_A} & = -\log_2{0.9998} = 0.000\ \mathrm{bits} \\
-    \mathit{min\text{-}entropy_B} & = -\log_2{0.5} = 1.000\ \mathrm{bits}
-\end{align*}
+with the definition, $\mathit{min\text{-}entropy_A}$ equals to
+$0.000\ \mathrm{bits}$ and $\mathit{min\text{-}entropy_B}$ equals to
+$1.000\ \mathrm{bits}$.
 
 \textbf{Max Entropy.}
-Depending on the value of key, the code can run two different branches for each leakage site. 
-Therefore, with the max entropy
-definition, both leakage sites leak
-
-\begin{displaymath}
-    \mathit{max\text{-}entropy} = -\log_2{2} = 1.000\ \mathrm{bits}
-\end{displaymath}
+Depending on the value of key, the code have two branches for each leakage site. 
+Therefore, with the max entropy definition, both leakage sites leak $1.000\ \mathrm{bits}$.
 
 \textbf{Shannon Entropy.}
 Based on Shannon entropy, the respective amount of information in A and B equals to

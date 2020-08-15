@@ -59,16 +59,8 @@ existing tool can precisely assess the severity of vulnerabilities in production
 software. 
 
 To overcome these limitations, we propose a novel method to quantify information 
-leakages precisely. We quantify the number of leaked bits for each actual execution.
-%Unlike previous works that only consider the
-%``average'' information leakage, we study the problem based on real attack
-%scenarios. The average information leakage model assumes the target program has
-%\emph{variable} or \emph{random} sensitive information as inputs when an attack is
-%launched. However, for real-world attacks, an adversary may run the target
-%problem with the \emph{fixed} unknown sensitive information
-%as the input. Therefore, the previous threat model cannot model real attack
-%scenarios. In contrast, our method is more precise and fine-grained. 
-We quantify the amount of leaked information as the cardinality of the set of possible
+leakages precisely. We quantify the number of leaked bits during one real execution,
+and define the amount of leaked information as the cardinality of the set of possible
 secrets based on an attacker's observation to each leakage site.
 Before an attack, an adversary has a large but finite input space. Every time
 when the adversary observes a leakage site, he can eliminate some potential
@@ -81,7 +73,7 @@ we can quantify the information leakage precisely.
 
 We use constraints generated from symbolic execution to model the relation 
 between the original sensitive input and the attacker's observations. 
-Symbolic execution can provide fine-grained information but is usually believed to be an expensive
+Symbolic execution can provide fine-grained information but is usually an expensive
 operation in terms of performance. Therefore, existing dynamic symbolic
 execution works~\cite{203878,236338,Brotzman19Casym} either only analyze
 small programs or apply some domain knowledge~\cite{203878} to simplify the analysis. We
@@ -93,11 +85,11 @@ many bits it can leak for each leakage site.
 First, we collect execution traces for each target
 libraries and then run symbolic execution on each instruction. In this way, we model
 each side-channel leakage as a logic formula. The sensitive input is divided into
-several independent bytes, and each byte is regarded as a unique and free symbol. Those
+several independent bytes, and each byte is treated as a unique and free symbol. Those
 formulas can precisely model side-channel vulnerabilities. Then we use the conjunction
 of those formulas to model the same leaks in the source code but appears in the different location of
 the execution trace file (e.g., leakages inside a loop).
-Finally, we introduce Monte Carlo sampling method to estimate the single and combined information leakage. 
+Finally, we introduce Monte Carlo sampling method to estimate the information leakage. 
 
 
 %Based on the fixed attack target, we classify the software-based side-channel
@@ -128,7 +120,7 @@ Finally, we introduce Monte Carlo sampling method to estimate the single and com
 %sites. Therefore, we introduce a monte carlo sampling method to estimate the
 %total information leakage.
 
-We apply \tool{} on both symmetric and asymmetric ciphers in real-world crypto
+We evaluate \tool{} on both symmetric and asymmetric ciphers in real-world crypto
 libraries, including OpenSSL, mbedTLS and Monocypher\@. The experimental result confirms
 that \tool{} can precisely identify previously known vulnerabilities, reports
 how much information is leaked and which byte in the original sensitive buffer
