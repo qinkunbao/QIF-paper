@@ -1,9 +1,9 @@
 \subsection{Implementation}
-We implement \tool{} with 16,729 lines of code in C++ and Python. It has three
+We implement \tool{} with 16,729 lines of code in C++ and Python from scratch. It has three
 components, Intel Pin tool that can collect the execution trace, the
 instruction-level symbolic execution engine, and the backend that can estimate
 the information leakage. The breakdown is shown in
-Table~\ref{appendix:code}. The dynamic symbolic execution engine is built from scratch.
+Table~\ref{appendix:code}. 
 The tool can also report the memory address of
 the leakage site. To assist developers to fix the bugs, we also have several
 Python scripts that can report the leakage location in the source code with the

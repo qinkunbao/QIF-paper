@@ -20,26 +20,27 @@ engineers to test programs and fix vulnerabilities.
 precise in terms of true leakages compared to other static source code
 method~\cite{197207,BacelarAlmeida:2013:FVS:2483313.2483334}, can omit some
 leakages on other traces. The amount of leaked information also depends on the secret key.
-However, as the tool is intended for debugging and testing.
-we think it is software engineers' responsibility to select the input key and trigger the 
-path in which they are interested. For crypto software, it is not  
-a problem since virtually all keys follow the same or similar computational paths.
+However, as the tool is intended for debugging and testing,
+we think it is software engineers' responsibility to select the input key and trigger 
+the path in which they are interested. It is not a problem for crypto software 
+since virtually all keys follow the same or similar computational paths.
 
-We use the amount of leaked information to represent the sensitivity level of each
-side-channel vulnerability. Although imperfect, \tool{} produces a reasonable
-measurement for each leak. For example, the simple modular exponentiation is notoriously
-famous for various side-channel attacks~\cite{kocher1996timing}. During the execution, the single 
-leak points will be executed multiple times and each time it leaks one different bit.
-Therefore, \tool{} reports that the vulnerability can leak the whole key. However, not every
-leak point inside a loop is severe. Because very often the leakages may leak the same
-bit in the original key and those leaks are not independent. \tool{} can capture the most 
-fine-grained information by modeling each leak during the execution 
-as a math formula and by using the conjunction of those formulas to describe the total effect.
-There could be multiple leakage sites in the program. While some leakages are independent,
-some other leakage sites are dependent. Some leakage sites (e.g, square and multiply) can leak one particular bit 
-of the original key, but some leakage sites leak one bit from several bytes in the original
-key. Those constraints can precisely model the relationship between the key buffers
-and leakage sites.
+We use the amount of leaked information to represent the sensitivity level of 
+each side-channel vulnerability. Although imperfect, \tool{} produces a reasonable 
+measurement for each leak. For example, the simple modular exponentiation is 
+notoriously famous for various side-channel attacks~\cite{kocher1996timing}. 
+During the execution, the single leak points will be executed multiple times, 
+and each time it leaks one different bit. Therefore, \tool{} reports that the 
+vulnerability can leak the whole key. However, not every leak point inside a 
+loop is severe. Because very often the leakages may leak the same bit in the 
+original key, and those leaks are not independent. \tool{} can capture the most 
+fine-grained information by modeling each leak during the execution as a math 
+formula and by using the conjunction of those formulas to describe the total effect. 
+There could be multiple leakage sites in the program. While some leakages are independent, 
+some other leakage sites are dependent. Some leakage sites (e.g., square and multiply) 
+can leak one particular bit of the original key, but some leakage sites leak one bit 
+from several bytes in the original key. Those constraints can precisely model the 
+relationship between the key buffers and leakage sites.
 
 \tool{} reaches full precision if the number of estimated leaked bits 
 equals to Definition~\ref{def}. According to the threat model, the 
