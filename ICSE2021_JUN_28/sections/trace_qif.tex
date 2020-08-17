@@ -31,8 +31,7 @@ else
 
 We consider a dummy password checker shown in Figure~\ref{fig:password-checker}.
 The password checker will take an 8-byte char array (exclude \textsf{NULL} character) 
-and check if
-the input is the correct password. If an attacker knows the code executes branch
+and check if the input is the correct password. If an attacker knows the code executes branch
 $\{{1\}}$ by side-channel attacks, he can infer the password equals to
 ``password'', in which case the attacker can entirely retrieve the password.
 Therefore, the total leaked information should be 64 bits, which equals to the

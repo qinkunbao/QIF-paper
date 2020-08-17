@@ -1,10 +1,9 @@
 \section{Background and Threat Model}
-In this section, we first present an introduction to address-based side-channel
-attacks and show many of them are caused by two specific vulnerable patterns: 
-secret-dependent control-flow transfers and secret-dependent
-memory accesses. Therefore, we will focus on identifying and quantifying those
-leakages in the paper. After that, we discuss existing information leakage quantification 
-metrics.
+In this section, we first present an introduction to address-based side-channel 
+attacks and show many of them are rooted in two specific vulnerable patterns: 
+secret-dependent control-flow transfers and secret-dependent memory accesses. 
+Therefore, we will focus on identifying and quantifying those leakages in the paper. 
+After that, we discuss existing information leakage quantification metrics.
 
 \subsection{Address-based Side-channels}
 Side channels leak sensitive information
@@ -74,10 +73,11 @@ program accesses different memory addresses if the program has different
 sensitive inputs. As shown in Figure~\ref{fig:secret:cf} and Figure~\ref{fig:secret:da}, 
 if a program shows different patterns in
 control transfers or data accesses when the program processes different
-sensitive inputs, the program could possibly have side-channel vulnerabilities.
+sensitive inputs, the program could have side-channel vulnerabilities.
 Different kinds of side-channels can be exploited to retrieve information in
 various granularities. For example, cache channels can observe cache
-accesses at the level of cache sets~\cite{liu2015last}, cache lines~\cite{184415} or other granularities. 
+accesses at the level of cache sets~\cite{liu2015last}, cache lines~\cite{184415}, 
+or other granularities. 
 Other kinds of side-channels like controlled-channel attack~\cite{7163052},
 can observe the memory access at the level of memory pages.
 
@@ -124,7 +124,7 @@ value of $K$. The Shannon entropy $H(K)$ is defined as
     H(K) = - \sum_{k {\in} K}p(k)\log_2(p(k))
 \end{displaymath}
 
-Shannon entropy can be used to quantify the initial uncertainty about the
+Shannon entropy can be used to quantify the initial uncertainty about
 sensitive information. It measures the amount of information in a system.
 
 Min-entropy describes the information leaks for a program with the most likely input. 
@@ -189,7 +189,7 @@ attacker knows which branch is executed?
 Assuming $\mathit{key}$ is uniformly distributed, we can calculate the corresponding
 possibility by counting the number of possible inputs. Table~\ref{shtable}
 describes the probability of each observation. We use the above three types of 
-leakage metrics to calculate the amount of leaked information for leak A and leak B.
+leakage metrics to quantify the leaked information for leak A and leak B.
 
 \vspace{3pt}
 \textbf{Min Entropy.}

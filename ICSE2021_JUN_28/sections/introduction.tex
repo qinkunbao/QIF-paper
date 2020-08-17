@@ -34,8 +34,7 @@ DATA~\cite{217537} reports 2,246 potential leakage sites for the RSA
 implementation in OpenSSL\@. 
 %After some inspections, 1,510 leakages are dismissed. But it
 %still leaves 460 data-access leakages and 278 control-flow leakages. 
-However, we find many of the reported vulnerabilities are not fixed because
-of the following reasons.
+However, we find many of the reported vulnerabilities are not fixed by the developers.
 First, many vulnerable implementations have better performance. For example,
 many implementations of RSA, adopt the CRT optimization,
 which is faster but vulnerable to fault attacks~\cite{aumuller2002fault}.
@@ -66,7 +65,7 @@ Before an attack, an adversary has a large but finite input space. Every time
 when the adversary observes a leakage site, he can eliminate some potential
 inputs and reduce the size of the input space. The smaller the input space is,
 the more information is obtained. In an extreme case, if the size of the
-input space reduces to one, the adversary can uniquely determine the input, 
+input space reduces to one, an adversary can determine the input, 
 which means all the secret information (e.g., the whole secret key) is
 leaked. By counting the number of distinct inputs~\cite{10.1007/11499107_24}, 
 we can quantify the information leakage precisely.
@@ -132,12 +131,11 @@ In summary, we make the following contributions:
 
 \begin{itemize}
       \item We propose a novel method that can quantify fine-grained leaked
-            information from side-channel vulnerabilities to match real attack
-            scenarios. Our method is different from previous ones in that we
+            information from side-channel vulnerabilities to match actual attack
+            scenarios. Our approach is different from previous ones in that we
             model real attack scenarios under one real execution. 
-            We transfer the information quantification problem into a counting
-            problem and use the Monte Carlo sampling method to estimate the
-            information leakage.
+            We transfer the information quantification problem into a counting problem 
+            and use the Monte Carlo sampling method to estimate the information leakage.
    
       \item We implement the proposed method into a tool and apply it
             on several real-world software. \tool{} successfully identifies
@@ -145,5 +143,5 @@ In summary, we make the following contributions:
             corresponding information leakage. 
             Our results are surprisingly different, much more useful in practice.
             The information leakage results provide detailed information that can 
-            help developers to fix the reported vulnerabilities.
+            help developers to fix the vulnerabilities.
 \end{itemize}
