@@ -80,16 +80,24 @@ small programs or apply some domain knowledge~\cite{203878} to simplify the anal
 examine the bottleneck of the trace-oriented symbolic execution and optimize it
 to be scalable to real-world cryptosystems.
 
-We apply the above technique and build a tool called \tool{} to estimate how
-many bits it can leak for each leakage site. 
-First, we collect execution traces for each target
+We have implemented the proposed technique in a tool called \tool{} and shows their merits 
+in real-world crypto libraries including OpenSSL, mbedTLS, and Monocypher.
+First, we collect execution traces for 
 libraries and then run symbolic execution on each instruction. In this way, we model
-each side-channel leakage as a logic formula. The sensitive input is divided into
-several independent bytes, and each byte is treated as a unique and free symbol. Those
+each side-channel leakage as a logic formula. Those
 formulas can precisely model side-channel vulnerabilities. Then we use the conjunction
 of those formulas to model the same leaks in the source code but appears in the different location of
 the execution trace file (e.g., leakages inside a loop).
 Finally, we introduce Monte Carlo sampling method to estimate the information leakage. 
+The experimental result confirms
+that \tool{} can precisely identify previously known vulnerabilities, reports
+how much information is leaked and which byte in the original sensitive buffer
+is leaked. We also test \tool{} on side-channel free algorithms. \tool{} has no
+false positives.
+Newer version of crypto libraries leak less amount of information 
+compared to previous versions.
+\tool\ also discovers new vulnerabilities. With the help of \tool{}, we confirm
+that those vulnerabilities are severe.
 
 
 %Based on the fixed attack target, we classify the software-based side-channel
@@ -119,18 +127,6 @@ Finally, we introduce Monte Carlo sampling method to estimate the information le
 %leakage, we must know the dependent relationships among those multiple leakages
 %sites. Therefore, we introduce a monte carlo sampling method to estimate the
 %total information leakage.
-
-We evaluate \tool{} on both symmetric and asymmetric ciphers in real-world crypto
-libraries, including OpenSSL, mbedTLS and Monocypher\@. The experimental result confirms
-that \tool{} can precisely identify previously known vulnerabilities, reports
-how much information is leaked and which byte in the original sensitive buffer
-is leaked. We also test \tool{} on side-channel free algorithms. \tool{} has no
-false positives.
-Also, we show the widely deployed software countermeasures can mitigate side channels.
-Newer version of crypto libraries leak less amount of information 
-compared to previous versions.
-\tool\ also discovers new vulnerabilities. With the help of \tool{}, we confirm
-that those vulnerabilities are severe.
 
 In summary, we make the following contributions:
 
