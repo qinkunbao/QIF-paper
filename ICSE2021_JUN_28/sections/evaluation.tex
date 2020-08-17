@@ -73,14 +73,14 @@
 \end{table}
 
 We evaluate \tool{} on real-world crypto libraries including OpenSSL, mbedTLS and Monocypher\@. 
-OpenSSL is the most commonly used crypto libraries in today's software. mbedTLS\@
-(previous known as PolarSSL) is designed to be easy to understand and fit on
-embedded devices. We also evaluate Monocypher, a new cryptographic library that
-resists to most side-channel attacks. 
-Monocypher is designed to have no 
-secret dependent indices and secret dependent branches. Therefore,
-Monocypher should be secure under our threat model.
-We mark variables and buffers that store the secret. 
+%OpenSSL is the most commonly used crypto libraries in today's software. mbedTLS\@
+%(previous known as PolarSSL) is designed to be easy to understand and fit on
+%embedded devices. We also evaluate Monocypher, a new cryptographic library that
+%resists to most side-channel attacks. 
+%Monocypher is designed to have no 
+%secret dependent indices and secret dependent branches. Therefore,
+%Monocypher should be secure under our threat model.
+%We mark variables and buffers that store the secret. 
 It can be done either by adding an annotation on the source code 
 or telling Pin tool the address and the length of secrets.
 For DES and AES, we mark symmetric keys as secrets. For RSA, we mark 
@@ -91,17 +91,13 @@ private keys as secrets.
 We build the source code into 32-bit x86 Linux executables with GCC 8.0
 under Ubuntu 16.04. After secrets are loaded in the memory, 
 the pin tool start to collect the traces of each executable.
-Although we use use symbol information to track back leakage
-sites into the source code, our tool can work on stripped binaries as well. We
-develop a Pin tool based on Intel Pin (version 3.7) to record the execution
-trace. We run our experiments on a 2.90GHz Intel Xeon(R) E5-2690 CPU with 128GB
+We run our experiments on a 2.90GHz Intel Xeon(R) E5-2690 CPU with 128GB
 RAM. The execution time is calculated on a single-core.
 During our evaluation process, we are interested in the following
 aspects:
 \begin{enumerate}
     \item  \textbf{Identifying side-channels leakages.}
-          The first step of \tool{} is to identify side-channel leakages. Is
-          \tool{} effective to detect side-channels in real-world crypto
+          Is \tool{} effective to detect side-channels in real-world crypto
           systems? (\S\ref{sec:eval_overview} and \S\ref{eval:scala})
     \item  \textbf{Quantifying side-channel leakages.}
           Can \tool{} precisely report the number of leaked bits in crypto
@@ -123,17 +119,14 @@ However, we do find some vulnerabilities that \tool{} report with severe
 leakages. Some of them have been confirmed by existing research that those
 vulnerabilities can be exploited to realize real attacks.
 Without our tool, developers will not be able to
-distinguish those ``vulnerabilities'' from severe ones and ignore others for sure easily.
+distinguish those ``vulnerabilities'' from severe ones and ignore others easily.
 
 Symmetric encryption implementations in OpenSSL and mbedTLS\@ have significant
 leakages due to the lookup table implementation. 
-Every leakage found during the evaluation belong to the type of
-secret-dependent memory accesses. \tool{} finds several leakage sites for both 
+\tool{} finds several leakage sites for both 
 implementations of DES and AES in
 OpenSSL and mbedTLS\@. \tool{} confirms that all those leakages come from table
-lookups. One proper fix would be a scalar bit-sliced
-implementation. We do not see the bit-sliced implementation of AES and
-DES in various versions of mbedTLS\@. However, we find the new
+lookups. We find the new
 implementation of OpenSSL instead uses typical four 1K tables. It only uses one 1K
 of the tables. This implementation is rather easy but does somehow decrease the total
 amount of leaked information as the quantification result shown in the next
@@ -147,9 +140,8 @@ We also find the newer
 versions of RSA in OpenSSL tend to have fewer leakages detected by \tool{}. We
 will discuss the version changes and corresponding leakages in \S\ref{eval:asym}.
 
-\tool{} can also estimate how
-much information is leaked from each vulnerability. \tool{} achieves the goal by
-estimating the number of keys that satisfy the constraints. During the evaluation,
+\tool{} can estimate how
+much information is leaked from each vulnerability. During the evaluation,
 for each leakage site, \tool{} will stop once 1) it has 95\% confidence
 possibility that the error of estimated leaked information is less than 1 bit,
 which gives us confidence on the leakage quantification with the \emph{precision guarantee}, 
@@ -173,17 +165,16 @@ We will present the details in the subsequent sections.
 %\end{figure}
 
 %\subsubsection{Comparison with the Existing Tools}
-\tool{} is designed to quantify side-channel leakages. But it can detect
-side-channel leakages as well. In this section, we compare \tool{} with the
+In this section, we compare \tool{} with the
 existing trace-based side-channel detection tools.
 
 As shown in Table~\ref{eval:cacheD},
 \tool{} not only discovers all the leakage sites reported by CacheD~\cite{203878}, but also
 find many new ones. CacheD fails to detect many vulnerabilities for two
 reasons. First, CacheD can only detect secret-dependent memory access
-vulnerabilities. But \tool{} can detect secret-dependent control-flows as well.
+vulnerabilities. \tool{} can detect secret-dependent control-flows as well.
 Second, CacheD uses some domain
-knowledge to simplify symbolic execution and has to trim the traces before
+knowledge to simplify symbolic execution to trim the traces before
 processing, which does not introduce false positives, but can neglect some
 vulnerabilities. The table~\ref{eval:cacheD} shows that
 \tool{} is three times faster than CacheD. As the time of symbolic execution
@@ -255,7 +246,7 @@ table can mitigate side-channel vulnerabilities.
 \subsubsection{Asymmetric Ciphers: RSA}\label{eval:asym}
 We also evaluate \tool{} on RSA.  Developers are more interested in 
 fixing side-channel vulnerabilities for RSA implementations. 
-We test five versions of OpenSSL (0.9.7, 1.0.2f, 1.0.2k, 1.1.0f, 1.1.1). The
+We test six versions of OpenSSL (0.9.7, 1.0.2f, 1.0.2k, 1.1.0f, 1.1.1, 1.1.1g). The
 result, as shown in Figure~\ref{fig:rsa}, indicates that the newer
 version of OpenSSL leaks less amount of information compared to previous
 versions. After version 0.9.7g, OpenSSL adopts a fixed-window \textsf{mod\_exp\_mont}

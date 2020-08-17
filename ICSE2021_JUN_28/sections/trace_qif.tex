@@ -201,36 +201,11 @@ Figure~\ref{fig:password-checker} runs the branch 1, then the $K^{o^{1}} =
 the attacker observes the code hits branch 2, the leaked information is
 $L_{P(k)=o^{2}} = \log_2{2^{64}} - \log_2{(2^{64}-1)} \approx 0$ bit.
 
-We can also calculate the leaked information from the sample code in
-Figure~\ref{fig:side-channel}. As the size of input sensitive information is
+As the size of input sensitive information is
 usually public. The problem of quantifying the leaked information has been
 transferred into the problem of estimating the size of input key $|K^o|$ under
-the condition $o \in O$. The result is shown in Table~\ref{shtable2}. 
-We can see that some branches (e.g., A) or traces leak much more information than some others. 
-Those kinds of branches can be vulnerable when an attacker's data is incorporate. 
-For example, the code will skip some of the calculation if the value is 0 in big 
-number multiplication.
+the condition $o \in O$. 
 
-In contrast, an \emph{average} estimate based on random secret input information is around
-1 bit, as shown in \S\ref{sec:background_leak} and Table~\ref{shtable}, is
-not very useful in practice as an attacker is able to get much more leaked
-information in some attack scenarios.
-
-\begin{table}[ht]
-    \centering\small\footnotesize
-    \caption{New leakage modeling results}
-    \label{shtable2}
-    \vspace*{-1pt}
-%    \resizebox{\columnwidth}{!}{
-    \begin{tabular}{l|cc|cc}
-        \hline
-      
-        Observation ($o$)   & $A$ & $\neg A$ & $B$ & $\neg B$ \\ \hline
-        Number of Solutions & 65526       & 10        & 32768     & 32768           \\ \hline
-        Leaked Information (bits) & 0.0         & 14.7      & 1.0       & 1.0         \\
-        \hline
-    \end{tabular}
-\end{table}
 \subsection{Our Conceptual Framework}
 \label{side-channel:condition}
 We now discuss how to model observations ($O$), which are the direct information

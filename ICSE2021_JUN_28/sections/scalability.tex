@@ -13,22 +13,21 @@ applications. In this section, we begin by discussing the bottlenecks of
 applying the above approaches in real-world software. After that, we
 propose our methods.
 
-In general, \tool{} faces the following performance and cost  challenges in
+In general, \tool{} faces the following performance challenges in
 order to \emph{scale to production crypto system analysis}.
 \begin{itemize}
       \item Symbolic execution (\textbf{Challenge C2})
-      \item Constraint solving (\textbf{Challenge C3})
-      \item Counting the number of items in $K^o$ (\textbf{Challenge C4})
+      \item Counting the number of items in $K^o$ (\textbf{Challenge C3})
 \end{itemize}
 
 \subsection{Trace-oriented Symbolic Execution}
 Symbolic execution is notorious for its unbearable performance cost. 
 Previous trace-oriented
 symbolic execution based
-works~\cite{203878,Chattopadhyay:2017:QIL:3127041.3127044} all have large
+works~\cite{203878,Chattopadhyay:2017:QIL:3127041.3127044} have large
 performance bottlenecks. As a result, those approaches either only apply to
 small-size programs~\cite{Chattopadhyay:2017:QIL:3127041.3127044} or apply some
-domain knowledge to simplify the analysis. 
+domain knowledges~\cite{Wang:2007:NCD:1250662.1250723} to simplify the analysis. 
 %Those tools interpret each
 %instruction and update memory cells and registers with formulas that
 %captured the semantics of the execution and search different input values that
@@ -48,7 +47,6 @@ intermediate languages (IR) to simplify analysis.
 The reason is that the number of machine instructions is
 enormous, and the semantics of each instruction is complex. Intel Developer
 Manual~\cite{intelsys} introduces more than 1000 different x86 instructions. 
-IR typically has fewer instructions compared to the original machine ISA\@.
 However, the IR layer, which predigest the implementation
 and reduce the workload of those tools, is not suitable for side-channels 
 analysis. Memory-based side-channels are very low issues. So, in general,
@@ -58,7 +56,7 @@ branches. Also, as some IRs are not a superset or a subset of ISA,
 it is hard to rule out conditional jumps introduced by IR and add real branches 
 eliminated by IR transformations.
 
-Moreover, the IR design can introduce significant overhead~\cite{217563}.
+Moreover, the IR design introduces significant overhead~\cite{217563}.
 Transferring machine instructions into IR is time-consuming. For example,
 REIL IR~\cite{dullien2009reil}, adopted in CacheS~\cite{236338}, has multiple
 transform processes, from binary to VEX IR, BAP IR, and finally REIL IR\@. 
@@ -66,7 +64,7 @@ Also, IR increases the total number of instructions. For example, x86
 instruction \textit{test eax, eax} transfers into 18 REIL IR instructions. 
 
 \vspace*{2pt}
-\textbf{Our Solution to Challenge C2:}
+\textbf{Our Solution:}
 We abandon the IR design and take the engineer efforts to implement 
 the symbolic execution directly on the top of x86 instructions from scratch. 
 Table~\ref{scala:ir} shows that eliminating the IR layer can reduce the number 
@@ -121,7 +119,7 @@ in recent years, constraint solving remains one of the obstacles to achieve the
 scalability for real-world cryptosystems.
 
 \vspace*{2pt}
-\textbf{Our Solution to Challenge C3:}
+\textbf{Our Solution:}
 Instead of feeding the formula $f_a(k_1) \neq f_a(k_2)$ into a SMT solver, we
 randomly pick up $k_1, k_2 \in K$ and test them if they can satisfy the
 formula. Our solution is based on the following intuition. For most combination
@@ -134,33 +132,33 @@ work well for our problem.
 
 \subsection{Counting the Number}
 \label{MCreasons}
-According to
-Definition~\ref{def} introduced in \S\ref{sec:trace-qif},
-the problem of quantifying the amount of leaked information can be reduced to
-the problem of computing the number of items in $K^o$. However, we find that while
-there are various propositional model counters (e.g., \#SAT), they are not
-sufficient scalable for production cryptosystem analysis.
+%According to
+%Definition~\ref{def} introduced in \S\ref{sec:trace-qif},
+%the problem of quantifying the amount of leaked information can be reduced to
+%the problem of computing the number of items in $K^o$. However, we find that while
+%there are various propositional model counters (e.g., \#SAT), they are not
+%sufficient scalable for production cryptosystem analysis.
 %there is no open source modulo theories counter (\#SMT) available.
 
-One straightforward method approximating the number of solutions is based on Monte Carlo
-sampling. However, the number of satisfying values could be exponentially small.
-Consider the formula $f_i\equiv{k_1} = 1\land{k_2} = 2\land{k_3} = 3\land{k_4} =
-4$, where $k_1$, $k_2$, $k_3$, and $k_4$ each represents one byte in the
-original sensitive input buffer, there is only one satisfying solution of total
-$2^{32}$ possible values, which requires exponentially many samples to get a
-tight bound. Monte Carlo method also suffers from the curse of dimensionality.
-For example, the length of an RSA private key can be as long as 4096 bits. If we
-take each byte (8 bits) in the original buffer as one symbol, the formula can
-have as many as 512 symbols.
+%One straightforward method approximating the number of solutions is based on Monte Carlo
+%sampling. However, the number of satisfying values could be exponentially small.
+%Consider the formula $f_i\equiv{k_1} = 1\land{k_2} = 2\land{k_3} = 3\land{k_4} =
+%4$, where $k_1$, $k_2$, $k_3$, and $k_4$ each represents one byte in the
+%original sensitive input buffer, there is only one satisfying solution of total
+%$2^{32}$ possible values, which requires exponentially many samples to get a
+%tight bound. Monte Carlo method also suffers from the curse of dimensionality.
+%For example, the length of an RSA private key can be as long as 4096 bits. If we
+%take each byte (8 bits) in the original buffer as one symbol, the formula can
+%have as many as 512 symbols.
 
-\vspace*{6pt}
-\textbf{Our Solution to Challenge C4:}
-We adopt multiple-step Monte Carlo sampling methods to count the number of
-possible inputs that satisfy the logic formula groups. The key idea is to split
-those constraints into several small formulas and sample them independently.
+%\vspace*{2pt}
+%\textbf{Our Solution to Challenge C3:}
+%We adopt multiple-step Monte Carlo sampling methods to count the number of
+%possible inputs that satisfy the logic formula groups. The key idea is to split
+%those constraints into several small formulas and sample them independently.
 %We will introduce the method in the following subsection.
 
-\subsection{Information Leakage Estimation}
+%\subsection{Information Leakage Estimation}
 
 \newcommand{\addr}[1]{{l}_{#1}}
 \renewcommand{\addr}[1]{{\gamma}_{#1}}
@@ -169,14 +167,15 @@ those constraints into several small formulas and sample them independently.
 
 In this section, we present the algorithm to calculate the information leakage
 based on Definition~\ref{def} (\S\ref{sec:trace-qif}), answering to
-\textbf{Challenge C4}.
+\textbf{Challenge C3}.
 
 \subsubsection{Problem Statement}
 For each leakage site, we model it with a math formula constraint with the
 method presented in~\S\ref{side-channel:condition}. Suppose the address of the
-leakage site is $\addr{i}$, we use $c_{\addr{i}}$ to denote the constraint. For
-multiple leakage sites, we take the conjunction of those constraints to
-represent those leakage sites.
+leakage site is $\addr{i}$, we use $c_{\addr{i}}$ to denote the constraint. 
+%For
+%multiple leakage sites, we take the conjunction of those constraints to
+%represent those leakage sites.
 
 According to the Definition~\ref{def}, to calculate the amount of leaked
 information, the key is to calculate 
@@ -187,21 +186,19 @@ information, the key is to calculate
 the cardinality
 of $K^o$. Suppose an attacker can observe $n$ leakage sites, and each leakage
 site has the following constraints: $c_{\addr{1}}, c_{\addr{2}}, \ldots,
-c_{\addr{n}}$ respectively. The total leakage has the constraint
+c_{\addr{n}}$ respectively. The total leakage can be calculated from the constraint
 $c_t({\addr{1}},{\addr{2}},\ldots,{\addr{n}}) = c_{\addr{1}} \land c_{\addr{2}}
 \land \ldots \land c_{\addr{n}}$. 
 %%The problem of estimating the total leaked
 %%information can be reduced to the problem of counting the number of different
 %%solutions that satisfies the constraint
 %%$c_t({\addr{1}},{\addr{2}},\ldots,{\addr{n}})$. 
-A native method for
-approximating the result is to pick elements $k$ from $K$ and check if the
+A native method is to pick elements $k$ from $K$ and check if the
 element also contained in $K^o$. Assume $q$ elements satisfy this condition. In
 expectation, we can use $\frac{k}{q}$ to approximate the value of
 $\frac{|K|}{|K^o|}$.
 
-However, as discussed in \S\ref{MCreasons}, the above sampling method will
-typically fail in practice due to the following two problems:
+However, the above sampling method fails in practice due to the following two problems:
 
 \begin{enumerate}
       \item The curse of dimensionality. $c_t({\addr{1}},\ldots,{\addr{n}})$ is
@@ -277,21 +274,22 @@ one.
       the maximum independent partition of $c_t(\addr{1},\addr{2},\ldots,\addr{n})$ iff
       \begin{enumerate}
             \item $g_{1} \land g_{2} \land \ldots \land g_{m} = c_t(\addr{1},\addr{2},\ldots,\addr{n})$
-            \item $\forall i, j \in \{1, 2, \ldots, m\} \quad \textrm{and} \quad
-                        i \neq j, \quad\pi(g_{i}) \cap \pi(g_{j}) = \emptyset $
+            \item $\forall i, j \in \{1, \ldots, m\} \quad \textrm{and} \quad
+                        i \neq j,\quad\pi(g_{i}) \cap \pi(g_{j}) = \emptyset $
             \item For any other partitions  $h_{1}, h_{2}, \ldots, h_{m'}$ satisfy 1) and
                   2), $m \geq m'$
       \end{enumerate}
 
 \end{mydef}
 
-The reason we want a good partition of constraints is that we want to reduce
-the dimensions. Consider the example in the previous section,
-$$c: ({k_1} = 1)\land({k_2} = 2)\land({k_3} > 4)\land({k_3} - {k_4} > 10)$$ A
-good partition of $F$ would be
-$$g_{1}: ({k_1} = 1)\quad g_{2}: ({k_2} = 2)\quad g_{3}: ({k_3} > 4) \land
-({k_3} - {k_4} > 10)$$ So instead of sampling in the four dimension space, we
-can sample each constraint in the less dimension space and combine them together
+The reason we want a good partition of constraints is we want to reduce
+the dimensions. 
+%Considering the example below,
+%$$c: ({k_1} = 1)\land({k_2} = 2)\land({k_3} > 4)\land({k_3} - {k_4} > 10)$$ A
+%good partition of $F$ would be
+%$$g_{1}: ({k_1} = 1)\quad g_{2}: ({k_2} = 2)\quad g_{3}: ({k_3} > 4) \land
+%({k_3} - {k_4} > 10)$$  
+We can sample each constraint independently and combine them together
 with Theorem~\ref{IndependentConstraint} .
 
 \begin{theorem}
@@ -344,14 +342,15 @@ Appendix~\ref{appendix:partition}.
 
 After we split those constraints into several small constraints, we count the
 number of solutions for each constraint. Even though the dimension has been
-significantly reduced after the previous step, this is still a \#P problem. For our
-project, we apply the approximate counting instead of exact counting for two
-reasons. First, we do not need to have a very precise result of the exact number
-of total solutions since the information is defined with a logarithmic function.
-We do not need to distinguish between constraints having $10^{10}$ or $10^{10} +
-10$ solutions; they are very close to after taking logarithmic. Second, the
-precise model counting approaches, like Davis-Putnam-Logemann-Loveland (DPLL)
-search, have difficulty scaling up to large problem sizes.
+significantly reduced after the previous step, this is still a \#P problem. 
+%For our
+%project, we apply the approximate counting instead of exact counting for two
+%reasons. First, we do not need to have a very precise result of the exact number
+%of total solutions since the information is defined with a logarithmic function.
+%We do not need to distinguish between constraints having $10^{10}$ or $10^{10} +
+%10$ solutions; they are very close to after taking logarithmic. Second, the
+%precise model counting approaches, like Davis-Putnam-Logemann-Loveland (DPLL)
+%search, have difficulty scaling up to large problem sizes.
 
 We apply the ``counting by sampling" method. The basic idea is as follows. For
 the constraint $g_{i}= c_{i_1} \land c_{i_2} \land ,\ldots, \land c_{i_j} \land
@@ -404,8 +403,7 @@ The detailed algorithm is shown in Appendix~\ref{appendix:montecarlo}.
 
 \subsubsection{Error Estimation}
 \label{sssec:errest}
-In this part, we will show that even we use approximating methods, our result
-can have probabilistic guarantee that the error of the estimated amount of leaked 
+Our result has the probabilistic guarantee that the error of the estimated amount of leaked 
 information is less than 1 bit under the Central Limit Theorem (CLT) and uncertainty
 propagation theorem.
 
