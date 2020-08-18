@@ -27,7 +27,7 @@ indicate the sensitive level of side-channel vulnerabilities.
 CacheSym~\cite{Brotzman19Casym} introduces a static cache-aware symbolic
 reasoning technique to cover multiple paths for the target program. Still, their
 approaches cannot assess the sensitive level for each side-channel
-vulnerability does not scale to real-world crypto libraries.
+vulnerability. And their approaches only work on small code snippets.
 
 The dynamic approach, usually with taint analysis and symbolic execution,
 can perform a very precise analysis. CacheD~\cite{203878} takes a concrete

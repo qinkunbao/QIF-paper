@@ -1,7 +1,7 @@
 \section{Discussions and Limitations}
 While recent works have reported lots
-of potential side-channel vulnerabilities, we find most of them are not patched by
-developers because they do not think those vulnerabilities are severe enough.
+of potential side-channel vulnerabilities, we find many of them are not patched by
+developers.
 However, side-channels are inevitable in software and it is hard to fix all of them. 
 Addressing old vulnerabilities may also introduce new leakage
 sites. We need a
@@ -16,7 +16,7 @@ and reason about countermeasures.
 \tool{} estimates the amount of leaked information for each side-channel leakage
 in one execution trace. \tool{} is useful for software
 engineers to test programs and fix vulnerabilities.
-\tool{} works on native x86 execution traces. The design, which is very
+The design, which is very
 precise in terms of true leakages compared to other static source code
 method~\cite{197207,BacelarAlmeida:2013:FVS:2483313.2483334}, can omit some
 leakages on other traces. The amount of leaked information also depends on the secret key.
@@ -52,9 +52,7 @@ caused by the imprecise memory model during the evaluation.
 During the symbolic execution, for each constraint it generates,
 the tool will check the correctness of the constraint by giving 
 the constraint real values (the value of sensitive keys). Sampling 
-can also introduce imprecision but with a probabilistic guarantee, 
-as long as the sampling can terminate under the Central Limit Theorem (CLT) condition 
-in probability theory. 
+can also introduce imprecision but with a probabilistic guarantee. 
 However, during the evaluation, we find that \tool{} cannot estimate 
 the amount of leakage for some leakage sites in a reasonable time, 
 which means the number of $K^o$ is very small. According to Definition~\ref{def}, 
