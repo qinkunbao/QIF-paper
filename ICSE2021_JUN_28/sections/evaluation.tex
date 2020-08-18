@@ -123,9 +123,7 @@ distinguish those ``vulnerabilities'' from severe ones and ignore others easily.
 
 Symmetric encryption implementations in OpenSSL and mbedTLS\@ have significant
 leakages due to the lookup table implementation. 
-\tool{} finds several leakage sites for both 
-implementations of DES and AES in
-OpenSSL and mbedTLS\@. \tool{} confirms that all those leakages come from table
+\tool{} confirms that all those leakages come from table
 lookups. We find the new
 implementation of OpenSSL instead uses typical four 1K tables. It only uses one 1K
 of the tables. This implementation is rather easy but does somehow decrease the total
@@ -134,9 +132,9 @@ section.
 
 We also evaluate our tool on the RSA implementation. With the optimization
 introduced in \S\ref{sec:scala}, we do not apply any domain knowledge to
-simplify the analysis. Therefore, our tools can not only identify all the leakage sites
-reported by CacheD~\cite{203878}, but find new leakages in a shorter time. 
-We also find the newer
+simplify the analysis. Therefore, our tools can identify all the leakage sites
+reported by CacheD~\cite{203878} and find new leakages in a shorter time. 
+We also find newer
 versions of RSA in OpenSSL tend to have fewer leakages detected by \tool{}. We
 will discuss the version changes and corresponding leakages in \S\ref{eval:asym}.
 
@@ -218,7 +216,7 @@ speed up the performance, but can also introduce additional side-channels
 as well. During our evaluation, we find mbedTLS 2.5 and 2.15.1 have the same
 implementation of AES\@ and DES\@. Therefore, our tool also provides the same 
 leakage report for both
-versions. A sample of the generated report can be found in the Appendix~\ref{sec:result-table}.
+versions. 
 
 According to \tool{}, we find DES\@ implementations in both mbedTLS and OpenSSL have several
 sensitive information leakages in the key schedule function.

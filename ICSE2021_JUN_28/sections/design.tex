@@ -23,22 +23,17 @@ Carlo (MC) simulations to estimate the amount of leaked information.
 
 \begin{enumerate}
     \item \emph{Execution trace generation.} The design goal of \tool{} is to
-          estimate the information leakage as precisely as possible. Therefore,
-          we sacrifice the soundness for precision in terms of program
-          analysis. We run the target binary under dynamic binary instrumentations (DBI)
+          estimate the information leakage as precisely as possible. We run the target binary under dynamic binary instrumentations (DBI)
           to record execution traces and the runtime information.
           Once sensitive information is loaded into memory, we start to collect the 
           trace.
     \item \emph{Instruction level symbolic execution.} We model attackers'
           observations from side-channel vulnerabilities with logic formulas.
           Each formula captures the fine-grained information between input
-          secrets and leakage sites. In consideration of precision and
-          performance, we remove the intermediate language (IR) layer of the
-          symbolic execution. Also, the engine only symbolically executes the
+          secrets and leakage sites. The engine only symbolically executes the
           instruction that might be affected by the input key.  
     \item \emph{Leakage estimation.} We transfer the information leakage 
-          quantification problem into the problem of counting the number of assignments 
-          that satisfy the formulas which model the observations from attackers. We propose a
+          quantification problem into the counting problem. We propose a
           Monte Carlo method to estimate the number of satisfying solutions.
           With the help of the Central Limit Theorem (CLT), we also give an error 
           estimate with the probability, which provides us with the \emph{precision guarantee}.
