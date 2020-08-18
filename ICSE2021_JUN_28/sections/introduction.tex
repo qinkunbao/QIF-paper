@@ -8,7 +8,7 @@ Among them, software-based side-channel attacks, such as cache attacks, memory p
 attacks, and controlled-channel attacks, are especially common and have been
 studied for
 years~\cite{7163052,217543,217589,lee2017inferring,191010,liu2015last}. These
-attacks result from vulnerable software and shared hardware components.
+attacks stem from vulnerable software and shared hardware components.
 By observing program outputs or hardware behaviors, attackers can infer program
 execution flows that manipulate secrets and guess secrets such as encryption
 keys~\cite{Osvik2006,Gullasch:2011:CGB:2006077.2006784,203878,10.1007/978-3-540-45238-6_6}.
@@ -36,12 +36,13 @@ implementation in OpenSSL\@.
 %still leaves 460 data-access leakages and 278 control-flow leakages. 
 However, we find many of the reported vulnerabilities are not fixed by the developers.
 First, many vulnerable implementations have better performance. For example,
-many implementations of RSA, adopt the CRT optimization,
+RSA usually adopt the CRT optimization,
 which is faster but vulnerable to fault attacks~\cite{aumuller2002fault}.
 Second, side-channels are numerous and it is hard to fix all these vulnerabilities,
 let alone the majority of them are negligible. 
 That is, some vulnerabilities can result in the key being 
-entirely compromised~\cite{184415, aumuller2002fault}, but many other vulnerabilities prove to be less
+entirely compromised~\cite{184415, aumuller2002fault}, 
+but many other vulnerabilities prove to be less
 severe in reality. Therefore, we need a proper quantification metric to 
 assess the sensitive level of side-channel vulnerabilities.
 
@@ -67,10 +68,10 @@ inputs and reduce the input space's size. The smaller the input space is,
 the more information is obtained. In an extreme case, if the input space's size 
 reduces to one, an adversary can determine the input, 
 which means all the secret information (e.g., the whole secret key) is
-leaked. By counting the number of distinct inputs~\cite{10.1007/11499107_24}, 
+leaked. By counting the number of inputs~\cite{10.1007/11499107_24}, 
 we can quantify the information leakage precisely.
-We use constraints generated from symbolic execution to model the relation 
-between the original sensitive input and the attacker's observations. 
+We use symbolic execution to generate constrains to model the relation 
+between the original sensitive input and an attacker's observations. 
 Symbolic execution can provide fine-grained information but is usually an expensive
 operation in terms of performance. Therefore, existing dynamic symbolic
 execution works~\cite{203878,236338,Brotzman19Casym} either only analyze
