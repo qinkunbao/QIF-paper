@@ -58,18 +58,17 @@ existing tool can precisely assess the severity of vulnerabilities in production
 software. 
 
 To overcome these limitations, we propose a novel method to quantify information 
-leakages precisely. We quantify the number of leaked bits during one real execution,
-and define the amount of leaked information as the cardinality of the set of possible
-secrets based on an attacker's observation to each leakage site.
-Before an attack, an adversary has a large but finite input space. Every time
-when the adversary observes a leakage site, he can eliminate some potential
-inputs and reduce the size of the input space. The smaller the input space is,
-the more information is obtained. In an extreme case, if the size of the
-input space reduces to one, an adversary can determine the input, 
+leakages precisely. We quantify the number of leaked bits during one real 
+execution and define the amount of leaked information as the cardinality of 
+the set of possible secrets based on an attacker's observation of each leakage 
+site. Before an attack, an adversary has a large but finite input space. 
+Whenever the adversary observes a leakage site, he can eliminate some potential 
+inputs and reduce the input space's size. The smaller the input space is, 
+the more information is obtained. In an extreme case, if the input space's size 
+reduces to one, an adversary can determine the input, 
 which means all the secret information (e.g., the whole secret key) is
 leaked. By counting the number of distinct inputs~\cite{10.1007/11499107_24}, 
 we can quantify the information leakage precisely.
-
 We use constraints generated from symbolic execution to model the relation 
 between the original sensitive input and the attacker's observations. 
 Symbolic execution can provide fine-grained information but is usually an expensive
@@ -79,24 +78,27 @@ small programs or apply some domain knowledge~\cite{203878} to simplify the anal
 examine the bottleneck of the trace-oriented symbolic execution and optimize it
 to be scalable to real-world cryptosystems.
 
-We have implemented the proposed technique in a tool called \tool{} and shows their merits 
-in real-world crypto libraries including OpenSSL, mbedTLS, and Monocypher.
-First, we collect execution traces for 
-libraries and then run symbolic execution on each instruction. In this way, we model
+We have implemented the proposed technique in a tool called \tool{} and show 
+their merits in real-world crypto libraries, including OpenSSL, 
+mbedTLS, and Monocypher.
+First, we collect execution traces for libraries and then run 
+symbolic execution on each instruction. In this way, we model
 each side-channel leakage as a logic formula. Those
-formulas can precisely model side-channel vulnerabilities. Then we use the conjunction
-of those formulas to model the same leaks in the source code but appears in the different location of
+formulas can precisely model side-channel vulnerabilities. 
+Then we use the conjunction of those formulas to model the 
+same leaks in the source code but appears in the different location of
 the execution trace file (e.g., leakages inside a loop).
-Finally, we introduce Monte Carlo sampling method to estimate the information leakage. 
+Finally, we introduce a Monte Carlo sampling method to estimate 
+the information leakage. 
 The experimental result confirms
-that \tool{} can precisely identify previously known vulnerabilities, reports
-how much information is leaked and which byte in the original sensitive buffer
-is leaked. We also test \tool{} on side-channel free algorithms. \tool{} has no
-false positives.
-Newer version of crypto libraries leak less amount of information 
+that \tool{} can precisely identify previously known vulnerabilities, 
+reports how much information is leaked and which byte in the original sensitive 
+buffer is leaked. We also test \tool{} on side-channel free algorithms. 
+\tool{} has no false positives.
+A newer version of crypto libraries leaks less amount of information 
 compared to previous versions.
-\tool\ also discovers new vulnerabilities. With the help of \tool{}, we confirm
-that those vulnerabilities are severe.
+\tool\ also discovers new vulnerabilities. With the help of \tool{}, 
+we confirm that those vulnerabilities are severe.
 
 
 %Based on the fixed attack target, we classify the software-based side-channel
