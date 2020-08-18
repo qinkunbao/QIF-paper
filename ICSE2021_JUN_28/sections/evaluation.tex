@@ -6,8 +6,6 @@
     \caption{Evaluation results overview: Name, Side-channel Leaks\,(Leaks), 
         Secret-dependent Control-flows\,(CF), Secret-dependent Data-flows\,(DA),
         The number of instructions\,(\# Instructions), Symbolic Execution\,(SE), and Monte Carlo\,(MC).
-        A summary of vulnerabilities 
-        with the amount of leaked information can be found in Appendix \S\ref{sec:result-table}.
     }\label{table:over_result}
     \vspace*{-5pt}
     \newlength{\x}
@@ -323,7 +321,7 @@ Besides, branches can also be compiled into non-branch machine instructions
 like conditional moves. Therefore, simple code reviews are not accurate
 enough to detect side-channels. 
 
-On the other hand, for those vulnerabilities that leak less information,
+For vulnerabilities that leak less amount of information,
 developers are more reluctant to fix them. 
 For example, OpenSSL 0.9.7 adopts a fixed windows version of 
 function \textsf{BN\_mod\_exp\_mont\_consttime} to replace original function
@@ -332,9 +330,9 @@ function \textsf{BN\_mod\_exp\_mont\_consttime} to replace original function
 leak the last bit of the big number \textbf{m}. In the updated version,
 developers make the fixed windows become the default option and rewrite most parts of the 
 function. However, the vulnerability still exists in OpenSSL 1.1.1,
-despite the vulnerability is blunt. Details of the 
-vulnerability can been seen in Appendix\S~\ref{appendix:minor:vul}.
-
+despite the vulnerability is blunt. Even for the up-to-date version of the library, 
+\tool{} still finds several
+side-channel leakages.
 \begin{figure}
     \centering
     \begin{lstlisting}[xleftmargin=.02\textwidth,xrightmargin=.01\textwidth]
@@ -374,10 +372,6 @@ vulnerability can been seen in Appendix\S~\ref{appendix:minor:vul}.
     \vspace*{-6pt}
 \end{figure}
 
-Even for the up-to-date version of the library, \tool{} still finds several
-side-channel leakages.
-Details of the leak can be found in Appendix \S\ref{unknown:leak} and 
-Table \ref{tab:RSAOpenSSL1.1.1g}.
 
 \subsubsection{Monocypher}\label{eval:mono}
 Monocypher is a small, easy to use cryptographic library with a
