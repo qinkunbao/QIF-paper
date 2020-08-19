@@ -43,16 +43,11 @@ from several bytes in the original key. Those constraints can precisely model th
 relationship between the key buffers and leakage sites.
 
 \tool{} reaches full precision if the number of estimated leaked bits 
-equals to Definition~\ref{def}. According to the threat model, the 
-length of the secret is known, so the only estimated value is the number
-of possible secrets under the attacker's observation ($|K^o|$). 
+equals to Definition~\ref{def}. 
 During the symbolic execution, \tool{} may lose precision from the 
 memory model it uses in theory. However, we do not find false positives 
 caused by the imprecise memory model during the evaluation. 
-During the symbolic execution, for each constraint it generates,
-the tool will check the correctness of the constraint by giving 
-the constraint real values (the value of sensitive keys). Sampling 
-can also introduce imprecision but with a probabilistic guarantee. 
+Sampling  can also introduce imprecision but with a probabilistic guarantee. 
 However, during the evaluation, we find that \tool{} cannot estimate 
 the amount of leakage for some leakage sites in a reasonable time, 
 which means the number of $K^o$ is very small. According to Definition~\ref{def}, 

@@ -67,7 +67,7 @@ guess the value bit by
 bit (e.g., Kocher's timing attacks~\cite{kocher1996timing}), as in Figure~\ref{fig:gap}(b). 
 We want to have a
 theory for dynamic analysis that if the theory says an attack leaks $x$ bits of
-secret information from a side-channel vulnerability, then $x$ should be useful
+secret information, then $x$ should be useful
 in estimating the sensitive level of the vulnerability. However, the above
 methods all fail in real attack models. This is the first challenge we face
 \textbf{(Challenge C1)}.
@@ -81,9 +81,9 @@ letters to represent one element in the set (e.g., $a \in A$).
 We assume a program ($\beta$) has $K$ as the sensitive input. $K$ should be a
 finite set of keys. The program also takes known messages $M$ as the input. 
 During an AES encryption, for example, 
-$\beta$ is the encryption function. $K$ is the set containing all possible AES keys, 
+$\beta$ is the encryption function. $K$ is the set of all possible AES keys, 
 and $M$ is messages to be
-encrypted. During the execution, an adversary may have some observations ($O$)
+encrypted. In a real execution, an adversary may have some observations ($O$)
 from the program. Examples of those observations include timing, CPU usages, and
 Electromagnetic signals (EM). In this paper, we consider secret-dependent
 control-flows and secret-dependent memory accesses as observations.
@@ -111,13 +111,9 @@ transferred into the following question.
 \emph{How much uncertainty of $K$ can be reduced if an attacker knows $\beta$, $m$, and $o$?}
 
 \subsection{Theoretical Analysis \textbf{(Solution to Challege C1)}}
-Now we present our metric to quantify the amount of leaked information from
-dynamic analysis.
-
 In information theory, the mutual information (I) is a measure of the mutual
-dependence between two variables. Here we use I to describe the
+dependence between two variables. We use $I$ to describe the
 dependence between original sensitive keys ($K$) and attackers' observations ($O$).
-It can be expressed as:
 %which is defined as:
 
 %\begin{equation} \label{eq:1}
@@ -162,7 +158,7 @@ Therefore, we define the amount of leaked information as
     Leakage = H(K;o) = H(K) - H(K|o)
 \end{displaymath}
 
-For a program ($\beta$) without knowing any domain information, all possible sensitive
+For a program ($\beta$) without any domain information, all possible sensitive
 inputs should appear equally. Therefore, for any $k \in K$, $p(k) =
 \frac{1}{|K|}$. We have
 $$H(K) = \sum_{k {\in} K}\frac{1}{|K|}\log_2{|K|} = \log_2{|K|}$$
@@ -185,7 +181,7 @@ For any $k' \in K \setminus K^o$, $p(k'|o) = 0$. We get
 \end{mydef}
 
 The above definition~\cite{AskarovC12} can be understood in an intuitive way. Suppose an attacker
-wants to guess a 128-bit encryption key. 
+guesses a 128-bit encryption key. 
 Without any domain knowledge, 
 he can find the key by performing exhaustive search over $2^{128}$ possible keys. 
 However, the program has a side-channel leakage site. After the program finishes execution, the
@@ -201,7 +197,7 @@ the attacker observes the code hits branch 2, the leaked information is
 $L_{P(k)=o^{2}} = \log_2{2^{64}} - \log_2{(2^{64}-1)} \approx 0$ bit.
 
 As the size of input sensitive information is
-usually public. The problem of quantifying the leaked information has been
+usually public, the problem of quantifying the leaked information has been
 transferred into the problem of estimating the size of input key $|K^o|$ under
 the condition $o \in O$. 
 
@@ -243,9 +239,9 @@ If the memory access equals to $t_b$, we can use the constraint $c_i :
 f_i(\beta, k, m) >> L = t_b >> L$ to model the observation on secret-dependent
 data accesses.
 
-With the above definitions, we can model an attacker's observation by a series of math
-formulas. For example, in Figure~\ref{fig:side-channel}, if an attacker observes
-the code executes the branch 1, we have $c_5: k_1 + k_2 < 4$ to describe an
-attacker's knowledge and $K^{o5} = \{k_1,\, k_2\,|\, (k_1 + k_2) < 4\}$. If an
-attacker observes the code executes the branch 2, we have $c_8: k_1 - k_2 > 0$
-and $K^{o8} = \{k_1,\, k_2\,|\, (k_1 - k_2) > 0\}$.
+%With the above definitions, we can model an attacker's observation by a series of math
+%formulas. For example, in Figure~\ref{fig:side-channel}, if an attacker observes
+%the code executes the branch 1, we have $c_5: k_1 + k_2 < 4$ to describe an
+%attacker's knowledge and $K^{o5} = \{k_1,\, k_2\,|\, (k_1 + k_2) < 4\}$. If an
+%attacker observes the code executes the branch 2, we have $c_8: k_1 - k_2 > 0$
+%and $K^{o8} = \{k_1,\, k_2\,|\, (k_1 - k_2) > 0\}$.

@@ -29,12 +29,12 @@ addresses and data flow from secrets to branch conditions. We refer to them as
 secret-dependent memory-accesses and control-flows, respectively. 
 Recent
 works~\cite{203878,217537,Wichelmann:2018:MFF:3274694.3274741,Brotzman19Casym,236338,182946},
-find plenty of side-channel vulnerabilities. For example,
+can detect plenty of side-channel vulnerabilities. For example,
 DATA~\cite{217537} reports 2,246 potential leakage sites for the RSA
 implementation in OpenSSL\@. 
 %After some inspections, 1,510 leakages are dismissed. But it
 %still leaves 460 data-access leakages and 278 control-flow leakages. 
-However, we find many of the reported vulnerabilities are not fixed by the developers.
+However, many of the reported vulnerabilities are not fixed by the developers.
 First, many vulnerable implementations have better performance. For example,
 RSA implementations usually adopt the CRT optimization,
 which is faster but vulnerable to fault attacks~\cite{aumuller2002fault}.
@@ -56,7 +56,7 @@ reports that the upper
 bound leakage of AES-128 exceeds the original key size. The dynamic methods take
 another approach with a concrete input and run the program in a real
 environment. Although they are very precise in terms of true leakages, no
-existing tool can precisely assess the severity of vulnerabilities in production
+existing tool can precisely assesses the severity of vulnerabilities in production
 software. 
 
 To overcome these limitations, we propose a novel method to quantify information 
@@ -64,7 +64,7 @@ leakages precisely. We quantify the number of leaked bits during one real
 execution and define the amount of leaked information as the cardinality of 
 the set of possible secrets based on an attacker's observation of each leakage 
 site. Before an attack, an adversary has a large but finite input space. 
-Whenever the adversary observes a leakage site, he can eliminate some potential 
+Whenever the adversary observes a leakage site, he can eliminate some impossible 
 inputs and reduce the input space's size. The smaller the input space is, 
 the more information is obtained. In an extreme case, if the input space's size 
 reduces to one, an adversary can determine the input, 
@@ -97,8 +97,8 @@ that \tool{} can precisely identify previously known vulnerabilities,
 reports how much information is leaked and which byte in the original sensitive 
 buffer is leaked. We also test \tool{} on side-channel free algorithms. 
 \tool{} has no false positives.
-A newer version of crypto libraries leaks less amount of information 
-compared to previous versions.
+The result also shows newer version of crypto libraries leak less amount of information 
+than previous versions.
 \tool\ also discovers new vulnerabilities. With the help of \tool{}, 
 we confirm that those vulnerabilities are severe.
 
