@@ -16,6 +16,7 @@ scenario, the leakage could be severer.
 
 
 \begin{figure}[h!]
+    \vspace*{-5pt}
     \centering
     \begin{lstlisting}[xleftmargin=.03\textwidth,xrightmargin=.01\textwidth]
 char key[9] = input();
@@ -24,9 +25,10 @@ if(strcmp(key, "password"))   // leakage site C
 else
     fail();                   // branch 2
 \end{lstlisting}
-\vspace*{1pt}
+\vspace*{-5pt}
     \caption{A dummy password checker}
     \label{fig:password-checker}
+\vspace*{-5pt}
 \end{figure}
 
 We consider a dummy password checker shown in Figure~\ref{fig:password-checker}.
@@ -46,10 +48,12 @@ branches, tools based on max-entropy will report the code has $\log_2{2} = 1$
 bit leakage.
 
 \begin{figure}[h]
+    \vspace*{-5pt}
     \centering
     \includegraphics[width=.65\columnwidth]{./figures/RA.pdf}
 \vspace*{-2pt}
     \caption{The gap between the real attack and previous models}\label{fig:gap}
+    \vspace*{-5pt}
 \end{figure}
 
 Both approaches fail to tell how much information is leaked for one real execution
@@ -90,21 +94,21 @@ control-flows and secret-dependent memory accesses as observations.
 
 With the above definitions, we define the following mapping between $\beta$,
 $K$, $M$, and $O$:
-
+\vspace*{-5pt}
 \begin{displaymath}
     \beta(K, M) \rightarrow O
 \end{displaymath}
+\vspace*{-5pt}
+
 
 We model a side-channel with the following way. An adversary does not have
 access to $K$, but he knows $\beta$, $M$, and $O$. For one execution of a
 deterministic program, once $k \in K$ and $m \in M$ are fixed, the observation
 ($o \in O$) should also be determined. As an attacker, he knows $\beta$, $o$,
 and $m$. The attacker wants to infer the value of $k$. We use $K^o$ to denote
-the set of possible $k$ values that produce the same observation:
+the set of possible $k$ values that produce the same observation: $K^o = \{ k \in K \, |\, \beta(k, m) \rightarrow o\}$
 
-\begin{displaymath}
-    K^o = \{ k \in K \, |\, \beta(k, m) \rightarrow o\}
-\end{displaymath}
+
 
 Then the problem of quantifying the amount of leaked information can be
 transferred into the following question.
@@ -122,18 +126,24 @@ dependence between original sensitive keys ($K$) and attackers' observations ($O
 
 %where $P(k_i, o_i)$ is the joint discrete distribution of $K$ and $O$.
 %Alternatively, the mutual information can also be equivalently expressed as:
-
+\vspace*{-5pt}
 \begin{equation} \label{eq:2}
     I(K;O) = H(K) - H(K|O)
 \end{equation}
+\vspace*{-5pt}
 
 $H(K|O)$ is the entropy of $K$ under the condition $O$. It quantifies the
 uncertainty of $K$ given the value of $O$. In other word, the conditional
 entropy $H(K|O)$ marks the uncertainty about $K$ after an adversary has gained
 some observations ($O$).
+
+\vspace*{-5pt}
 \begin{equation}
     H(K|O) = - \sum_{o {\in} O} {p(o) \sum_{k {\in} K}{p(k|o)\log_2p(k|o)}}
 \end{equation}
+\vspace*{-5pt}
+
+
 
 In this project, we hope for a very precise definition of information
 leakages. Suppose an attacker runs the target program with one
@@ -143,25 +153,33 @@ memory access patterns ($o$). We come to the simple slogan
 %% leakage equals:
 %% \textbf{Initial uncertainty - remaining uncertainty}
 that
+\vspace*{-5pt}
 \begin{align*}
      & \mathit{Information\ leakage} =                                         \\
      & ~~~~ \mathit{Initial\ uncertainty} - \mathit{Remaining\ uncertainty}.
 \end{align*}
+\vspace*{-5pt}
 
 Next we compare the Eq.~(\ref{eq:2}) with the above slogan, we find $H(K)$
 is the $\mathit{Initial\ uncertainty}$ and $H(K|O)$ is $\mathit{Remaining\
 uncertainty}$. During a real attack, the observation ($o$) is known. Thus we
-have $H(K|O) = H(K|o)$.
+have $H(K|O) = H(K|o)$. Therefore, we define the amount of leaked information as
 
-Therefore, we define the amount of leaked information as
+\vspace*{-5pt}
+
 \begin{displaymath}
     Leakage = H(K;o) = H(K) - H(K|o)
 \end{displaymath}
+\vspace*{-5pt}
+
 
 For a program ($\beta$) without any domain information, all possible sensitive
 inputs should appear equally. Therefore, for any $k \in K$, $p(k) =
 \frac{1}{|K|}$. We have
+\vspace*{-5pt}
 $$H(K) = \sum_{k {\in} K}\frac{1}{|K|}\log_2{|K|} = \log_2{|K|}$$
+\vspace*{-5pt}
+
 For any $k' \in K \setminus K^o$, $p(k'|o) = 0$. We get
 \begin{align*}
     H(K;o) & = - \sum_{k {\in} K^o}{p(k|o)\log_2p(k|o)}                         \\
@@ -179,6 +197,7 @@ For any $k' \in K \setminus K^o$, $p(k'|o) = 0$. We get
     The amount of leaked information $L_{\beta(k)\rightarrow o}$ based on the observation ($o$) is
     $$L_{\beta(k)\rightarrow o} = \log_2{|K|} - \log_2{|K^o|}$$
 \end{mydef}
+\vspace*{-5pt}
 
 The above definition~\cite{AskarovC12} can be understood in an intuitive way. Suppose an attacker
 guesses a 128-bit encryption key. 

@@ -1,6 +1,140 @@
 
 \newcommand{\vvv}{\vspace*{-3pt}}
 
+\section{Exisiting Information Leakage Quantification}
+
+Given an event $e$ that occurs with the probability $p(e)$, we receive
+\begin{displaymath}
+    I = - \log_2p(e)
+\end{displaymath}
+bits of information by knowing the event $e$ happens according to information theory~\cite{shannon1948mathematical}. 
+Considering a char variable $a$
+with one byte size in a C program, its value ranges from 0 to 255.
+If we observe $a$ equals $1$, without any domain knowledge, 
+the probability of this observation is $\frac{1}{256}$. 
+So we get $-\log(\frac{1}{256}) = 8$ bits information, which is exactly the size
+of a char variable in the C program.
+Existing works on information leakage quantification typically use Shannon
+entropy~\cite{clark2007static,Wichelmann:2018:MFF:3274694.3274741},
+min-entropy~\cite{10.1007/978-3-642-00596-1_21}, and max-entropy~\cite{182946,
+Doychev:2017:RAS:3062341.3062388}. In these frameworks, the input sensitive
+information $K$ is considered as a random variable.
+
+Let $k$ be one of the possible
+value of $K$. The Shannon entropy $H(K)$ is defined as
+\begin{displaymath}
+    H(K) = - \sum_{k {\in} K}p(k)\log_2(p(k))
+\end{displaymath}
+
+Shannon entropy can be used to quantify the initial uncertainty about
+sensitive information. It measures the amount of information in a system.
+
+Min-entropy describes the information leaks for a program with the most likely input. 
+For example, min-entropy can be used to describe the
+best chance of success in guessing one's password using the
+most common password. %, which is defined as
+\begin{displaymath}
+    \mathit{min\text{-}entropy} = - \log_2(p_{\mathit{max}})
+\end{displaymath}
+
+Max-entropy is defined solely on the number of possible observations.
+%It is equal to $-\log_2{n}$.
+\begin{displaymath}
+    \mathit{max\text{-}entropy} = -\log_2{n}
+\end{displaymath}
+As it is easy to compute, most recent works~\cite{182946,Doychev:2017:RAS:3062341.3062388} use max-entropy as the definition of
+the amount of leaked information.
+
+To illustrate how these definitions work, we consider the code
+fragment in Figure~\ref{fig:side-channel}. It has two possible leakage sites, A and B.
+
+\begin{figure}[h!]
+\centering
+\begin{lstlisting}[xleftmargin=.03\textwidth,xrightmargin=.01\textwidth]
+uint8_t key[2], t1, t2;
+get_key(key);              // 0 <= key[0], key[1] < 256
+t1 = key[0] + key[1];
+t2 = key[0] - key[1];
+if (t1 < 4)                // leakage site A
+    foo();                             
+if (t2 > 0)                // leakage site B     
+    bar();                             
+\end{lstlisting}
+\vspace*{-1pt}
+    \caption{Side-channel leakage}
+    \label{fig:side-channel}
+\end{figure}
+In this paper we assume an attacker can observe the secret-dependent control-flows in 
+Figure~\ref{fig:side-channel}.
+Therefore, an attacker can have two different observations for each leak site
+depending on the value of the $\mathit{key}$: $A$ for function \textsf{foo} is executed, 
+$\neg A$ for function \textsf{foo} is not executed, $B$ for function \textsf{bar} is
+executed, and $\neg B$ for function \textsf{bar} is not executed.
+
+\begin{table}[ht]
+    \centering\small\footnotesize
+    \caption{The distribution of observation}\label{shtable}
+    \vspace*{-0pt}
+%    \resizebox{\columnwidth}{!}{
+    \begin{tabular}{l|cc|cc}
+        \hline
+        Observation ($o$)   & $A$ & $\neg A$ & $B$ & $\neg B$ \\ \hline
+        Number of Solutions & 65526       & 10        & 32768     & 32768           \\ \hline
+        Possibility (p)     & 0.9998      & 0.0002    & 0.5    & 0.5       \\
+        \hline
+    \end{tabular}
+%        }
+\end{table}
+
+Assuming $\mathit{key}$ is uniformly distributed, we can calculate the corresponding
+possibility by counting the number of possible inputs. Table~\ref{shtable}
+describes the probability of each observation. We use the above three types of 
+leakage metrics to quantify the leaked information for leak A and leak B.
+
+\vspace{3pt}
+\textbf{Min Entropy.}
+As $p_{A\mathit{max}} = 0.9998$ and $p_{B\mathit{max}} = 0.5$, 
+with the definition, $\mathit{min\text{-}entropy_A}$ equals to
+$0.000\ \mathrm{bits}$ and $\mathit{min\text{-}entropy_B}$ equals to
+$1.000\ \mathrm{bits}$.
+
+\textbf{Max Entropy.}
+Depending on the value of key, the code have two branches for each leakage site. 
+Therefore, with the max entropy definition, both leakage sites leak $1.000\ \mathrm{bits}$.
+
+\textbf{Shannon Entropy.}
+Based on Shannon entropy, the respective amount of information in A and B equals to
+{\footnotesize
+\begin{align*}
+    \mathit{Shannon\text{-}entropy_A} & = -(0.9998*\log_{2}0.9998      \\
+                                    & \qquad+ 0.0002*\log_{2}0.0002)  \\
+                                    & = 0.000\ \mathrm{bits}         \\
+    \mathit{Shannon\text{-}entropy_B} & = -(0.5*\log_{2}0.5      \\
+                                    & \qquad+ 0.5*\log_{2}0.5)        \\
+                                    & = 1.000\ \mathrm{bits}                             
+\end{align*}
+}
+
+\section{\tool{}' main components}
+
+\label{appendix:code}
+\begin{table}[h!]
+    \centering
+    %    \resizebox{.8\columnwidth}{!}{
+    \caption{\tool{}' main components and sizes}\label{tbl:implementation}
+    \begin{tabular}{lr@{~}@{}l}
+        \hline
+        Component            & \multicolumn{2}{c}{Lines of Code (LOC)}             \\ \hline
+        Trace Logging        & 501 lines                               & of C++    \\
+        Symbolic Execution   & 14,963 lines                            & of C++    \\
+        Data Flow            & 451 lines                               & of C++    \\
+        Monte Carlo Sampling & 603 lines                               & of C++    \\
+        Others               & 211 lines                               & of Python \\ \hline
+        Total                & 16,729 lines                            &           \\\hline
+    \end{tabular}
+    %    }
+\end{table}
+
 
 
 \section{Algorithm to Compute the Maximum Independent Partition}

@@ -9,7 +9,7 @@ attacks, and controlled-channel attacks, are especially common and have been
 studied for
 years~\cite{7163052,217543,217589,lee2017inferring,191010,liu2015last}. These
 attacks stem from vulnerable software and shared hardware components.
-By observing program outputs or hardware behaviors, attackers can infer program
+By observing those inadvertent behaviors, attackers can infer program
 execution flows that manipulate secrets and guess secrets such as encryption
 keys~\cite{Osvik2006,Gullasch:2011:CGB:2006077.2006784,203878,10.1007/978-3-540-45238-6_6}.
 
@@ -65,8 +65,7 @@ execution and define the amount of leaked information as the cardinality of
 the set of possible secrets based on an attacker's observation of each leakage 
 site. Before an attack, an adversary has a large but finite input space. 
 Whenever the adversary observes a leakage site, he can eliminate some impossible 
-inputs and reduce the input space's size. The smaller the input space is, 
-the more information is obtained. In an extreme case, if the input space's size 
+inputs and reduce the input space's size. In an extreme case, if the input space's size 
 reduces to one, an adversary can determine the input, 
 which means all the secret information (e.g., the whole secret key) is
 leaked. By counting the number of inputs~\cite{10.1007/11499107_24}, 
@@ -74,7 +73,7 @@ we can quantify the information leakage precisely.
 We use symbolic execution to generate constrains to model the relation 
 between the original sensitive input and an attacker's observations. 
 Symbolic execution can provide fine-grained information but is an expensive
-operation in terms of performance. Therefore, existing dynamic symbolic
+operation. Therefore, existing dynamic symbolic
 execution works~\cite{203878,236338,Brotzman19Casym} either only analyze
 small programs or apply some domain knowledge~\cite{203878} to simplify the analysis. We
 examine the bottleneck of the trace-oriented symbolic execution and optimize it
@@ -84,7 +83,7 @@ We have implemented the proposed technique in a tool called \tool{} and show
 their merits in real-world crypto libraries, including OpenSSL, 
 mbedTLS, and Monocypher.
 We collect execution traces of those libraries and run 
-symbolic execution on each instruction. In this way, we model
+symbolic execution on each instruction. We model
 each side-channel leakage as a logic formula. Those
 formulas can precisely model side-channel vulnerabilities. 
 Then we use the conjunction of those formulas to model the 

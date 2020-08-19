@@ -68,6 +68,8 @@
     \item[4] OpenSSL\,0.9.7  ~~\item[5] OpenSSL\,1.0.2f  \item[6] OpenSSL\,1.0.2k \\
     \item[7] OpenSSL\,1.1.0f ~\item[8] OpenSSL\,1.1.1 ~\item[9] OpenSSL\,1.1.1g
     \end{tablenotes}
+    \vspace*{-15pt}
+
 \end{table}
 
 We evaluate \tool{} on real-world crypto libraries including OpenSSL, mbedTLS and Monocypher\@. 
@@ -203,6 +205,7 @@ actually leaked for each vulnerability, which eases the pain to identify real se
             \multicolumn{7}{l}{\# of Instructions per second \qquad  CacheD: 2,519 \qquad \tool: 9,324}                                                                                                                                          \\ \hline
         \end{tabular}
     }
+    \vspace*{-15pt}
 \end{table}
 
 \subsection{Case Studies}
@@ -292,7 +295,7 @@ which proves the effectiveness of our quantifying method.
         We round the number of leaked information into the nearest integer. 
         The mark $*$ means timeout (see \S\ref{loc:timeout}).}
     \label{fig:rsa}
-    \vspace*{-12pt}
+    \vspace*{-20pt}
 \end{figure*}
 
 Our quantification result shows vulnerabilities
@@ -349,7 +352,7 @@ side-channel leakages.
     \vspace*{-6pt}
     \caption{Macro \textsf{sqr\_add\_c2} in OpenSSL 0.9.7}
     \label{fig:old_sqr2}
-    \vspace*{-6pt}
+    \vspace*{-8pt}
 \end{figure}
 
 
@@ -369,7 +372,7 @@ side-channel leakages.
     \vspace*{-6pt}
     \caption{Macro \textsf{sqr\_add\_c2} in OpenSSL 1.1.1}
     \label{fig:new_sqr2}
-    \vspace*{-6pt}
+    \vspace*{-10pt}
 \end{figure}
 
 
