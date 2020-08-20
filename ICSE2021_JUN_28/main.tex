@@ -104,33 +104,34 @@ showlines=true
 
 \begin{abstract}
 
-  Side-channel attacks allow adversaries to infer sensitive information based
-  on non-functional characteristics. Existing works on software side-channel
-  detections identify numerous potential vulnerabilities. 
-  However, in practice, many such vulnerabilities leak a negligible amount of
-  sensitive information, and thus developers are often reluctant to address
-  them.  On the other hand, no existing tools can precisely report the number of
-  leaked bits for each leakage site for production systems.
+Side-channel attacks allow adversaries to infer sensitive information based
+on non-functional characteristics. Existing works on side-channel
+detections identify numerous potential vulnerabilities. 
+However, in practice, many such vulnerabilities leak a negligible amount of
+sensitive information, and thus developers are often reluctant to address
+them. However, no existing tools can precisely report the number of
+leaked bits for each leakage site in production systems.
   
-  To overcome this limitation, we propose a novel method to precisely quantify
-  the leaked information in a single-trace and deterministic attack through side-channels. 
-  Our quantification method is dramatically different from previous methods, and the results are
-  confirmed to be much more precise and usable in practice. We model an
-  attacker's observation of each leakage site as a constraint.  
-  We scale symbolic execution to production software to generate the
-  constraints and then run Monte Carlo sampling to estimate the number of leaked
-  bits for each vulnerability. By using the Central Limit Theorem, we can also give the error bound for estimation.
+We propose a novel method to precisely quantify the leaked information in 
+a single-trace attack through side-channels to overcome this limitation. 
+Our quantification method is dramatically different from previous methods, and the results are
+confirmed to be much more precise and usable in practice. We model an
+attacker's observation of each leakage site as a constraint.  
+We scale symbolic execution to production software to generate the
+constraints and then run Monte Carlo sampling to estimate the number of leaked
+bits for each vulnerability. By using the Central Limit Theorem, 
+we can also give the error bound for estimation.
   
-  We have implemented the above technique in a tool called \tool{}, which can
-  not only find the side-channel vulnerabilities but also estimate how many
-  bits are leaked. \tool{} outperforms existing dynamic side-channel
-  detection tools in terms of performance and accuracy. Also, \tool{} can
-  report a very fine-grained vulnerability leakage information.  
-  We evaluate \tool{} on OpenSSL, mbedTLS and Monocypher\@.  
-  Our results show that most of the reported vulnerabilities are hard to
-  exploit in practice.  We also find several sensitive vulnerabilities that
-  are missed by the existing tools. We confirm those vulnerabilities with
-  manual checks and by the developers.
+We have implemented the above technique in a tool called \tool{}, which can
+not only find the side-channel vulnerabilities but also estimate how many
+bits are leaked. \tool{} outperforms existing dynamic side-channel
+detection tools in terms of performance and accuracy. Also, \tool{} can
+report a very fine-grained vulnerability leakage information.  
+We evaluate \tool{} on OpenSSL, mbedTLS and Monocypher\@.  
+Our results show that most of the reported vulnerabilities are hard to
+exploit in practice.  We also find several sensitive vulnerabilities that
+are missed by the existing tools. We confirm those vulnerabilities with
+manual checks and by the developers.
 \end{abstract}
 % IEEEtran.cls defaults to using nonbold math in the Abstract.
 % This preserves the distinction between vectors and scalars. However,

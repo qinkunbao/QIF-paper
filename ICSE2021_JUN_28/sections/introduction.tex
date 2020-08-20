@@ -23,24 +23,22 @@ keys~\cite{Osvik2006,Gullasch:2011:CGB:2006077.2006784,203878,10.1007/978-3-540-
 %%universal direction is software countermeasures, detecting and eliminating
 %%side-channel vulnerabilities from code base.
 
-Regarding the root cause of software-based side channel attacks, many of them originate
-from two specific circumstances: data flow from secrets to load
+Regarding the root cause of software-based side-channel attacks, many of them originate
+from two code patterns: data flow from secrets to load
 addresses and data flow from secrets to branch conditions. We refer to them as
 secret-dependent memory-accesses and control-flows, respectively. 
-Recent
-works~\cite{203878,217537,Wichelmann:2018:MFF:3274694.3274741,Brotzman19Casym,236338,182946},
+Recent works~\cite{203878,217537,Wichelmann:2018:MFF:3274694.3274741,Brotzman19Casym,236338,182946},
 can detect plenty of side-channel vulnerabilities. For example,
 DATA~\cite{217537} reports 2,246 potential leakage sites for the RSA
 implementation in OpenSSL\@. 
-%After some inspections, 1,510 leakages are dismissed. But it
-%still leaves 460 data-access leakages and 278 control-flow leakages. 
+After some inspections, 1,510 leakages are dismissed. But it
+still leaves 460 data-access leakages and 278 control-flow leakages. 
 However, many of the reported vulnerabilities are not fixed by the developers.
 First, many vulnerable implementations have better performance. For example,
 RSA implementations usually adopt the CRT optimization,
 which is faster but vulnerable to fault attacks~\cite{aumuller2002fault}.
 Second, side-channels are numerous and fixing old vulnerabilities can introduce new 
-vulnerabilities,
-let alone the majority of them are negligible. 
+weaknesses, let alone the majority of them are negligible. 
 That is, some vulnerabilities can result in the key being 
 entirely compromised~\cite{184415, aumuller2002fault}, 
 but many other vulnerabilities prove to be less
@@ -52,17 +50,16 @@ abstract interpretations, can give a leakage upper bound, which is useful to
 justify the implementation is secure if they report zero leakage.
 However, they cannot indicate how severe the leakage is because of the
 over-approximation method they apply. For example, CacheAudit~\cite{182946} 
-reports that the upper
-bound leakage of AES-128 exceeds the original key size. The dynamic methods take
+reports that the upper bound leakage of AES-128 exceeds the original key size. The dynamic methods take
 another approach with a concrete input and run the program in a real
 environment. Although they are very precise in terms of true leakages, no
-existing tool can precisely assesses the severity of vulnerabilities in production
-software. 
+existing tool can precisely assess the severity of production
+software vulnerabilities. 
 
 To overcome these limitations, we propose a novel method to quantify information 
 leakages precisely. We quantify the number of leaked bits during one real 
 execution and define the amount of leaked information as the cardinality of 
-the set of possible secrets based on an attacker's observation of each leakage 
+possible secrets based on an attacker's observation of each leakage 
 site. Before an attack, an adversary has a large but finite input space. 
 Whenever the adversary observes a leakage site, he can eliminate some impossible 
 inputs and reduce the input space's size. In an extreme case, if the input space's size 
@@ -70,7 +67,7 @@ reduces to one, an adversary can determine the input,
 which means all the secret information (e.g., the whole secret key) is
 leaked. By counting the number of inputs~\cite{10.1007/11499107_24}, 
 we can quantify the information leakage precisely.
-We use symbolic execution to generate constrains to model the relation 
+We use symbolic execution to generate constraints to model the relation 
 between the original sensitive input and an attacker's observations. 
 Symbolic execution can provide fine-grained information but is an expensive
 operation. Therefore, existing dynamic symbolic
@@ -96,7 +93,7 @@ that \tool{} can precisely identify previously known vulnerabilities,
 reports how much information is leaked and which byte in the original sensitive 
 buffer is leaked. We also test \tool{} on side-channel free algorithms. 
 \tool{} has no false positives.
-The result also shows newer version of crypto libraries leak less amount of information 
+The result also shows the newer version of crypto libraries leaks less amount of information 
 than previous versions.
 \tool\ also discovers new vulnerabilities. With the help of \tool{}, 
 we confirm that those vulnerabilities are severe.
@@ -141,7 +138,7 @@ In summary, we make the following contributions:
             and use the Monte Carlo sampling method to estimate the information leakage.
    
       \item We implement the proposed method into a tool and apply it
-            on several real-world software. \tool{} successfully identifies
+            to several real-world software. \tool{} successfully identifies
             previous unknown and known side-channel vulnerabilities and calculates the
             corresponding information leakage. 
             Our results are surprisingly different, much more useful in practice.
