@@ -416,8 +416,8 @@ $$ |\Delta p| \leq 1.96\sqrt{\frac{ \hat{p} (1- \hat{p} )}{n}}$$
 Since we use $L = \log_{2}p$ to estimate the amount of leaked information, we
 can have the following error propagation formula $\Delta L = \frac{\Delta
 p}{p\ln2}$ by taking the derivative from Definition~\ref{def}. For \tool, we want the error of estimated leaked
-information ($\Delta L$) to be less than 1 bit. So we can get $\frac{\Delta
-p}{p\ln2} \leq 1$. Therefore, as long as $ n \geq \frac{1.96^2(1-p)}{p(\ln2)^2}$, we have
+information ($\Delta L$) to be less than 1 bit. So we get $\frac{\Delta
+p}{p\ln2} \leq 1$. Therefore, as long as $ n \geq \frac{1.96^2(1-p)}{p(\ln2)^2}$, we can have
 95\% confidence that the error of estimated leaked information is less than 1 bit.
 During the simulation, if $n$ and $p$ satisfy the above inequation, Monte Carlo
 simulation will terminate.
