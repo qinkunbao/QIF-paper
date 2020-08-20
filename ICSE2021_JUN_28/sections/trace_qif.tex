@@ -7,13 +7,12 @@ rest of the paper, and propose our method.
 
 \subsection{Problem Setting}
 Existing static side-channel quantification
-works~\cite{182946,Wichelmann:2018:MFF:3274694.3274741 } define information
+works~\cite{182946,Wichelmann:2018:MFF:3274694.3274741,zhang2010sidebuster} define information
 leakage using max entropy or Shannon entropy.  If zero bit of
 information leakage is reported, the program is secure. However, it is not
 useful in practice if their tools report the program leaks some information.
 Because their reported result is the ``average'' leakage, while in a real attack
 scenario, the leakage could be severer.
-
 
 \begin{figure}[h!]
     \vspace*{-5pt}
@@ -25,7 +24,7 @@ if(strcmp(key, "password"))   // leakage site C
 else
     fail();                   // branch 2
 \end{lstlisting}
-\vspace*{-5pt}
+\vspace*{-10pt}
     \caption{A dummy password checker}
     \label{fig:password-checker}
 \vspace*{-5pt}
@@ -56,9 +55,9 @@ bit leakage.
     \vspace*{-5pt}
 \end{figure}
 
-Both approaches fail to tell how much information is leaked for one real execution
-precisely. The problem with existing methods is that input values and real runtime 
-information are neglected by their approaches. 
+Both approaches fail to tell how much information is leaked for one real execution. 
+The problem with existing methods is that their approaches neglect input values and 
+real runtime information. 
 They assume an attacker runs the program multiple times with many different or 
 random sensitive inputs. As
 shown in Figure~\ref{fig:gap}(a), previous models, both Shannon entropy and max
@@ -69,11 +68,9 @@ information, in which case the sensitive information is fixed (e.g., AES keys).
 The adversary will run the attack over and over again with fixed input and 
 guess the value bit by
 bit (e.g., Kocher's timing attacks~\cite{kocher1996timing}), as in Figure~\ref{fig:gap}(b). 
-We want to have a
-theory for dynamic analysis that if the theory says an attack leaks $x$ bits of
-secret information, then $x$ should be useful
-in estimating the sensitive level of the vulnerability. However, the above
-methods all fail in real attack models. This is the first challenge we face
+We want to have a theory for dynamic analysis that if the theory says an attack leaks $x$ bits of
+secret information, then $x$ should be useful in estimating the sensitive level of the vulnerability. 
+However, the above methods all fail in real attack models. This is the first challenge we face
 \textbf{(Challenge C1)}.
 
 \subsection{Notations}
@@ -82,36 +79,34 @@ programs and side-channels. We use capital letters (e.g., $A$) to represent a
 set. $|A|$ represents the cardinality of the set $A$. We use corresponding lower case
 letters to represent one element in the set (e.g., $a \in A$).
 
-We assume a program ($\beta$) has $K$ as the sensitive input. $K$ should be a
-finite set of keys. The program also takes known messages $M$ as the input. 
+We assume a program ($\beta$) has $K$ as the sensitive input. $K$ should be 
+a finite set of keys. The program also takes known messages $M$ as the input. 
 During an AES encryption, for example, 
 $\beta$ is the encryption function. $K$ is the set of all possible AES keys, 
-and $M$ is messages to be
-encrypted. In a real execution, an adversary may have some observations ($O$)
-from the program. Examples of those observations include timing, CPU usages, and
-Electromagnetic signals (EM). In this paper, we consider secret-dependent
-control-flows and secret-dependent memory accesses as observations.
+and $ M $ is encrypted messages. In a real execution, an adversary may have 
+some observations ($O$) from the program. Examples of those observations include 
+timing, CPU usages, and Electromagnetic signals (EM). In this paper, 
+we consider secret-dependent control-flows and secret-dependent memory 
+accesses as observations.
 
-With the above definitions, we define the following mapping between $\beta$,
+With the above definition, we have the following mapping between $\beta$,
 $K$, $M$, and $O$:
 \vspace*{-5pt}
 \begin{displaymath}
     \beta(K, M) \rightarrow O
 \end{displaymath}
-\vspace*{-5pt}
 
 
-We model a side-channel with the following way. An adversary does not have
+We model a side-channel in the following way. An adversary does not have
 access to $K$, but he knows $\beta$, $M$, and $O$. For one execution of a
 deterministic program, once $k \in K$ and $m \in M$ are fixed, the observation
 ($o \in O$) should also be determined. As an attacker, he knows $\beta$, $o$,
 and $m$. The attacker wants to infer the value of $k$. We use $K^o$ to denote
 the set of possible $k$ values that produce the same observation: $K^o = \{ k \in K \, |\, \beta(k, m) \rightarrow o\}$
 
-
-
 Then the problem of quantifying the amount of leaked information can be
 transferred into the following question.
+
 \emph{How much uncertainty of $K$ can be reduced if an attacker knows $\beta$, $m$, and $o$?}
 
 \subsection{Theoretical Analysis \textbf{(Solution to Challege C1)}}
@@ -126,24 +121,18 @@ dependence between original sensitive keys ($K$) and attackers' observations ($O
 
 %where $P(k_i, o_i)$ is the joint discrete distribution of $K$ and $O$.
 %Alternatively, the mutual information can also be equivalently expressed as:
-\vspace*{-5pt}
 \begin{equation} \label{eq:2}
     I(K;O) = H(K) - H(K|O)
 \end{equation}
-\vspace*{-5pt}
 
 $H(K|O)$ is the entropy of $K$ under the condition $O$. It quantifies the
-uncertainty of $K$ given the value of $O$. In other word, the conditional
-entropy $H(K|O)$ marks the uncertainty about $K$ after an adversary has gained
-some observations ($O$).
+uncertainty of $K$, given the value of $O$. In other words, the conditional 
+entropy $H(K|O)$ marks the uncertainty about $K$ after an adversary has 
+gained some observations ($O$).
 
-\vspace*{-5pt}
 \begin{equation}
     H(K|O) = - \sum_{o {\in} O} {p(o) \sum_{k {\in} K}{p(k|o)\log_2p(k|o)}}
 \end{equation}
-\vspace*{-5pt}
-
-
 
 In this project, we hope for a very precise definition of information
 leakages. Suppose an attacker runs the target program with one
@@ -153,32 +142,26 @@ memory access patterns ($o$). We come to the simple slogan
 %% leakage equals:
 %% \textbf{Initial uncertainty - remaining uncertainty}
 that
-\vspace*{-5pt}
 \begin{align*}
      & \mathit{Information\ leakage} =                                         \\
      & ~~~~ \mathit{Initial\ uncertainty} - \mathit{Remaining\ uncertainty}.
 \end{align*}
-\vspace*{-5pt}
 
 Next we compare the Eq.~(\ref{eq:2}) with the above slogan, we find $H(K)$
 is the $\mathit{Initial\ uncertainty}$ and $H(K|O)$ is $\mathit{Remaining\
 uncertainty}$. During a real attack, the observation ($o$) is known. Thus we
 have $H(K|O) = H(K|o)$. Therefore, we define the amount of leaked information as
 
-\vspace*{-5pt}
-
 \begin{displaymath}
     Leakage = H(K;o) = H(K) - H(K|o)
 \end{displaymath}
-\vspace*{-5pt}
-
 
 For a program ($\beta$) without any domain information, all possible sensitive
 inputs should appear equally. Therefore, for any $k \in K$, $p(k) =
 \frac{1}{|K|}$. We have
-\vspace*{-5pt}
+%\vspace*{-5pt}
 $$H(K) = \sum_{k {\in} K}\frac{1}{|K|}\log_2{|K|} = \log_2{|K|}$$
-\vspace*{-5pt}
+%\vspace*{-5pt}
 
 For any $k' \in K \setminus K^o$, $p(k'|o) = 0$. We get
 \begin{align*}
@@ -202,9 +185,9 @@ For any $k' \in K \setminus K^o$, $p(k'|o) = 0$. We get
 The above definition~\cite{AskarovC12} can be understood in an intuitive way. Suppose an attacker
 guesses a 128-bit encryption key. 
 Without any domain knowledge, 
-he can find the key by performing exhaustive search over $2^{128}$ possible keys. 
+he can find the key by performing an exhaustive search over $2^{128}$ possible keys. 
 However, the program has a side-channel leakage site. After the program finishes execution, the
-attacker get some leaked information and only need to find the key by performing 
+attacker gets some leaked information and only needs to find the key by performing an
 exhaustive search over $2^{120}$ possible keys. Then we can say that 8 bits of the information
 is leaked. In this example, $2^{128}$ is the size of $K$ and $2^{120}$ is the size of $K^o$.
 
