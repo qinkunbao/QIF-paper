@@ -15,11 +15,9 @@ Due to space limit, we do not include side-channel attacks work.
 
 \subsection{Detection and Mitigation}
 
-There are a large number of works on side-channel vulnerability detections in
-recent years.  CacheAudit~\cite{182946} uses abstract domains to compute the
+CacheAudit~\cite{182946} uses abstract domains to compute the
 over approximation of cache-based side-channel information leakage upper bound.
-However, it is
-less useful to judge the sensitive level of the side-channel leakage based on
+However, it is less useful to judge the sensitive level of the side-channel leakage based on
 the leakage provided by CacheAudit. CacheS~\cite{236338} improves the work of
 CacheAudit by proposing the novel abstract domains, which only track
 secret-related code. Like CacheAudit, CacheS cannot provide the information to
@@ -69,8 +67,7 @@ and Ernst~\cite{McCamantE2008} quantify the information leakage as the network
 flow capacity. Backes et al.~\cite{5207642} propose an automated method for QIF
 by computing an equivalence relation on the set of input keys. But the approach
 cannot handle real-world programs with bitwise operations. 
-Phan et
-al.~\cite{Phan:2012:SQI:2382756.2382791} propose symbolic QIF. The goal of their
+Phan et al.~\cite{Phan:2012:SQI:2382756.2382791} propose symbolic QIF. The goal of their
 work is to ensure the program is non-interference. They adopt an over
 approximation way of estimating the total information leakage and their method
 does not work for secret-dependent memory access side-channels.
@@ -100,7 +97,7 @@ research~\cite{chistikov2017approximate,phan2015model} on Modulo Theories model 
 They cannot be directly applied to 
 side channel leakage quantification.
 ApproxFlow~\cite{biondi2018scalable} uses ApproxMC~\cite{chakraborty2016algorithmic} for information flow quantification,
-but it's only tested with small programs while \tool\ can scale to production crypto libraries. 
+but it's only tested with small programs while \tool{} can scale to production crypto libraries. 
 
 
 

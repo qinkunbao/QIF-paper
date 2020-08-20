@@ -1,7 +1,6 @@
 \section{Discussions and Limitations}
-While recent works have reported lots
-of potential side-channel vulnerabilities, we find many of them are not patched by
-developers.
+While recent works have reported lots of side-channel vulnerabilities, 
+we find many of them are not patched by developers.
 However, side-channels are inevitable in software and it is hard to fix all of them. 
 Addressing old vulnerabilities may also introduce new leakage
 sites. We need a
@@ -11,19 +10,18 @@ So software engineers can focus on
 the modular exponentiation using square and multiply algorithms can
 leak more information than a key validation function.
 
-\tool{} can be used by software developers to find sensitive vulnerabilities
+\tool{} can be used by software developers to find severe vulnerabilities
 and reason about countermeasures.
 \tool{} estimates the amount of leaked information for each side-channel leakage
 in one execution trace. \tool{} is useful for software
 engineers to test programs and fix vulnerabilities.
-The design, which is very
-precise in terms of true leakages compared to other static source code
+The design, which is very precise in terms of true leakages compared to other static source code
 method~\cite{197207,BacelarAlmeida:2013:FVS:2483313.2483334}, can omit some
 leakages on other traces. The amount of leaked information also depends on the secret key.
 However, as the tool is intended for debugging and testing,
 we think it is software engineers' responsibility to select the input key and trigger 
 the path in which they are interested. It is not a problem for crypto software 
-since virtually all keys follow the same or similar computational paths.
+since virtually all keys follow similar computational paths.
 
 We use the amount of leaked information to represent the sensitivity level of 
 each side-channel vulnerability. Although imperfect, \tool{} produces a reasonable 
