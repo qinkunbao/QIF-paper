@@ -68,12 +68,12 @@ program accesses different memory addresses if the program has different
 sensitive inputs. As shown in Figure~\ref{fig:secret:cf} and Figure~\ref{fig:secret:da}, 
 if a program shows different patterns in
 control transfers or data accesses when the program processes different
-sensitive inputs, the program are vulnerable to side-channel attacks.
+sensitive inputs, the program is vulnerable to side-channel attacks.
 Different kinds of side-channels can be exploited to retrieve information at
 various granularities. For example, cache channels can observe cache
 accesses at the level of cache sets~\cite{liu2015last}, cache lines~\cite{184415}, 
 or other granularities. 
-Other kinds of side-channels like controlled-channel attack~\cite{7163052},
+Other kinds of side-channels, like controlled-channel attack~\cite{7163052},
 can observe the memory access at the level of memory pages.
 
 %\lstinputlisting[language=c, 
@@ -230,4 +230,4 @@ on the memory or cache. However, for this project, we assume
 the attacker can have noise-free observations like previous works~\cite{203878,182946,Brotzman19Casym}. 
 The threat model captures most of the cache-based and memory-based side-channel attacks. 
 We only consider the deterministic program for the project and assume an attacker 
-has access to the source code of the target program.
+can access the source code of the target program.
