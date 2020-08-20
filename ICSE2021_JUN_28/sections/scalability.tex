@@ -27,7 +27,7 @@ symbolic execution based
 works~\cite{203878,Chattopadhyay:2017:QIL:3127041.3127044} have large
 performance bottlenecks. As a result, those approaches either only apply to
 small-size programs~\cite{Chattopadhyay:2017:QIL:3127041.3127044} or apply some
-domain knowledges~\cite{Wang:2007:NCD:1250662.1250723} to simplify the analysis. 
+domain knowledge~\cite{Wang:2007:NCD:1250662.1250723} to simplify the analysis. 
 %Those tools interpret each
 %instruction and update memory cells and registers with formulas that
 %captured the semantics of the execution and search different input values that
@@ -47,9 +47,9 @@ intermediate languages (IR) to simplify analysis.
 The reason is that the number of machine instructions is
 enormous, and the semantics of each instruction is complex. Intel Developer
 Manual~\cite{intelsys} introduces more than 1000 different x86 instructions. 
-However, the IR layer, which predigest the implementation
-and reduce the workload of those tools, is not suitable for side-channels 
-analysis. Memory-based side-channels are very low issues. So, in general,
+However, the IR layer, which predigests the implementation
+and reduces the workload of those tools, is not suitable for side-channels 
+analysis.
 IR-based or source code side-channels analyses are not accurate enough.
 In many cases, compilers use conditional moves or bitwise operations to eliminate
 branches. Also, as some IRs are not a superset or a subset of ISA, 
@@ -63,7 +63,7 @@ transform processes, from binary to VEX IR, BAP IR, and finally REIL IR\@.
 Also, IR increases the total number of instructions. For example, x86
 instruction \textit{test eax, eax} transfers into 18 REIL IR instructions. 
 
-\vspace*{2pt}
+%\vspace*{2pt}
 \textbf{Our Solution:}
 We abandon the IR design and take the engineer efforts to implement 
 the symbolic execution directly on the top of x86 instructions from scratch. 
@@ -71,10 +71,9 @@ Table~\ref{scala:ir} shows that eliminating the IR layer can reduce the number
 of instructions executed during the analysis. Previous works~\cite{217563} also 
 has a similar approach to speed up the fuzzing. Our implementation is different
 from their works in two aspects: 1) We use complete constraints. 2) We run the
-symbolic execution on one execution path one time. Our result indicate the 
+symbolic execution on one execution path each time. Our result indicate the 
 design is around 30 times faster than the IR design (transferring ISA into IR and
 symbolically executing instructions).
-
 
 \begin{table}%[ht]
       \centering\small\footnotesize
@@ -105,21 +104,23 @@ side-channels can be reduced to the question below.
             satisfy the formula $f_a(k_1) \neq f_a(k_2)$?}
 \end{quote}
 
-Existing approach relies on satisfiability modulo theories (SMT) solvers (e.g,
-Z3~\cite{DeMoura:2008:ZES:1792734.1792766}) to find satisfying $k_1$ and $k_2$.
-We argue that while it is a universal approach to solving constraints with SMT
-solvers, for constraints with the above formats, using custom heuristics and
-testing is much more efficient in practice. Constraint solving is a decision
-problem expressed in logic formulas. SMT solvers transfer the inputted SMT
-formula into the boolean conjunctive normal form (CNF) and feed it into the
-internal boolean satisfiability problem (SAT) solver. The translation process,
-called ``bit blasting'', is time-consuming. Also, as the SAT problem is a
-well-known NP-complete problem, it is also hard to deal when it comes to
-realistic uses with huge formulas. Despite the rapid development of SMT solvers
-in recent years, constraint solving remains one of the obstacles to achieve the
-scalability for real-world cryptosystems.
+Existing approach relies on satisfiability modulo theories (SMT) solvers 
+(e.g, Z3~\cite{DeMoura:2008:ZES:1792734.1792766}) to find satisfying 
+$k_1$ and $k_2$.
+We argue that while it is a universal approach to solving constraints 
+with SMT solvers, for constraints with the above formats, using custom 
+heuristics and testing is much more efficient in practice. Constraint 
+solving is a decision problem expressed in logic formulas. SMT solvers 
+transfer the inputted SMT formula into the boolean conjunctive normal 
+form (CNF) and feed it into the internal boolean satisfiability 
+problem (SAT) solver. The translation process, called ``bit blasting'', 
+is time-consuming. Also, as the SAT problem is a well-known NP-complete 
+problem, it is hard to deal when it comes to
+practical uses with huge formulas. Despite the rapid development 
+of SMT solvers in recent years, constraint solving remains one of 
+the obstacles to achieving the scalability of analyzing real-world cryptosystems.
 
-\vspace*{2pt}
+%\vspace*{2pt}
 \textbf{Our Solution:}
 Instead of feeding the formula $f_a(k_1) \neq f_a(k_2)$ into a SMT solver, we
 randomly pick up $k_1, k_2 \in K$ and test them if they can satisfy the
@@ -173,18 +174,14 @@ based on Definition~\ref{def} (\S\ref{sec:trace-qif}), answering to
 \subsubsection{Problem Statement}
 For each leakage site, we model it with a math formula constraint with the
 method presented in~\S\ref{side-channel:condition}. Suppose the address of the
-leakage site is $\addr{i}$, we use $c_{\addr{i}}$ to denote the constraint. 
+leakage site is $\addr{i}$, we use $c_{\addr{i}}$ to denote the constraint
+that models the side-channel leakage. 
 %For
 %multiple leakage sites, we take the conjunction of those constraints to
 %represent those leakage sites.
 
 According to the Definition~\ref{def}, to calculate the amount of leaked
-information, the key is to calculate 
-%%$\frac{|K|}{|K^o|}$. 
-%%$K^o$ represents the
-%%set that contains every input keys that satisfy the constraint. As the
-%%cardinality of $K$ is known, the primary problem is to estimate 
-the cardinality
+information, the key is to calculate the cardinality
 of $K^o$. Suppose an attacker can observe $n$ leakage sites, and each leakage
 site has the following constraints: $c_{\addr{1}}, c_{\addr{2}}, \ldots,
 c_{\addr{n}}$ respectively. The total leakage can be calculated from the constraint
@@ -194,7 +191,7 @@ $c_t({\addr{1}},{\addr{2}},\ldots,{\addr{n}}) = c_{\addr{1}} \land c_{\addr{2}}
 %%information can be reduced to the problem of counting the number of different
 %%solutions that satisfies the constraint
 %%$c_t({\addr{1}},{\addr{2}},\ldots,{\addr{n}})$. 
-A native method is to pick elements $k$ from $K$ and check if the
+A simple method is to pick elements $k$ from $K$ and check if the
 element also contained in $K^o$. Assume $q$ elements satisfy this condition. In
 expectation, we can use $\frac{k}{q}$ to approximate the value of
 $\frac{|K|}{|K^o|}$.
@@ -238,8 +235,8 @@ problem:
             with a point, the sampling result is \emph{Satisfied} or not \emph{Not Satisfied}.
             The result is randomly generated in a way that does not depend on the result in 
             previous experiments. Also, as the amount of leaked information is calculated
-            by $\log$ function, we do not need to precisely count the number of solutions for
-            a given constraint.
+            by $\log$ function, we do not need to count the number of solutions for 
+            a given constraint precisely.
             %\item For each constraint $F(C_{{addr}_i})$, the satisfying assignments
             %are close to each other, which means if we find one satisfying assignment, we 
             %are more likely to find other satisfying assignments nearby than randomly
@@ -350,7 +347,7 @@ significantly reduced after the previous step, this is still a \#P problem.
 %precise model counting approaches, like Davis-Putnam-Logemann-Loveland (DPLL)
 %search, have difficulty scaling up to large problem sizes.
 
-We apply the ``counting by sampling" method. The basic idea is as follows. For
+We apply the ``counting by sampling'' method. For
 the constraint $g_{i}= c_{i_1} \land c_{i_2} \land ,\ldots, \land c_{i_j} \land
 ,\ldots, \land c_{i_m}$, if the solution satisfies $g_{i}$, it should also
 satisfy any constraint from $c_{i_1}$ to $c_{i_m}$. In other words, $K_{c_gi}$
