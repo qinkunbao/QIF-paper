@@ -23,7 +23,7 @@ keys~\cite{Osvik2006,Gullasch:2011:CGB:2006077.2006784,203878,10.1007/978-3-540-
 %%universal direction is software countermeasures, detecting and eliminating
 %%side-channel vulnerabilities from code base.
 
-Regarding the root cause of software-based side-channel attacks, many of them originate
+Regarding the root cause of side-channel attacks, many of them originate
 from two code patterns: data flow from secrets to load
 addresses and data flow from secrets to branch conditions. We refer to them as
 secret-dependent memory-accesses and control-flows, respectively. 
@@ -37,7 +37,7 @@ However, many of the reported vulnerabilities are not fixed by the developers.
 First, many vulnerable implementations have better performance. For example,
 RSA implementations usually adopt the CRT optimization,
 which is faster but vulnerable to fault attacks~\cite{aumuller2002fault}.
-Second, side-channels are numerous and fixing old vulnerabilities can introduce new 
+Second, fixing old vulnerabilities can introduce new 
 weaknesses, let alone the majority of them are negligible. 
 That is, some vulnerabilities can result in the key being 
 entirely compromised~\cite{184415, aumuller2002fault}, 
@@ -60,8 +60,7 @@ software vulnerabilities.
 To overcome these limitations, we propose a novel method to quantify information 
 leakages precisely. We quantify the number of leaked bits during one real 
 execution and define the amount of leaked information as the cardinality of 
-possible secrets based on an attacker's observation of each leakage 
-site. Before an attack, an adversary has a large but finite input space. 
+possible secrets based on an attacker's observation. Before an attack, an adversary has a large but finite input space. 
 Whenever the adversary observes a leakage site, he can eliminate some impossible 
 inputs and reduce the input space's size. In an extreme case, if the input space's size 
 reduces to one, an adversary can determine the input, 
