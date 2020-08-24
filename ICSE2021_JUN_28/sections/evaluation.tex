@@ -58,21 +58,23 @@
         RSA\tnote{7}                & 31                     & 22                  & 9                    & 16,390,750   & 34      & 490         \\
         RSA\tnote{8}                & 4                      &  4                  & 0                    & 18,207,016   & 8      & 53          \\
         RSA\tnote{9}                & 8                      &  8                  & 0                    & 18,536,796    & 5      & 780         \\
+        RSA\tnote{10}               & 8                      &  8                  & 0                    & 27,407,986    & 113    & 6560       \\
 
-
-        Total              & 896                    & 233                 & 663                & 139,733,961      & 228m \foo & 3,672m \foo     \\\hline
+        Total              & 904                    & 241                 & 663                & 167,141,947      & 341m  & 10,232m     \\\hline
     \end{tabular}
 \end{threeparttable}
 \begin{tablenotes}
+    \scriptsize
+
     \item[1] mbedTLS\,2.5  ~~~~\item[2] mbedTLS\,2.15 ~\item[3] Monocypher\,3.0 \\
     \item[4] OpenSSL\,0.9.7  ~~\item[5] OpenSSL\,1.0.2f  \item[6] OpenSSL\,1.0.2k \\
-    \item[7] OpenSSL\,1.1.0f ~\item[8] OpenSSL\,1.1.1 ~\item[9] OpenSSL\,1.1.1g
-    \end{tablenotes}
-    \vspace*{-15pt}
+    \item[7] OpenSSL\,1.1.0f ~\item[8] OpenSSL\,1.1.1 ~\item[9] OpenSSL\,1.1.1g ~\item[10] Libgcrypt\,1.8.5\\
+\end{tablenotes}
+\vspace*{-20pt}
 
 \end{table}
 
-We evaluate \tool{} on real-world crypto libraries including OpenSSL, mbedTLS and Monocypher\@. 
+We evaluate \tool{} on real-world crypto libraries including OpenSSL, mbedTLS, Libgcrypt and Monocypher\@. 
 %OpenSSL is the most commonly used crypto libraries in today's software. mbedTLS\@
 %(previous known as PolarSSL) is designed to be easy to understand and fit on
 %embedded devices. We also evaluate Monocypher, a new cryptographic library that
@@ -107,8 +109,8 @@ aspects:
 
 \subsection{Evaluation Result Overview} \label{sec:eval_overview}
 Table~\ref{table:over_result} shows the overview of evaluation results. 
-\tool{} finds 896 leakages in total from real-world crypto libraries. 
-Among those 896 leak points, 233 of them are leaked due to secret-dependent 
+\tool{} finds 904 leakages in total from real-world crypto libraries. 
+Among those 904 leak points, 241 of them are leaked due to secret-dependent 
 control-flow transfers, and 663 of them are leaked due to secret-dependent memory accesses.
 
 \tool{} also identifies that most side-channel
