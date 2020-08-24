@@ -326,7 +326,10 @@ that line 4 and 9 in Figure~\ref{fig:old_sqr2} both have if branches.
 However, it is not a leak site because
 most compilers will use \emph{add with carry} instruction to remove the branch.
 Besides, branches can also be compiled into non-branch machine instructions 
-like conditional moves. Therefore, simple code reviews are not accurate
+like conditional moves. 
+We also notice a bitwise operation in Libgcrypt 1.8.5 is compiled to a conditional 
+jump, which lead to a side-channel leakage.
+Therefore, simple code reviews are not accurate
 enough to detect side-channels. 
 
 For vulnerabilities that leak less amount of information,

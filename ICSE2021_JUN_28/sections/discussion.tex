@@ -1,5 +1,5 @@
 \section{Discussions and Limitations}
-While recent works have reported lots of side-channel vulnerabilities, 
+While recent works reported lots of side-channel vulnerabilities, 
 we find many of them are not patched by developers.
 However, side-channels are inevitable in software and it is hard to fix all of them. 
 Addressing old vulnerabilities may also introduce new leakage
@@ -33,20 +33,22 @@ vulnerability can leak the whole key. However, not every leak point inside a
 loop is severe. Because very often the leakages may leak the same bit in the 
 original key, and those leaks are not independent. \tool{} can capture the most 
 fine-grained information by modeling each leak during the execution as a math 
-formula and by using the conjunction of those formulas to describe the total effect. 
-There could be multiple leakage sites in the program. While some leakages are independent, 
-some other leakage sites are dependent. Some leakage sites (e.g., square and multiply) 
+formula and use the conjunction of those formulas to describe the total effect. 
+Some leakage sites (e.g., square and multiply) 
 can leak one particular bit of the original key, but some leakage sites leak one bit 
 from several bytes in the original key. 
 
 \tool{} reaches full precision if the number of estimated leaked bits 
 equals to Definition~\ref{def}. 
-During the symbolic execution, \tool{} may lose precision from the 
+\tool{} may lose precision from the 
 memory model it uses in theory. However, we do not find false positives 
 caused by the imprecise memory model during the evaluation. 
 Sampling can also introduce imprecision but with a probabilistic guarantee. 
 However, during the evaluation, we find that \tool{} cannot estimate 
 the amount of leakage for some leakage sites in a reasonable time, 
 which means the number of $K^o$ is very small. According to Definition~\ref{def}, 
-it means the leakage is very severe.
+it means the leakage is very severe. The sampling method in \S\ref{sec:scala} seems
+simple and may miss some leakages in theory. However, the evaluation result 
+shows \tool{} can identify all the leakages that can found by the previous works~\cite{203878,236338,Brotzman19Casym}
+when we evaluate the same program.
 
