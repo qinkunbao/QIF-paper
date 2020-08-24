@@ -12,9 +12,9 @@ leakage using max entropy or Shannon entropy.  If zero bit of
 information leakage is reported, the program is secure. However, it is not
 useful in practice if their tools report the program leaks some information.
 Because their reported result is the ``average'' leakage, while in a real attack
-scenario, the leakage could be severer.
+scenario, the leakage could be dramatically different.
 
-\begin{figure}[h!]
+ \begin{figure}[h!]
     \vspace*{-5pt}
     \centering
     \begin{lstlisting}[xleftmargin=.03\textwidth,xrightmargin=.01\textwidth]
@@ -65,7 +65,7 @@ entropy, give an ``average'' estimate of the information leakage. However, it is
 not the typical scenario for an adversary to launch a side-channel attack. When
 a side-channel attack happens, the adversary wants to retrieve the sensitive
 information, in which case the sensitive information is fixed (e.g., AES keys).
-The adversary will run the attack over and over again with fixed input and 
+The adversary can perform the attack over and over again with fixed input and 
 guess the value bit by
 bit (e.g., Kocher's timing attacks~\cite{kocher1996timing}), as in Figure~\ref{fig:gap}(b). 
 We want to have a theory for dynamic analysis that if the theory says an attack leaks $x$ bits of
