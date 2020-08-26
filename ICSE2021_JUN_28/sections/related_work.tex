@@ -71,7 +71,9 @@ work is to ensure the program is non-interference. They adopt an over
 approximation way of estimating the total information leakage and their method
 does not work for secret-dependent memory access side-channels.
 CHALICE~\cite{Chattopadhyay:2017:QIL:3127041.3127044} quantifies the leaked
-information for a given cache behavior. CHALICE symbolically reason about cache
+information for a given cache behavior. 
+CHALICE also mentions the same issue of max-entropy.
+It symbolically reason about cache
 behavior and estimate the amount of leaked information based on cache miss/hit.
 Their approach can only scale to small programs, which limits its usage in
 real-world applications. On the contrary, \tool{} can assess the sensitive level
