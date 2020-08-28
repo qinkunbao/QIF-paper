@@ -140,6 +140,8 @@ Based on Shannon entropy, the respective amount of information in A and B equals
 
 
 \section{Algorithm to Compute the Maximum Independent Partition}
+\renewcommand{\baselinestretch}{0.97}\selectfont
+
 \label{appendix:partition}
 {\small
 \IncMargin{1em}
@@ -148,7 +150,8 @@ Based on Shannon entropy, the respective amount of information in A and B equals
     \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
     \Input{$c_t(\addr{1},\addr{2},\ldots,\addr{n}) = c_{\addr{1}} \land c_{\addr{2}} \land \ldots \land c_{\addr{m}}$}
     \Output{The Maximum Independent Partition of $G = \{g_{1}, g_{2}  , \ldots,  g_{m} \}$ }
-    \For{$i\leftarrow 1$ \KwTo $n$}
+    Insert $c_{\addr{1}}$ to $G$ as a new entry \;
+    \For{$i\leftarrow 2$ \KwTo $n$}
     {
         $S_{c_{\addr{i}}}$ $\leftarrow$ $\pi(c_{\addr{i}})$ \;
         \For{$g_{i} \in G$}
@@ -158,9 +161,9 @@ Based on Shannon entropy, the respective amount of information in A and B equals
             \If{$S \neq \emptyset$}
             {
                 $g_{j} \leftarrow g_{i} \land g_{\addr{i}}$ \;
-                \textbf{break} \;
+                \textbf{continue} \;
             }
-            Insert $c_{\addr{i}}$ to $G$
+            Insert $c_{\addr{i}}$ to $G$ as a new entry \;
         }
     }
     \caption{The Maximum Independent Partition}
@@ -168,6 +171,8 @@ Based on Shannon entropy, the respective amount of information in A and B equals
 \end{algorithm}
 \DecMargin{1em}
 }
+
+\renewcommand{\baselinestretch}{1}\selectfont
 
 \section{Algorithm to Compute the Number of Satisfying Assignments}
 \label{appendix:montecarlo}
