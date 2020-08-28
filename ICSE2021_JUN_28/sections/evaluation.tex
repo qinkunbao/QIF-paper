@@ -1,4 +1,4 @@
-\section{Evaluation}[htbp]
+\section{Evaluation}
 \label{res_overview}
 
 \begin{table}[]
@@ -83,7 +83,7 @@ We evaluate \tool{} on real-world crypto libraries including OpenSSL, mbedTLS, L
 %secret dependent indices and secret dependent branches. Therefore,
 %Monocypher should be secure under our threat model.
 We mark variables and buffers that store the secret. 
-It can be done either by adding an annotation on the source code 
+The operation can be done either by adding an annotation on the source code 
 or telling the Pin tool the address and the length of secrets.
 For DES and AES, we mark symmetric keys as secrets. 
 For RSA, we mark private keys as secrets. For ECDSA, 
@@ -116,10 +116,10 @@ control-flow transfers, and 663 of them are leaked due to secret-dependent memor
 \tool{} also identifies that most side-channel
 vulnerabilities leak very little information in practice, which confirms our
 initial assumption.  
-However, we do find some vulnerabilities that \tool{} report with severe
+However, we do find some vulnerabilities that \tool{} reports with severe
 leakages. Some of them have been confirmed by existing research that those
 vulnerabilities can be exploited to realize real attacks.
-Without our tool, developers will not be able to
+With our tool, developers will be able to
 distinguish those ``vulnerabilities'' from severe ones and ignore others easily.
 
 Symmetric encryption implementations in OpenSSL and mbedTLS have significant
@@ -328,7 +328,7 @@ most compilers will use \emph{add with carry} instruction to remove the branch.
 Besides, branches can also be compiled into non-branch machine instructions 
 like conditional moves. 
 We also notice a bitwise operation in Libgcrypt 1.8.5 is compiled to a conditional 
-jump, which lead to a side-channel leakage.
+jump, which leads to a side-channel leakage.
 Therefore, simple code reviews are not accurate
 enough to detect side-channels. 
 
