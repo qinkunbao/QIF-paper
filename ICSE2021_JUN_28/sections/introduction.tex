@@ -6,8 +6,7 @@ electromagnetic radiation, and even
 sound~\cite{agrawal2002side,kar20178,chari1999towards,217605,genkin2014rsa}.
 Among them, software-based side-channel attacks, such as cache attacks, memory page
 attacks, and controlled-channel attacks, are especially common and have been
-studied for
-years~\cite{7163052,217543,217589,lee2017inferring,191010,liu2015last}. These
+studied for years~\cite{7163052,217543,217589,lee2017inferring,191010,liu2015last}. These
 attacks stem from vulnerable software and shared hardware components.
 By observing those inadvertent behaviors, attackers can infer program
 execution flows that manipulate secrets and guess secrets such as encryption
@@ -27,14 +26,14 @@ Regarding the root cause of side-channel attacks, many of them originate
 from two code patterns: data flow from secrets to load
 addresses and data flow from secrets to branch conditions. We refer to them as
 secret-dependent memory-accesses and control-flows, respectively. 
-Recent works~\cite{203878,217537,Wichelmann:2018:MFF:3274694.3274741,Brotzman19Casym,236338,182946},
+Recent works~\cite{203878,217537,Wichelmann:2018:MFF:3274694.3274741,Brotzman19Casym,236338,182946}
 can detect plenty of side-channel vulnerabilities. For example,
-DATA~\cite{217537} reports 2,246 potential leakage sites for the RSA
+DATA~\cite{217537} reports 2,248 potential leakage sites for the RSA
 implementation in OpenSSL\@. 
 After some inspections, 1,510 leakages are dismissed. But it
 still leaves 460 data-access leakages and 278 control-flow leakages. 
 However, many of the reported vulnerabilities are not fixed by the developers.
-First, many vulnerable implementations have better performance. For example,
+First, some vulnerable implementations have better performance. For example,
 RSA implementations usually adopt the CRT optimization,
 which is faster but vulnerable to fault attacks~\cite{aumuller2002fault}.
 Second, fixing old vulnerabilities can introduce new 
@@ -44,7 +43,7 @@ entirely compromised~\cite{184415, aumuller2002fault},
 but many other vulnerabilities are proven to be less
 severe in reality. Therefore, we need a proper quantification metric to 
 assess the sensitive level of side-channel vulnerabilities,
-so the developers can efficiently and confidently triage the reported vulnerabilities.
+so the developers can efficiently triage the reported vulnerabilities.
 
 Previous work like static methods~\cite{182946,5207642}, usually with
 abstract interpretations, can give a leakage upper bound, which is useful to
@@ -89,8 +88,8 @@ the execution trace file (e.g., leakages inside a loop).
 Finally, we introduce a Monte Carlo sampling method to estimate 
 the information leakage. 
 The experimental result confirms
-that \tool{} can precisely identify previously known vulnerabilities, 
-reports how much information is leaked and which byte in the original sensitive 
+that \tool{} can precisely identify previously known vulnerabilities and 
+report how much information is leaked and which byte in the original sensitive 
 buffer is leaked. We also test \tool{} on side-channel free algorithms. 
 \tool{} has no false positives.
 The result also shows the newer version of crypto libraries leaks less amount of information 

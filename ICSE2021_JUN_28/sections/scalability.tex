@@ -42,15 +42,15 @@ as other methods with approaches below.
 
 \subsubsection{Interprete Instructions Symbolically}
 Existing binary analysis tools~\cite{shoshitaishvili2016state,
-10.1007/978-3-642-22110-1_37} usually translate machine instructions into
-intermediate languages (IR) to simplify analysis. 
+10.1007/978-3-642-22110-1_37} translate machine instructions into
+intermediate languages (IR) to simplify the analysis. 
 The reason is that the number of machine instructions is
 enormous, and the semantics of each instruction is complex. Intel Developer
 Manual~\cite{intelsys} introduces more than 1000 different x86 instructions. 
 However, the IR layer, which predigests the implementation
 and reduces the workload of those tools, is not suitable for side-channels 
 analysis.
-IR-based or source code side-channels analyses are not accurate enough.
+In general, IR-based or source code side-channels analyses are not accurate enough.
 In many cases, compilers use conditional moves or bitwise operations to eliminate
 branches. Also, as some IRs are not a superset or a subset of ISA, 
 it is hard to rule out conditional jumps introduced by IR and add real branches 
@@ -199,7 +199,7 @@ $\frac{|K|}{|K^o|}$.
 However, the above sampling method fails in practice due to the following two problems:
 
 \begin{enumerate}
-      \item The curse of dimensionality. $c_t({\addr{1}},\ldots,{\addr{n}})$ is
+      \item The curse of dimensionality problem. $c_t({\addr{1}},\ldots,{\addr{n}})$ is
             the conjunction of many constraints. Therefore, the input variables
             of each constraints will also be the input variables of the
             $c_t({\addr{1}},\ldots,{\addr{n}})$. The sampling method will fail
@@ -296,10 +296,12 @@ with Theorem~\ref{IndependentConstraint}.
       equation in regard to the size of $K_c$
       $$|K_{c_t(\addr{1},\addr{2},\ldots,\addr{n})}| = |K_{g_{1}}|*|K_{g_{2}}|*\ldots*|K_{g_{n}}|$$
 \end{theorem}
-
-With Theorem~\ref{IndependentConstraint}, we can transfer the problem of
+\vspace{-3pt}
+With Theorem~\ref{IndependentConstraint}, we transfer the problem of
 counting the number of solutions to a complicated constraint in high-dimension
-space into counting solutions to several small constraints. 
+space into counting solutions to several small constraints. We compute the
+maximum independent partition by iterating each $\addr{i}$ and applying the function
+$\pi$ over the constraint $\addr{i}$.
 
 %% We apply the following
 %% algorithm~\ref{algo:max-inde} to get the Maximum Independent Partition of the

@@ -109,16 +109,15 @@ sensitive information, and thus developers are often reluctant to address
 them. However, no existing tools can precisely report the number of
 leaked bits for each leakage site in production systems.
   
-We propose a new pogram analysis method to precisely quantify the 
-leaked information in 
-a single-trace attack through side-channels to overcome this limitation.
+We propose a new program analysis method to precisely quantify the 
+leaked information in a single-trace attack through side-channels to overcome this limitation.
 It can identify covert information flows in programs that can expose 
-confidential information. It can reason about security flaws 
+confidential information and reason about security flaws 
 that would otherwise be difficult, if not impossible, for a developer to find.
 We model an attacker's observation of each leakage site as a constraint.  
 We scale symbolic execution to production software to generate the
 constraints and then run Monte Carlo sampling to estimate the number of leaked
-bits for each vulnerability. By using the Central Limit Theorem, 
+bits for each leakage site. By using the Central Limit Theorem, 
 we can also give the error bound for estimation.
   
 We have implemented the above technique in a tool called \tool{}, which can

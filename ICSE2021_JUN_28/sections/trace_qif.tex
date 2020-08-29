@@ -1,4 +1,4 @@
-\section{\tool{} Leakage Definition}
+\section{\tool{}: Precise Side-Channel Analysis}
 \label{sec:trace-qif}
 In this section, we discuss how \tool{} quantifies the amount of leaked
 information. We first present the limitation of existing quantification metrics.
@@ -42,7 +42,8 @@ $1$.
 However, previous static-based approaches cannot precisely reflect the amount of
 the leakage. According to the definition of Shannon entropy, the leakage will be
 $\frac{1}{2^{64}}*\log_{2}\frac{1}{2^{64}} + \frac{2^{64}-1}{2^{64}}
-*\log_{2}\frac{2^{64}-1}{2^{64}} \approx 0$ bits. Because the program has two
+*\log_{2}\frac{2^{64}-1}{2^{64}} \approx 0$ bits. Max-entropy is defined on the
+number of possible observations. Because the program has two
 branches, tools based on max-entropy will report the code has $\log_2{2} = 1$
 bit leakage.
 
@@ -60,8 +61,8 @@ The problem~\cite{Chattopadhyay:2017:QIL:3127041.3127044} with existing methods 
 real runtime information. 
 They assume an attacker runs the program multiple times with many different or 
 random sensitive inputs. As
-shown in Figure~\ref{fig:gap}(a), previous models, both Shannon entropy and max
-entropy, give an ``average'' estimate of the information leakage. However, it is
+shown in Figure~\ref{fig:gap}(a), previous models, both Shannon entropy and max-entropy, 
+give an ``average'' estimate of the information leakage. However, it is
 not the typical scenario for an adversary to launch a side-channel attack. When
 a side-channel attack happens, the adversary wants to retrieve the sensitive
 information, in which case the sensitive information is fixed (e.g., AES keys).
@@ -91,7 +92,7 @@ accesses as observations.
 
 With the above definition, we have the following mapping between $\beta$,
 $K$, $M$, and $O$:
-\vspace*{-5pt}
+%\vspace*{-0pt}
 \begin{displaymath}
     \beta(K, M) \rightarrow O
 \end{displaymath}
@@ -187,7 +188,7 @@ guesses a 128-bit encryption key.
 Without any domain knowledge, 
 he can find the key by performing an exhaustive search over $2^{128}$ possible keys. 
 However, the program has a side-channel leakage site. After the program finishes execution, the
-attacker gets some leaked information and only needs to find the key by performing an
+attacker gets some observations and only needs to find the key by performing an
 exhaustive search over $2^{120}$ possible keys. Then we can say that 8 bits of the information
 is leaked. In this example, $2^{128}$ is the size of $K$ and $2^{120}$ is the size of $K^o$.
 
@@ -206,14 +207,15 @@ the condition $o \in O$.
 \subsection{Our Conceptual Framework}
 \label{side-channel:condition}
 We now discuss how to model observations ($O$), which are the direct information
-that an adversary can get during the attack.
+that an adversary can get during the side-channel attack.
 
-During the execution, a program ($\beta$) have many temporary values ($t_i \in
+During an execution, a program ($\beta$) have many temporary values ($t_i \in
 T$). Once $\beta$ (program), $k$ (secret), and $m$ (message, public) are
 determined, $t_i$ is also fixed. Therefore, $ t_i = f_i(\beta, k, m)$, where $f_
 i$ is a function that maps between $t_i$ and ($\beta$, $k$, $m$).
 
-In the paper, we consider two code patterns that can be exploited by an attacker,
+In the paper, we consider two code patterns that can be exploited to infer sensitive information
+ by an attacker,
 \emph{secret-dependent control transfers} and \emph{secret-dependent data
 accesses}. 
 %In other words, an adversary has observations based on control-flows and data accesses.
