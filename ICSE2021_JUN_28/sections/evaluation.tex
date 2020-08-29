@@ -127,7 +127,7 @@ leakages due to the lookup table implementation.
 \tool{} confirms that all those leakages come from table
 lookups. We find the new
 implementation of OpenSSL instead uses typical four 1K tables. It only uses one 1K
-of the tables. This implementation is rather easy but does somehow decrease the total
+ table. This implementation is rather easy but does somehow decrease the total
 amount of leaked information as the quantification result shown in the next
 section.
 
@@ -327,7 +327,7 @@ However, it is not a leak site because
 most compilers will use \emph{add with carry} instruction to remove the branch.
 Besides, branches can also be compiled into non-branch machine instructions 
 like conditional moves. 
-We also notice a bitwise operation in Libgcrypt 1.8.5 is compiled to a conditional 
+We notice a bitwise operation in Libgcrypt 1.8.5 is compiled to a conditional 
 jump, which leads to a side-channel leakage.
 Therefore, simple code reviews are not accurate
 enough to detect side-channels. 
@@ -341,7 +341,7 @@ function \textsf{BN\_mod\_exp\_mont\_consttime} to replace original function
 leak the last bit of the big number \textbf{m}. In the updated version,
 developers make the fixed windows become the default option and rewrite most parts of the 
 function. However, the leakage site still exists in OpenSSL 1.1.1,
-despite it is blunt. 
+despite it is quite blunt. 
 \begin{figure}
     \centering
     \begin{lstlisting}[xleftmargin=.02\textwidth,xrightmargin=.01\textwidth]
@@ -389,7 +389,7 @@ We choose four ciphers that are
 designed to be side-channel resistant from the library.
 Because those ciphers have no 
 data flow from secrets to branch conditions and load addresses.
-Therefore, Monocypher should be safe under our threat models. 
+Monocypher should be safe under our threat models. 
 We analyze those ciphers with \tool{}, and it reports no leaks.
 This indicates that \tool{} can be used for countermeasure confirmation.
 
