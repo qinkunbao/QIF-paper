@@ -320,7 +320,7 @@ of the leaked amount, using a new method.
 
 # Reviewer C:
 
-1.  Abacus detects ~150 severe leakages in the older versions of cryptography libraries. Most of those severe 
+1.  Abacus detects aorund 150 severe leakages in the older versions of cryptography libraries. Most of those severe 
 leakages are fixed by the vendors. The recent versions (OpenSSL 1.1.0f+ mbedTLS 2.15+) still have 3~5 severe 
 leakages (big number implementations) identified by Abacus. Vendors fixed those leakages in the latest release version.
 
