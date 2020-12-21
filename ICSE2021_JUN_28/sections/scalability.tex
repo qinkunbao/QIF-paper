@@ -191,8 +191,8 @@ $c_t({\addr{1}},{\addr{2}},\ldots,{\addr{n}}) = c_{\addr{1}} \land c_{\addr{2}}
 %%information can be reduced to the problem of counting the number of different
 %%solutions that satisfies the constraint
 %%$c_t({\addr{1}},{\addr{2}},\ldots,{\addr{n}})$. 
-A simple method is to pick elements $k$ from $K$ and check if the
-element also contained in $K^o$. Assume $q$ elements satisfy this condition. In
+A simple method is to \cready{pick elements $k$}{pick $k$ elements} from $K$ and check if the
+\cready{element also contained}{element is also contained} in $K^o$. Assume $q$ elements satisfy this condition. In
 expectation, we can use $\frac{k}{q}$ to approximate the value of
 $\frac{|K|}{|K^o|}$.
 
@@ -355,9 +355,9 @@ should be the subset of $K_{c_1}$, $K_{c_2}$, \ldots , $K_{c_m}$. We notice that
 $c_i$ usually has less numbers of input compared to $g_{i}$. For example, if
 $c_{i_j}$ has only one 8-bit input variable, we can find the exact solution set
 $K_{c_{i_j}}$ of $c_{i_j}$ by trying every possible 256 solutions. After that,
-we can only generate random input numbers for the rest input variables in
+we can only generate random input numbers for the \cready{rest input variables}{rest of the input variables} in
 constraint $g_{i}$. With this simple yet effective trick, we can reduce the number of input
-while still ensure the accuracy.
+while still \cready{ensure}{ensuring} the accuracy.
 
 %% the algorithm
 %\IncMargin{1em}
@@ -408,7 +408,7 @@ $\hat{p}$ is independent and identically distributed, according to the central l
 theorem, the mean value should follow normal distribution
 $ \frac{\bar{p}-E(p)}{\sigma\sqrt{n}} \rightarrow N(0,1) $. Here $E(p)$ is the
 mean value of $p$, and $\sigma$ is the standard variance of $p$. If we use the
-observed value $\hat{p}$ to the calculate the standard deviation, we can claim that
+observed value $\hat{p}$ \cready{to the calculate}{to calculate} the standard deviation, we can claim that
 we have 95\%\footnote{For a normal distribution, 95\% of variable $\Delta p$ fall within two sigmas of the mean.} 
 confidence that the error $\Delta p= \bar{p} - E(p)$ falls in the interval:
 $$ |\Delta p| \leq 1.96\sqrt{\frac{ \hat{p} (1- \hat{p} )}{n}}$$
