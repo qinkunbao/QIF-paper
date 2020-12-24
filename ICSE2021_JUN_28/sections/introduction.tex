@@ -64,7 +64,7 @@ Whenever the adversary observes a leakage site, he can eliminate some impossible
 inputs and reduce the input space's size. In an extreme case, if the input space's size 
 reduces to one, an adversary can determine the input, 
 which means all the secret information (e.g., the whole secret key) is
-leaked. By counting the number of inputs~\cite{10.1007/11499107_24}, 
+leaked. By counting the number of \cready{}{possible} inputs~\cite{10.1007/11499107_24}, 
 we can quantify the information leakage precisely.
 We use symbolic execution to generate constraints to model the relation 
 between the original sensitive input and an attacker's observations. 
@@ -94,7 +94,7 @@ buffer is leaked. We also test \tool{} on side-channel free algorithms.
 \tool{} has no false positives.
 The result also shows the newer version of crypto libraries leaks less amount of information 
 than previous versions.
-\tool\ also discovers new vulnerabilities. With the help of \tool{}, 
+\tool{} also discovers new vulnerabilities. With the help of \tool{}, 
 we confirm that those vulnerabilities are severe.
 
 
@@ -138,8 +138,7 @@ In summary, we make the following contributions:
    
       \item We implement the proposed method into a tool and apply it
             to several real-world software. \tool{} successfully identifies
-            previous unknown and known side-channel vulnerabilities and calculates the
-            corresponding information leakage. 
+            previous unknown and known side-channel vulnerabilities and calculates the corresponding information leakage. 
             Our results are surprisingly different, much more useful in practice.
             The information leakage results provide detailed information that can 
             help developers to triage and fix the vulnerabilities.
