@@ -61,14 +61,14 @@ The problem~\cite{Chattopadhyay:2017:QIL:3127041.3127044} with existing methods 
 real runtime information. 
 They assume an attacker runs the program multiple times with many different or 
 random sensitive inputs. As
-shown in Figure~\ref{fig:gap}(a), previous models, both Shannon entropy and max-entropy, 
+shown in Figure~\ref{fig:gap}\,(a), previous models, both Shannon entropy and max-entropy, 
 give an ``average'' estimate of the information leakage. However, it is
 not the typical scenario for an adversary to launch a side-channel attack. When
 a side-channel attack happens, the adversary wants to retrieve the sensitive
 information, in which case the sensitive information is fixed (e.g., AES keys).
 The adversary can perform the attack over and over again with fixed input and 
 guess the value bit by
-bit (e.g., Kocher's timing attacks~\cite{kocher1996timing}), as in Figure~\ref{fig:gap}(b). 
+bit (e.g., Kocher's timing attacks~\cite{kocher1996timing}), as in Figure~\ref{fig:gap}\,(b). 
 We want to have a theory for dynamic analysis that if the theory says an attack leaks $x$ bits of
 secret information, then $x$ should be useful in estimating the sensitive level of the vulnerability. 
 However, the above methods all fail in real attack models. This is the first challenge we face
@@ -80,7 +80,7 @@ programs and side-channels. We use capital letters (e.g., $A$) to represent a
 set. $|A|$ represents the cardinality of the set $A$. We use corresponding lower case
 letters to represent one element in the set (e.g., $a \in A$).
 
-We assume a program ($\beta$) has $K$ as the sensitive input. $K$ should be 
+We assume a program ($\beta$) has $K$ as the \cready{sensitive input}{secret data}. $K$ should be 
 a finite set of keys. The program also takes known messages $M$ as the input. 
 During an AES encryption, for example, 
 $\beta$ is the encryption function. $K$ is the set of all possible AES keys, 
