@@ -113,15 +113,14 @@ transferred into the following question.
 \subsection{Theoretical Analysis \textbf{(Solution to Challege C1)}}
 In information theory, the mutual information \cready{(I)}{($I$)} is a measure of the mutual
 dependence between two variables. We use $I$ to describe the
-dependence between original sensitive keys ($K$) and attackers' observations ($O$).
-%which is defined as:
+dependence between original sensitive keys ($K$) and attackers' observations ($O$), which is defined as:
 
-%\begin{equation} \label{eq:1}
-%    I(K;O) = \sum_{k {\in} K}{\sum_{o {\in} O}{p(k, o)\log_2\frac{p(k, o)}{p(k)p(o)}}}
-%\end{equation}
+\begin{equation} \label{eq:1}
+    I(K;O) = \sum_{k {\in} K}{\sum_{o {\in} O}{p(k, o)\log_2\frac{p(k, o)}{p(k)p(o)}}}
+\end{equation}
 
-%where $P(k_i, o_i)$ is the joint discrete distribution of $K$ and $O$.
-%Alternatively, the mutual information can also be equivalently expressed as:
+where $p(k, o)$ is the joint probability mass function of $K$ and $O$.
+Alternatively, the mutual information can also be equivalently expressed as:
 \begin{equation} \label{eq:2}
     I(K;O) = H(K) - H(K|O)
 \end{equation}
@@ -148,7 +147,7 @@ that
      & ~~~~ \mathit{Initial\ uncertainty} - \mathit{Remaining\ uncertainty}.
 \end{align*}
 
-Next we compare the Eq.~(\ref{eq:2}) with the above slogan, we find $H(K)$
+Next we compare the Eq.~(\ref{eq:2}) with the above \cready{slogan}{formulation}, we find $H(K)$
 is the $\mathit{Initial\ uncertainty}$ and $H(K|O)$ is $\mathit{Remaining\
 uncertainty}$. During a real attack, the observation ($o$) is known. Thus we
 have $H(K|O) = H(K|o)$. Therefore, we define the amount of leaked information as
