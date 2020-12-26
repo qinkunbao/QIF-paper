@@ -22,7 +22,7 @@ the leakage provided by CacheAudit. CacheS~\cite{236338} improves the work of
 CacheAudit by proposing the novel abstract domains, which only track
 secret-related code. Like CacheAudit, CacheS cannot provide the information to
 indicate the sensitive level of side-channel vulnerabilities.
-CacheSym~\cite{Brotzman19Casym} introduces a static cache-aware symbolic
+CaSym~\cite{Brotzman19Casym} introduces a static cache-aware symbolic
 reasoning technique to cover multiple paths for the target program. Still, their
 approaches cannot assess the sensitive level for each side-channel
 vulnerability. And their approaches only work on small code snippets.
@@ -32,8 +32,8 @@ can perform a very precise analysis. CacheD~\cite{203878} takes a concrete
  execution trace and run the symbolic execution on the top of the trace
 to get the formula of each memory address. Therefore, CacheD is
 quite precise in term of false positives. We adopted a similar idea to model the
-secret-dependent memory accesses. DATA~\cite{217537} detects address-based
-side-channel vulnerabilities by comparing different execution traces under
+secret-dependent \cready{memory}{data} accesses. \cready{}{In contrast, \tool{} can also detect secret-dependent control-flows accesses and give a precise quantification of the leaked amount for each leakage site.}
+DATA~\cite{217537} detects address-based side-channel vulnerabilities by comparing different execution traces under
 various test inputs. MicroWalk~\cite{Wichelmann:2018:MFF:3274694.3274741} uses
 mutual information (MI) between sensitive input and execution state to detect
 side-channels. 
