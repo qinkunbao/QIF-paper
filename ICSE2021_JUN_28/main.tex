@@ -16,6 +16,7 @@
 \usepackage{pdfpages}
 \usepackage{subfig}
 \usepackage{hyperref}
+\usepackage{xcolor}
 \usepackage[ruled,linesnumbered]{algorithm2e}
 \usepackage[para,online,flushleft]{threeparttable}
 \usepackage{xspace}
@@ -32,7 +33,8 @@
 
 
 \newcommand{\cready}[2]{{\color{red}{\ifx&#1&\else- #1\fi}} {\color{ForestGreen}{\ifx&#2&\else+ #2\fi}}}%
-\renewcommand{\cready}[2]{\textbf{\sout{#1} + #2}}%
+\renewcommand{\cready}[2]{{\color{red}
+- #1} {\color{green} + #2}}%
 %\renewcommand{\cready}[2]{#2}%
 
 
