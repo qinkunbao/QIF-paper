@@ -20,25 +20,23 @@ Carlo (MC) simulations to estimate the amount of leaked information.
     \vspace*{-15pt}
 \end{figure}
 
-\begin{enumerate}
-    \item \emph{Execution trace generation.} The design goal of \tool{} is to
-          estimate the information leakage as precisely as possible. 
-          We run the target binary under dynamic binary instrumentations (DBI)
-          to record execution traces and the runtime information.
-          Once sensitive information is loaded into memory, we start to collect the 
-          trace.
-    \item \emph{Instruction level symbolic execution.} We model attackers'
-          observations from side-channel vulnerabilities with logic formulas.
-          Each formula captures the fine-grained information between input
-          secrets and leakage sites. The engine only symbolically executes the
-          instruction that might be affected by the input key.  
-    \item \emph{Leakage estimation.} We transfer the information leakage 
-          quantification problem into the counting problem. We propose a
-          Monte Carlo method to estimate the number of satisfying solutions.
-          With the help of the Central Limit Theorem (CLT), we also give an error 
-          estimate with the probability, which provides us with the \emph{precision guarantee}.
+\subsubsection{Execution trace generation.} The design goal of \tool{} is to estimate the information leakage as precisely as possible. 
+We run the target binary under dynamic binary instrumentations (DBI)
+to record execution traces and the runtime information.
+Once \cready{sensitive information}{secret data} is loaded into memory, we start to collect the trace. \cready{}{In this step, we also tell Abacus which variables are the secret. It can be done either by adding an annotation on the source code or telling DBI tool the memory address and the length of secrets.}
+\subsubsection{Instruction level symbolic execution.} We model attackers'
+observations from side-channel vulnerabilities with logic formulas.
+Each formula captures the fine-grained information between input
+secrets and leakage sites. The engine only symbolically executes the
+instruction that might be affected by the input key. \cready{}{\tool{} works on one single path at a time. The symbolic execution engine is conceptually similar to the trace-based executor (e.g., SAGE~\cite{godefroid2008automated}). That is, we use symbolic execution to track secrets. When secrets are loaded into the memory, Abacus starts to interpret instructions symbolically. We treat secrets as symbols ($S$). For other variables, we use concrete values ($C$) 
+from the execution. We do not know which instruction 
+may manipulate a secret until we execute it.}
+\subsubsection{Leakage estimation.} We transfer the information leakage 
+quantification problem into the counting problem. We propose a
+Monte Carlo method to estimate the number of satisfying solutions.
+With the help of the Central Limit Theorem (CLT), we also give an error 
+estimate with the probability, which provides us with the \emph{precision guarantee}.
 
-\end{enumerate}
 
 
 %% \subsection{Trace Logging}
