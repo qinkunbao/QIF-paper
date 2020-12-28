@@ -28,11 +28,9 @@ approaches cannot assess the sensitive level for each side-channel
 vulnerability. And their approaches only work on small code snippets.
 
 The dynamic approach, usually with taint analysis and symbolic execution,
-can perform a very precise analysis. CacheD~\cite{203878} takes a concrete
- execution trace and run the symbolic execution on the top of the trace
+can perform a very precise analysis. CacheD~\cite{203878} takes a concrete execution trace and run the symbolic execution on the top of the trace
 to get the formula of each memory address. Therefore, CacheD is
-quite precise in term of false positives. We adopted a similar idea to model the
-secret-dependent \cready{memory}{data} accesses. \cready{}{In contrast, \tool{} can also detect secret-dependent control-flows accesses and give a precise quantification of the leaked amount for each leakage site.}
+quite precise in term of false positives. \cready{}{However, CacheD is not able to detect secret-dependent control-flows.} We adopted a similar idea to model the secret-dependent \cready{memory}{data} accesses. \cready{}{In contrast, \tool{} can also detect secret-dependent control-flows accesses and give a precise quantification of the leaked amount.}
 DATA~\cite{217537} detects address-based side-channel vulnerabilities by comparing different execution traces under
 various test inputs. MicroWalk~\cite{Wichelmann:2018:MFF:3274694.3274741} uses
 mutual information (MI) between sensitive input and execution state to detect
