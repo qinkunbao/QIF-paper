@@ -1,14 +1,13 @@
 \section{Introduction} 
 %% side channels are important
-Side channels are inevitable in modern computer systems as the sensitive
-information may be leaked through many kinds of inadvertent behaviors, such as power,
+Side channels are ubiquitous in modern computer systems as sensitive
+information can be leaked through many mechanisms such as power,
 electromagnetic radiation, and even
 sound~\cite{agrawal2002side,kar20178,chari1999towards,217605,genkin2014rsa}.
-Among them, software-based side-channel attacks, such as cache attacks, memory page
-attacks, and controlled-channel attacks, are especially common and have been
-studied for years~\cite{7163052,217543,217589,lee2017inferring,191010,liu2015last}. These
-attacks stem from vulnerable software and shared hardware components.
-By observing those inadvertent behaviors, attackers can infer program
+Among them, software side-channel attacks, such as cache attacks, memory page
+attacks, and controlled-channel attacks, are especially problematic as they do not require physical proximity~\cite{7163052,217543,217589,lee2017inferring,191010,liu2015last}. These
+attacks arises from shared micro-architectural components in a computer processor.
+By observing inadvertent interactions between two programs, attackers can infer program
 execution flows that manipulate secrets and guess secrets such as encryption
 keys~\cite{Osvik2006,Gullasch:2011:CGB:2006077.2006784,203878,10.1007/978-3-540-45238-6_6}.
 
@@ -22,76 +21,76 @@ keys~\cite{Osvik2006,Gullasch:2011:CGB:2006077.2006784,203878,10.1007/978-3-540-
 %%universal direction is software countermeasures, detecting and eliminating
 %%side-channel vulnerabilities from code base.
 
-Regarding the root cause of side-channel attacks, many of them originate
-from two code patterns: data flow from secrets to load
+Many side-channel attacks originate
+in two code patterns: data flow from secrets to load
 addresses and data flow from secrets to branch conditions. We refer to them as
-secret-dependent \cready{memory-accesses}{data-accesses} and control-flows, respectively. 
-Recent works~\cite{203878,217537,Wichelmann:2018:MFF:3274694.3274741,Brotzman19Casym,236338,182946}
-can detect plenty of side-channel vulnerabilities. For example,
+secret-dependent data accesses and control flows, respectively. 
+
+Recent work~\cite{203878,217537,Wichelmann:2018:MFF:3274694.3274741,Brotzman19Casym,236338,182946}
+can detect many side-channel vulnerabilities. For example,
 DATA~\cite{217537} reports 2,248 potential leakage sites for the RSA
-implementation in OpenSSL \cready{}{1.1.0f}\@. 
-After some inspections, 1,510 leakages are dismissed. But it
-still leaves 460 data-access leakages and 278 control-flow leakages. 
-However, many of the reported vulnerabilities are not fixed by the developers.
-First, some vulnerable implementations have better performance. For example,
+implementation in OpenSSL 1.1.0f\@. 
+After inspection, 1,510 leaks can be dismissed. But that
+leaves 460 data-access leaks and 278 control-flow leaks. 
+Many of these vulnerabilities have not been fixed by developers for a variety of reasons.
+First, some vulnerable implementations perform better. For example,
 RSA implementations usually adopt the CRT optimization,
 which is faster but vulnerable to fault attacks~\cite{aumuller2002fault}.
-Second, fixing old vulnerabilities can introduce new 
-weaknesses, let alone the majority of them are negligible. 
-That is, some vulnerabilities can result in the key being 
+Second, fixing vulnerabilities can introduce new 
+weaknesses.
+Third, most vulnerabilities pose a negligible risk. 
+Although some vulnerabilities can result in the key being 
 entirely compromised~\cite{184415, aumuller2002fault}, 
-but many other vulnerabilities are proven to be less
+many other vulnerabilities are less
 severe in reality. Therefore, we need a proper quantification metric to 
-assess the sensitive level of side-channel vulnerabilities,
-so the developers can efficiently triage the reported vulnerabilities.
+assess the sensitivity of each side-channel vulnerability,
+so a developer can efficiently triage them.
 
-Previous work like static methods~\cite{182946,5207642}, usually with
-abstract interpretations, can give a leakage upper bound, which is useful to
-justify the implementation is secure if they report zero leakage.
-However, they cannot indicate how severe the leakage is because of the
-over-approximation method they apply. For example, CacheAudit~\cite{182946} 
-reports that the upper bound leakage of AES-128 exceeds the original key size. The dynamic methods take another approach with a concrete input and run the program in a real
+Previous work, such as static methods based on abstract interpretation~\cite{182946,5207642}, provides an upper bound on the amount of leakage, which can verify that an implementation is secure if it incurs zero leakage.
+However, these techniques cannot quantify the severity of a leak because they
+over approximate the leakage. For example, CacheAudit~\cite{182946} 
+reports that the upper-bound leakage of AES-128 exceeds the original key size. By contrast, dynamic methods take another approach by running a program in a real
 environment. Although they are very precise in terms of true leakages, no
 existing tool can precisely assess the severity of production
-software vulnerabilities. 
+software vulnerabilities. \jl{Can we say something more specific about dynamic techniques?}
 
 To overcome these limitations, we propose a novel method to quantify information 
-leakages precisely. We quantify the number of leaked bits during one real 
+leakage precisely. We quantify the number of bits that can be leaked during a real 
 execution and define the amount of leaked information as the cardinality of 
 possible secrets based on an attacker's observation. Before an attack, an adversary has a large but finite input space. 
-Whenever the adversary observes a leakage site, he can eliminate some impossible 
-\cready{inputs}{input secrets} and \cready{reduce the input space's size}{the serach space of the input secret}. In an extreme case, if the \cready{input space's size}{the size of the search space} reduces to one, an adversary can determine the input, which means all the secret information (e.g., the whole secret key) is
-leaked. By counting the number of \cready{inputs}{possible input secrets}~\cite{10.1007/11499107_24}, we can quantify the information leakage precisely.
+Whenever the adversary observes a leakage site, they can eliminate some impossible 
+inputs and reduce the input space's size. In an extreme case, if the input space's size reduces to one, an adversary has determined the input, which means all secret information (e.g., the entire secret key) is
+leaked. By counting the number of inputs~\cite{10.1007/11499107_24}, we can quantify the information leakage precisely.
 We use symbolic execution to generate constraints to model the relation 
-between the original \cready{sensitive input}{secret input} and an attacker's observations. 
-Symbolic execution can provide fine-grained information but is an expensive
-operation. Therefore, existing dynamic symbolic
-execution works~\cite{203878,236338,Brotzman19Casym} either only analyze
-small programs or apply some domain knowledge~\cite{203878} to simplify the analysis. We
+between the original sensitive input and an attacker's observations. 
+Symbolic execution can provide fine-grained information, but it is expensive
+to compute. Therefore, prior dynamic symbolic
+execution work~\cite{203878,236338,Brotzman19Casym} either analyzes only
+small programs or applies domain knowledge~\cite{203878} to simplify the analysis. We
 examine the bottleneck of the trace-oriented symbolic execution and optimize it
-to be scalable to real-world cryptosystems.
+to work for real-world crypto-systems.
 
-We have implemented the proposed technique in a tool called \tool{} and show 
-their merits in real-world crypto libraries, including OpenSSL, 
+We have implemented the proposed technique in a tool called \tool{} and demonstrated 
+it on real-world crypto libraries, including OpenSSL, 
 mbedTLS, and Monocypher.
-We collect execution traces of those libraries and run 
-symbolic execution on each instruction. We model
-each side-channel leakage as a logic formula. Those
-formulas can precisely model side-channel vulnerabilities. 
+We collect execution traces of these libraries and apply 
+symbolic execution to each instruction. We model
+each side-channel leak as a logic formula. These
+formulas precisely model side-channel vulnerabilities. 
 Then we use the conjunction of those formulas to model the 
-same leaks in the source code but appears in the different location of
-the execution trace file (e.g., leakages inside a loop).
+leaks at a statement that appears in different location in
+the execution trace file (e.g., leaks inside a loop).
 Finally, we introduce a Monte Carlo sampling method to estimate 
 the information leakage. 
-The experimental result confirms
+The experimental results confirm
 that \tool{} can precisely identify previously known vulnerabilities and 
 report how much information is leaked and which byte in the original sensitive 
-buffer is leaked. We also test \tool{} on side-channel free algorithms. 
-\tool{} has no false positives.
-The result also shows the newer version of crypto libraries leaks less amount of information 
-than previous versions.
+buffer is leaked. We also test \tool{} on side-channel-free algorithms. 
+\tool{} produces no false positives.
+The result also shows the newer version of crypto libraries leak less information 
+than earlier versions.
 \tool{} also discovers new vulnerabilities. With the help of \tool{}, 
-we confirm that those vulnerabilities are severe.
+we confirm that some of these vulnerabilities are severe.
 
 
 %Based on the fixed attack target, we classify the software-based side-channel
@@ -126,18 +125,19 @@ In summary, we make the following contributions:
 
 \begin{itemize}
       \item We propose a novel method that can quantify fine-grained leaked
-            information from side-channel vulnerabilities to match actual attack
-            scenarios. Our approach is different from previous ones in that we
-            model real attack scenarios under one real execution. 
-            We transfer the information quantification problem into a counting problem 
-            and use the Monte Carlo sampling method to estimate the information leakage.
+            information from side-channel vulnerabilities that result from actual attack
+            scenarios. Our approach differs from previous ones in that we
+            model real attack scenarios for one execution. 
+            We model the information quantification problem as a counting problem 
+            and use a Monte Carlo sampling method to estimate the information leakage.
    
-      \item We implement the proposed method into a tool and apply it
-            to several real-world software. \tool{} successfully identifies
+      \item We implement the method into a tool and apply it
+            to several pieces of real software. \tool{} successfully identifies
             previous unknown and known side-channel vulnerabilities and calculates the corresponding information leakage. 
             Our results are surprisingly different, much more useful in practice.
-            The information leakage results provide detailed information that can 
+            \jl{Different from what?}
+            The information leakage estimates provide information that can 
             help developers to triage and fix the vulnerabilities.
 \end{itemize}
 
-\cready{}{\tool{} is publicly available at \url{https://github.com/1c0e/Abacus}. We also release the benchmarks, metadata, and the raw results of our experiments.}
+\cready{}{\tool{} is publicly available at \url{https://github.com/1c0e/Abacus}. The repository also contains benchmarks, metadata, and raw results of our experiments.}

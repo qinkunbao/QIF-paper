@@ -52,6 +52,7 @@ showlines=true
 \newcommand{\fixme}[1]{\highlight{FIXME:} \emph{#1}}
 \newcommand{\todo}[1]{\highlight{TODO:} \emph{#1}}
 \newcommand{\Qinkun}[1]{\highlight{Qinkun's Response:} \emph{#1}}
+\newcommand{\jl}[1]{\highlight{JL}{\textbf{#1}}}
 \newcommand{\cut}[1]{}
 \newcommand{\replace}[2]{#2}
 
@@ -110,37 +111,34 @@ showlines=true
 
 \begin{abstract}
 
-Side-channel attacks allow adversaries to infer sensitive information based
-on non-functional characteristics. Existing works on side-channel
-detections identify numerous potential vulnerabilities. 
+Side-channel attacks allow adversaries to infer sensitive information from non-functional characteristics. Prior side-channel
+detection work is able to identify numerous potential vulnerabilities. 
 However, in practice, many such vulnerabilities leak a negligible amount of
 sensitive information, and thus developers are often reluctant to address
-them. However, no existing tools can precisely report the number of
-leaked bits for each leakage site in production systems.
+them. Existing tools do not provide information to evaluate a leak's severity, such as the number of
+leaked bits.
   
-We propose a new program analysis method to precisely quantify the 
-leaked information in a single-trace attack through side-channels to overcome this limitation.
-It can identify covert information flows in programs that can expose 
-confidential information and reason about security flaws 
+To address this issue, we propose a new program analysis method to precisely quantify the 
+leaked information in a single-trace attack through side-channels.
+It can identify covert information flows in programs that expose 
+confidential information and can reason about security flaws 
 that would otherwise be difficult, if not impossible, for a developer to find.
 We model an attacker's observation of each leakage site as a constraint.  
-We scale symbolic execution to production software to generate the
+We use symbolic execution to generate these
 constraints and then run Monte Carlo sampling to estimate the number of leaked
-bits for each leakage site. By using the Central Limit Theorem, 
-we can also give the error bound for estimation.
+bits for each leakage site. With the Central Limit Theorem, 
+we can also provide an error bound for these estimation.
   
-We have implemented the above technique in a tool called \tool{}, which can
-not only find \cready{the}{} side-channel vulnerabilities but also estimate how many
+We have implemented the technique in a tool called \tool{}, which can
+not only find very fine-grained side-channel vulnerabilities but can also estimate how many
 bits are leaked. \tool{} outperforms existing dynamic side-channel
-detection tools in terms of performance and accuracy. Also, \tool{} can
-report a very fine-grained vulnerability leakage information.  
+detection tools in performance and accuracy. 
 We evaluate \tool{} on OpenSSL, mbedTLS, Libgcrypt, and Monocypher\@.  
-Our results show that most of the reported vulnerabilities are hard to
-exploit in practice, which can dramatically improve
-the process of vulnerability report triage for the developers.
+Our results demonstrate that most reported vulnerabilities are difficult to
+exploit in practice and can be de-prioritized by developers.
 We also find several sensitive vulnerabilities that
 are missed by the existing tools. We confirm those vulnerabilities with
-manual checks and by the developers.
+manual checks and by contacting the developers.
 \end{abstract}
 % IEEEtran.cls defaults to using nonbold math in the Abstract.
 % This preserves the distinction between vectors and scalars. However,
