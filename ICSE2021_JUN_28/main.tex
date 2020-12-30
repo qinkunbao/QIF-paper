@@ -33,8 +33,7 @@
 
 
 \newcommand{\cready}[2]{{\color{red}{\ifx&#1&\else- #1\fi}} {\color{green}{\ifx&#2&\else+ #2\fi}}}%
-%\renewcommand{\cready}[2]{{\color{red}- #1} {\color{green} + #2}}%
-\renewcommand{\cready}[2]{#2}%
+%\renewcommand{\cready}[2]{#2}%
 
 
 \let\oldemptyset\emptyset
@@ -131,7 +130,7 @@ bits for each leakage site. By using the Central Limit Theorem,
 we can also give the error bound for estimation.
   
 We have implemented the above technique in a tool called \tool{}, which can
-not only find the side-channel vulnerabilities but also estimate how many
+not only find \cready{the}{} side-channel vulnerabilities but also estimate how many
 bits are leaked. \tool{} outperforms existing dynamic side-channel
 detection tools in terms of performance and accuracy. Also, \tool{} can
 report a very fine-grained vulnerability leakage information.  
