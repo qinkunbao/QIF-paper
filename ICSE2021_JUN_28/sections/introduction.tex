@@ -25,7 +25,7 @@ keys~\cite{Osvik2006,Gullasch:2011:CGB:2006077.2006784,203878,10.1007/978-3-540-
 Regarding the root cause of side-channel attacks, many of them originate
 from two code patterns: data flow from secrets to load
 addresses and data flow from secrets to branch conditions. We refer to them as
-secret-dependent memory-accesses and control-flows, respectively. 
+secret-dependent \cready{memory-accesses}{data-accesses} and control-flows, respectively. 
 Recent works~\cite{203878,217537,Wichelmann:2018:MFF:3274694.3274741,Brotzman19Casym,236338,182946}
 can detect plenty of side-channel vulnerabilities. For example,
 DATA~\cite{217537} reports 2,248 potential leakage sites for the RSA
@@ -50,8 +50,7 @@ abstract interpretations, can give a leakage upper bound, which is useful to
 justify the implementation is secure if they report zero leakage.
 However, they cannot indicate how severe the leakage is because of the
 over-approximation method they apply. For example, CacheAudit~\cite{182946} 
-reports that the upper bound leakage of AES-128 exceeds the original key size. The dynamic methods take
-another approach with a concrete input and run the program in a real
+reports that the upper bound leakage of AES-128 exceeds the original key size. The dynamic methods take another approach with a concrete input and run the program in a real
 environment. Although they are very precise in terms of true leakages, no
 existing tool can precisely assess the severity of production
 software vulnerabilities. 
@@ -61,12 +60,10 @@ leakages precisely. We quantify the number of leaked bits during one real
 execution and define the amount of leaked information as the cardinality of 
 possible secrets based on an attacker's observation. Before an attack, an adversary has a large but finite input space. 
 Whenever the adversary observes a leakage site, he can eliminate some impossible 
-inputs and reduce the input space's size. In an extreme case, if the input space's size 
-reduces to one, an adversary can determine the input, 
-which means all the secret information (e.g., the whole secret key) is
+\cready{inputs}{input secrets} and \cready{reduce the input space's size}{the serach space of the input secret}. In an extreme case, if the \cready{input space's size}{the size of the search space} reduces to one, an adversary can determine the input, which means all the secret information (e.g., the whole secret key) is
 leaked. By counting the number of \cready{inputs}{possible input secrets}~\cite{10.1007/11499107_24}, we can quantify the information leakage precisely.
 We use symbolic execution to generate constraints to model the relation 
-between the original sensitive input and an attacker's observations. 
+between the original \cready{sensitive input}{secret input} and an attacker's observations. 
 Symbolic execution can provide fine-grained information but is an expensive
 operation. Therefore, existing dynamic symbolic
 execution works~\cite{203878,236338,Brotzman19Casym} either only analyze
