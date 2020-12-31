@@ -23,14 +23,15 @@ Carlo (MC) simulation to estimate the amount of leaked information.
 \subsubsection{Execution trace generation} The design goal of \tool{} is to estimate the information leakage as precisely as possible. 
 We run the target binary under a dynamic binary instrumentation (DBI) tool
 to record execution traces and runtime information.
-Once sensitive information is loaded into memory, we start to collect the trace. In this step, we mark variables and buffers that hold the sensitive data by either annotating the source code (\textsf{make\_abacus\_symbolic}) or telling the DBI tool of the memory address and the length of secrets.
+Once the sensitive information is loaded into memory, we start to collect the trace.
+In this step, we mark variables and buffers that hold the sensitive data by either annotating the source code (\textsf{make\_abacus\_symbolic}) or telling the DBI tool of the memory address and the length of secrets.
 
 \subsubsection{Instruction level symbolic execution} We model attackers'
 observations from side-channel vulnerabilities with logic formulas.
 Each formula captures the fine-grained information between input
 secrets and leakage sites. The engine only symbolically executes
 instruction that might be affected by the input sensitive data. \tool{} works on one path at a time. The memory model is conceptually similar to other offline executors (e.g., SAGE~\cite{godefroid2008automated} and the trace-based executor of BitBlaze~\cite{song2008bitblaze}). That is, we use symbolic execution to track secrets. When secrets are loaded into the memory, \tool{} starts to interpret instructions symbolically. We treat secrets as symbols ($S$). For other variables, we use concrete values ($C$) 
-from the execution. We do not know which instruction may manipulate a secret until we execute it. For each instruction, if all its operands and implicit memory accesses are concrete values, we do the concrete calculation and update the destination with the concrete value according to the instruction's semantics. Otherwise, we symbolically interpret the instruction and update the destination with a formula.
+from the execution. We do not know which instruction may manipulate a secret until we execute it. For each instruction, if all its operands and implicit memory accesses are concrete values, we perform concrete calculation and update the destination with the concrete value according to the instruction semantics. Otherwise, we symbolically interpret the instruction and update the destination with a formula.
 
 \subsubsection{Leakage estimation} We change the information leakage 
 quantification problem into the counting problem. We propose a
