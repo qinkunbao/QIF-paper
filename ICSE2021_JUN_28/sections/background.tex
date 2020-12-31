@@ -2,7 +2,7 @@
 
 \subsection{Address-based Side-channels}
 Side channels leak sensitive information
-unconsciously through different execution behaviors caused by shared 
+unintentionally through different execution behaviors caused by shared 
 hardware components (e.g., CPU cache, TLB, and
 DRAM) in modern computer systems~\cite{ge2018survey,szefer2019survey,191010,184415,Osvik2006,liu2015last,184415}. 
 
@@ -64,17 +64,17 @@ uint32_t a = *RK++ ^ \
 \end{figure}
 
 The key intuition is that many of those side-channel attacks happen when a
-program accesses different memory addresses if the program \cready{has}{takes} different
-\cready{sensitive inputs}{secrets}. As shown in Figure~\ref{fig:secret:cf} and Figure~\ref{fig:secret:da}, 
-if a program shows different patterns in
-control transfers or data accesses when the program processes different
-sensitive inputs, the program is vulnerable to side-channel attacks.
-Different kinds of side-channels can be exploited to retrieve information at
-various granularities. For example, cache channels can observe cache
+program accesses different memory addresses depending on the values in
+\emph{sensitive inputs}. As shown in Figure~\ref{fig:secret:cf} and Figure~\ref{fig:secret:da}, 
+if a program executes different patterns of
+control transfers or data accesses when it processes different
+sensitive inputs, the program may be vulnerable to side-channel attacks.
+Different side-channels can be exploited to retrieve information at
+various granularities. For example, cache side channels observe cache
 accesses at the level of cache sets~\cite{liu2015last}, cache lines~\cite{184415}, 
-or other \cready{}{more fine-grained} granularities\cready{}{~\cite{yarom2017cachebleed,moghimi2020copycat}}. 
-Other kinds of side-channels, like controlled-channel attack~\cite{7163052},
-can observe the memory access at the level of memory pages.
+or finer granularities~\cite{yarom2017cachebleed,moghimi2020copycat}. 
+Other types of side-channels, such as controlled-channel attack~\cite{7163052},
+can observe the memory accesses at the granularity of memory pages.
 
 %\lstinputlisting[language=c, 
 %                 numbers=left,
@@ -98,22 +98,22 @@ can observe the memory access at the level of memory pages.
 
 \subsection{Exisiting Information Leakage Quantification}\label{sec:background_leak}
 
-Given an event $e$ that occurs with the probability $p(e)$, we receive
+Information theory~\cite{shannon1948mathematical} tells us that if an event $e$ that occurs with the probability $p(e)$, we receive
 \begin{displaymath}
     I = - \log_2p(e)
 \end{displaymath}
-bits of information by knowing the event $e$ happens according to information theory~\cite{shannon1948mathematical}. 
-Considering a char variable $a$
-with one byte size in a C program, its value ranges from 0 to 255.
-If we observe $a$ equals $1$, without any domain knowledge, 
+bits of information by knowing the event $e$ happened. 
+Considering a char variable $a$,
+with one byte size in a C program, its possible values range from 0 to 255.
+If we observe $a$ equals $1$, without prior domain knowledge, 
 the probability of this observation is $\frac{1}{256}$. 
-So we get $-\log(\frac{1}{256}) = 8$ bits information, which is exactly the size
-of a char variable in the C program.
-Existing works on information leakage quantification typically use Shannon
+So, we obtai  $-\log(\frac{1}{256}) = 8$ bits of information, which is exactly the size
+of a char variable.
+Existing work on information leakage quantification typically use Shannon
 entropy~\cite{clark2007static,Wichelmann:2018:MFF:3274694.3274741},
-min-entropy~\cite{10.1007/978-3-642-00596-1_21}, and max-entropy~\cite{182946,
+min-entropy~\cite{10.1007/978-3-642-00596-1_21}, or max-entropy~\cite{182946,
 Doychev:2017:RAS:3062341.3062388}. In these frameworks, the input sensitive
-information $K$ is considered as a random variable.
+information $K$ is considered to be a random variable.
 
 Let $k$ be one of the possible
 value of $K$. The Shannon entropy $H(K)$ is defined as
@@ -124,9 +124,9 @@ value of $K$. The Shannon entropy $H(K)$ is defined as
 Shannon entropy can be used to quantify the initial uncertainty about
 sensitive information. It measures the amount of information in a system.
 
-Min-entropy describes the information leaks for a program with the most likely input. 
+Min-entropy describes the information leaks for a program in terms of its most likely input. 
 For example, min-entropy can be used to describe the
-best chance of success in guessing one's password using the
+highest chance of success in guessing a password by using the
 most common password. %, which is defined as
 \begin{displaymath}
     \mathit{min\text{-}entropy} = - \log_2(p_{\mathit{max}})
@@ -159,13 +159,13 @@ if (t2 > 0)                // leakage site B
     \caption{Side-channel leakage}
     \label{fig:side-channel}
 \end{figure}
-In this paper we assume an attacker can observe the secret-dependent control-flows in 
+In this paper, we assume an attacker can use side channels to observe the secret-dependent control-flows in 
 Figure~\ref{fig:side-channel}.
-Therefore, an attacker can have two different observations for each leak site
-depending on the value of the $\mathit{key}$: $A$ for function \textsf{foo} is executed, 
-$\neg A$ for function \textsf{foo} is not executed, $B$ for function \textsf{bar} is
-executed, and $\neg B$ for function \textsf{bar} is not executed. Now the
-question is how much information can be leaked from the above code if an
+Therefore, an attacker can obtain two different observations for each leak site
+depending on the value of the $\mathit{key}$: $A$ when function \textsf{foo} is executed, 
+$\neg A$ when function \textsf{foo} is not executed, $B$ when function \textsf{bar} is
+executed, and $\neg B$ when function \textsf{bar} is not executed. The
+question is how much information can be leaked from this code if an
 attacker knows which branch is executed?
 
 \begin{table}[ht]
@@ -196,7 +196,7 @@ $0.000\ \mathrm{bits}$ and $\mathit{min\text{-}entropy_B}$ equals to
 $1.000\ \mathrm{bits}$.
 
 \textbf{Max Entropy.}
-Depending on the value of key, the code have two branches for each leakage site. 
+Depending on the value of key, the code has two branches for each leakage site. 
 Therefore, with the max entropy definition, both leakage sites leak $1.000\ \mathrm{bits}$.
 
 \textbf{Shannon Entropy.}
@@ -212,22 +212,21 @@ Based on Shannon entropy, the respective amount of information in A and B equals
 \end{align*}
 }
 In the next section, we will show that these measures work well only
-theoretically in a static analysis setting. 
+theoretically when applied with static analysis. 
 Generally, they do not apply to dynamic analysis or real
-settings. We will present that the static or theoretical results could be
-dramatically different from the real world, and we do need a better method to
-quantify the information leakage from a practical point of view.
-
+settings. We will show that the static or theoretical results can be
+dramatically different from the real world, which demonstrates the need for a better method to
+quantify the information leakage from a practical point of view. \jl{Where do we show this?}
 }
 
 \subsection{Threat Model}
-We consider an attacker shares the same hardware resource with the victim.
-The attacker attempts to retrieve sensitive information via address-based
-side-channel attacks. The attacker has no direct access to the memory or cache
-but can probe the memory or cache at each program point. In reality, the
-attacker will face many possible obstacles like the noisy observations 
-on the memory or cache. However, for this project, we assume
-the attacker can have noise-free observations like previous works~\cite{203878,182946,Brotzman19Casym}. 
-The threat model captures most of the cache-based and memory-based side-channel attacks. 
-We only consider the deterministic program for the project and assume an attacker 
-can access the source code \cready{}{or the binary executable} of the target program.
+We assume that an attacker shares the same hardware platform with the target.
+The attacker attempts to retrieve sensitive information through address-based
+side-channel attacks. The attacker has no direct access to the target's memory or cache,
+but it can probe its memory or cache at each program point. In reality, the
+attacker will face many possible obstacles such as the noisy observations 
+of the memory or cache. However, for this project, we assume
+the attacker has noise-free observations as in previous work~\cite{203878,182946,Brotzman19Casym}. 
+The threat model captures most cache-based and memory-based side-channel attacks. 
+We only consider only deterministic programs and assume an attacker 
+has access to the source code \cready{}{or binary executable} of the target program.

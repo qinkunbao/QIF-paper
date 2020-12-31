@@ -10,42 +10,40 @@ brickell2006software,crane2015thwarting},
 information
 quantification~\cite{biondi2018scalable,10.1007/978-3-642-31424-7_40,McCamantE2008,5207642,Phan:2012:SQI:2382756.2382791,Chattopadhyay:2017:QIL:3127041.3127044,zhang2010sidebuster,zhou2018static,pasareanu2016multi}, 
 and model counting~\cite{wei2005new, gomes2007sampling, gomes2006model, kroc2008leveraging, Chattopadhyay:2017:QIL:3127041.3127044}.
-Here we only present the closely related work to ours.
-Due to space limit, we do not include related work on side-channel attacks.
+Here we only present only work closely related to ours.
+Due to space limit, we do not discuss related work on side-channel attacks.
 
 \subsection{Detection and Mitigation}
 
-CacheAudit~\cite{182946} uses abstract domains to compute the
+CacheAudit~\cite{182946} uses abstract domains to compute an
 over approximation of cache-based side-channel information leakage upper bound.
-However, it is hard to judge the sensitive level of the side-channel leakage based on
-the leakage provided by CacheAudit. CacheS~\cite{236338} improves the work of
-CacheAudit by proposing the novel abstract domains, which only track
-secret-related code. Like CacheAudit, CacheS cannot provide the information to
+However, it is difficult to judge the sensitive level of the side-channel leakage based on
+the leakage provided by CacheAudit. CacheS~\cite{236338} improves on
+CacheAudit with new abstract domains that only track
+secret-related code. Like CacheAudit, CacheS cannot
 indicate the sensitive level of side-channel vulnerabilities.
 CaSym~\cite{Brotzman19Casym} introduces a static cache-aware symbolic
-reasoning technique to cover multiple paths for the target program. Still, their
-approaches cannot assess the sensitive level for each side-channel
-vulnerability. And their approaches only work on small code snippets.
+reasoning technique to cover multiple paths in a target program. Again, their
+approaches cannot evaluate the sensitive level for each side-channel
+vulnerability, and it only work on small code snippets.
 
-The dynamic approach, usually with taint analysis and symbolic execution,
-can perform a very precise analysis. CacheD~\cite{203878} takes a concrete execution trace and run the symbolic execution on the top of the trace
+The dynamic approach, usually consists of taint analysis and symbolic execution,
+can perform a very precise analysis. CacheD~\cite{203878} takes a concrete execution trace and runs symbolic execution on the trace
 to get the formula of each memory address. Therefore, CacheD is
-quite precise in term of false positives. \cready{}{However, CacheD is not able to detect secret-dependent control-flows.} We adopted a similar idea to model the secret-dependent \cready{memory}{data} accesses. \cready{}{In contrast, \tool{} can also detect secret-dependent control-flows accesses and give a precise quantification of the leaked amount.}
-DATA~\cite{217537} detects address-based side-channel vulnerabilities by comparing different execution traces \cready{}{of the test program} under various \cready{test}{secret} inputs. \cready{}{After collecting the execution traces, DATA aligns those traces and finds the differences among those trace files. Then it uses statistical hypothesis testing to find true leakages. However, both the imperfect trace alignment and the statistical testing can not guarantees DATA does not produce any false positives. Besides, similar to \tool{} and other dynamic approaches, DATA can miss some leakages.}
+quite precise in avoiding false positives. However, CacheD is not able to detect secret-dependent control-flows. We adopted a similar approach to model the secret-dependent data accesses, but \tool{} also finds secret-dependent control-flows and give a precise quantification of the leakage.
+DATA~\cite{217537} detects address-based side-channel vulnerabilities by comparing different execution traces under various test inputs. After collecting execution traces, DATA aligns them and finds the differences. It uses statistical hypothesis testing to find true leakages. However, both imperfect trace alignment and statistical testing ensure that DATA can produce false positives.
 MicroWalk~\cite{Wichelmann:2018:MFF:3274694.3274741} uses
 mutual information (MI) between sensitive input and execution state to detect side-channels. 
 
 Both hardware~\cite{Page2005PartitionedCA,
 Wang:2007:NCD:1250662.1250723,Zhang:2015:HDL:2775054.2694372,Li:2014:SLH:2541940.2541947,
 236344, 236334} and software~\cite{shih2017t,Coppens:2009:PMT:1607723.1608124,
-brickell2006software,crane2015thwarting, 197207} side-channels mitigation methods have
-been proposed recently. Hardware countermeasures, including parting the hardware
-computing resource~\cite{Page2005PartitionedCA}, randomizing cache
+brickell2006software,crane2015thwarting, 197207} side-channels mitigation techniques have
+been proposed recently. Hardware countermeasures, including partitioning hardware resources~\cite{Page2005PartitionedCA}, randomizing cache
 accesses~\cite{Wang:2007:NCD:1250662.1250723, 236344}, and designing new
-architecture~\cite{tiwari2011crafting}, which need to change the hardware and is
-usually hard to adopt in reality. On the contrary, software approaches are
+architecture~\cite{tiwari2011crafting}, require changes to complex processors and are complex to adopt. On the contrary, software approaches are
 usually easy to implement. Coppens et
-al.~\cite{Coppens:2009:PMT:1607723.1608124} introduced a compiler-based approach
+al.~\cite{Coppens:2009:PMT:1607723.1608124} uses a compiler
 to eliminate key-dependent control-flow transfers. Crane et
 al.~\cite{crane2015thwarting} mitigated side-channels by randomizing software.
 As for crypto libraries, the basic idea is to eliminate key-dependent
@@ -57,46 +55,41 @@ control-flows~\cite{Coppens:2009:PMT:1607723.1608124}.
 
 Proposed by Denning~\cite{robling1982cryptography} and Gray~\cite{gray1992toward}, 
 Quantitative Information Flow (QIF) aims at providing an estimation of the amount of leaked
-information from the sensitive information given the public output. If zero bit
-of the information is leaked, the program is called non-interference. McCamant
+information from the sensitive information given the public output. If zero bits
+of the information are leaked, the program is called non-interference. McCamant
 and Ernst~\cite{McCamantE2008} quantify the information leakage as the network
 flow capacity. Backes et al.~\cite{5207642} propose an automated method for QIF
 by computing an equivalence relation on the set of input keys. But the approach
 cannot handle real-world programs with bitwise operations. 
 Phan et al.~\cite{Phan:2012:SQI:2382756.2382791} propose symbolic QIF. The goal of their
-work is to ensure the program is non-interference. They adopt an over
-approximation way of estimating the total information leakage and their method
+work is to ensure a program is non-interference. They adopt an over
+approximation method to estimate the total information leakage and their method
 does not work for secret-dependent memory access side-channels.
 \cready{}{Pasareanu et al.~\cite{pasareanu2016multi} combine symbolic analysis and Max-SMT solving to synthesize the concrete public input ($m \in M$ in this paper) that can lead to the worst case leakage. They assume the target problem has multiple different input secrets and calculate the average leakage for one-fixed public input.}
 CHALICE~\cite{Chattopadhyay:2017:QIL:3127041.3127044} quantifies the leaked
 information for a given cache behavior. 
-CHALICE also mentions the same issue of max-entropy.
-It symbolically reason about cache
-behavior and estimate the amount of leaked information based on cache miss/hit.
-Their approach can only scale to small programs, which limits its usage in
-real-world applications. On the contrary, \tool{} can assess the sensitive level
+It symbolically reasons about cache
+behavior and estimates the amount of leaked information based on cache miss/hit.
+Their approach only scale to small programs, which limits its usage in
+real-world applications. On the contrary, \tool{} assesses the sensitive level
 of side-channels with different granularities. It can also analyze side-channels
 in real-world crypto libraries.
 
 \subsection{Model Counting}
-Model counting usually refers to the problem of computing the number of 
-models for a propositional formula (\#SAT). There are two directions
+Model counting refers to the problem of computing the number of 
+models for a propositional formula (\#SAT). There are two approaches to
 solving the problem, exact model counting and approximate model 
-counting. We focus on approximate model counting since it shares similar 
-idea as our approach. Wei and Selman~\cite{wei2005new} introduce
+counting. We focus on approximate model counting since it is our approach. Wei and Selman~\cite{wei2005new} introduce
 ApproxCount, a local search based method using Markov Chain Monte 
-Carlo (MCMC). ApproxCount has the better scalability compared to 
+Carlo (MCMC). ApproxCount has the better scalability than 
 exact model counters. Other approximate model counter includes 
 SampleCount~\cite{gomes2007sampling},
 Mbound~\cite{gomes2006model}, and MiniCount~\cite{kroc2008leveraging}. 
-Compared to ApproxCount,
-those model counters can give lower or upper bounds with guarantees.
+Unlike ApproxCount,
+these model counters can give lower or upper bounds with guarantees.
 Despite the rapid development of model counters for SAT and some 
-research~\cite{chistikov2017approximate,phan2015model} on Modulo Theories model counting (\#SMT).
-They cannot be directly applied to 
+research~\cite{chistikov2017approximate,phan2015model} on Modulo Theories model counting (\#SMT),
+they cannot be directly applied to 
 side channel leakage quantification.
 ApproxFlow~\cite{biondi2018scalable} uses ApproxMC~\cite{chakraborty2016algorithmic} for information flow quantification,
-but it's only tested with small programs while \tool{} can scale to production crypto libraries. 
-
-
-
+but it has only been tested with small programs.

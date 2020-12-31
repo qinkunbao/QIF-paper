@@ -1,14 +1,10 @@
 \subsection{Implementation}
-We implement \tool{} with 16,729 lines of code in C++17 and Python from scratch. It has three
-components, Intel Pin tool that can collect the execution trace, the
-instruction-level symbolic execution engine, and the backend that can estimate
+\tool{} consists of 16,729 lines of code in C++17 and Python. It has three
+components: an Intel Pin tool that collects the execution trace, the
+instruction-level symbolic execution engine, and the backend that estimates
 the information leakage. 
 
-
-Our current implementation supports most Intel 32-bit instructions,
-including bitwise operations, control transfer, data movement, and logic
-instructions, which are essential in finding memory-based side-channel
-vulnerabilities. The tool will use the real values to update the registers and memory
-cells for other instructions that the current implementation does not support. 
-Therefore, the tool may miss some leakages but will not give us any new false positives. 
-
+Our current implementation supports most Intel 32-bit instructions that are essential to find memory-based side-channel
+vulnerabilities, including bitwise operations, control transfer, data movement, and logic
+instructions. The tool uses the real values to update the registers and memory for instructions that the implementation does not support. 
+Therefore, the tool may miss some leakages but will not raise false positives. 

@@ -1,32 +1,30 @@
 \section{Scaling to Real-world Crypto Systems}
 \label{sec:scala}
 
-In \S\ref{sec:trace-qif}, we propose an advanced information leakage definition for
+In the previous section, we propose an information leakage definition for
 realistic attack scenarios to model two types of address-based side-channel
-leakages as math formulas, and quantify them by calculating the number of input
-keys ($K^o$) that satisfy those math formulas. Intuitively, we can use
-traditional symbolic execution to capture math formulas and model counting
-to get the number of satisfying input keys ($K^o$). However, some preliminary
-experiments show that the above approach suffers from unbearable costs, which
-impede its usage to detect and quantify side-channel leakages in real-world
-applications. In this section, we begin by discussing the bottlenecks of
-applying the above approaches in real-world software. After that, we
-propose our methods.
+leakages and showed how to quantify them by calculating the number of input
+keys ($K^o$) that satisfy the formulas. Intuitively, we can use
+symbolic execution to capture math formulas and model counting
+to obtain the number of satisfying input keys ($K^o$). However, preliminary
+experiments showed that this approach was far too expensive to use with real-world
+applications. In this section, we discuss the bottlenecks in
+this approach and propose a practical solution.
 
 In general, \tool{} faces the following performance challenges in
-order to \emph{scale to production crypto system analysis}.
+\emph{scaling to production-system crypto analysis}.
 \begin{itemize}
       \item Symbolic execution (\textbf{Challenge C2})
       \item Counting the number of items in $K^o$ (\textbf{Challenge C3})
 \end{itemize}
 
 \subsection{Trace-oriented Symbolic Execution}
-Symbolic execution is notorious for its unbearable performance cost. 
+Symbolic execution is notorious for its high performance cost. 
 Previous trace-oriented
-symbolic execution based
-works~\cite{203878,Chattopadhyay:2017:QIL:3127041.3127044} have large
-performance bottlenecks. As a result, those approaches either only apply to
-small-size programs~\cite{Chattopadhyay:2017:QIL:3127041.3127044} or apply some
+symbolic execution
+work~\cite{203878,Chattopadhyay:2017:QIL:3127041.3127044} has serious
+performance bottlenecks. As a result, these approaches either apply only to
+small programs~\cite{Chattopadhyay:2017:QIL:3127041.3127044} or require
 domain knowledge~\cite{Wang:2007:NCD:1250662.1250723} to simplify the analysis. 
 %Those tools interpret each
 %instruction and update memory cells and registers with formulas that
@@ -34,30 +32,29 @@ domain knowledge~\cite{Wang:2007:NCD:1250662.1250723} to simplify the analysis.
 %can lead to different execution behaviors using constraint solver. 
 We implement
 the approach presented in \S\ref{sec:trace-qif} and model the side-channels as
-formulas. While the tool can finish analyzing some simple cases like AES, it can
-not handle complicated cases like RSA.
-We observe that finding side-channels using symbolic execution is different from
-traditional general symbolic execution and can be optimized to be as efficient
-as other methods with approaches below.
+formulas. While the tools can analyze some simple cases such as AES, it cannot handle complicated examples such as RSA.
+We observe that finding side-channels using symbolic execution differs from
+traditional symbolic execution, and it can be optimized to be as efficient
+as other methods.
 
 \subsubsection{Interpret Instructions Symbolically}
 Existing binary analysis \cready{tools}{frameworks}~\cite{shoshitaishvili2016state,
 10.1007/978-3-642-22110-1_37, song2008bitblaze} translate machine instructions into
-intermediate languages (IR) to simplify the analysis. 
-The reason is that the number of machine instructions is
-enormous, and the semantics of each instruction is complex. Intel Developer
-Manual~\cite{intelsys} introduces more than 1000 different x86 instructions. 
-However, the IR layer, which predigests the implementation
-and reduces the workload of those tools, is not suitable for side-channels 
-analysis.
-In general, IR-based or source code side-channels analyses are not accurate enough.
-In many cases, compilers use conditional moves or bitwise operations to eliminate
+intermediate languages (IR) to simplify analysis since
+the variety of machine instructions is
+enormous, and their semantics is complex. The Intel Developer
+Manual~\cite{intelsys} documents more than 1000 different x86 instructions. 
+Unfortunately, the IR layer, which
+reduces the workload of these tools, is not suitable for side-channels 
+analysis because
+IR-based or source code side-channels analyses do not represent the executed instructions accurate enough to analyze fully their control and memory accesses.
+For example, a compiler may use conditional moves or bitwise operations to eliminate
 branches. Also, as some IRs are not a superset or a subset of ISA, 
 it is hard to rule out conditional jumps introduced by IR and add real branches 
 eliminated by IR transformations.
 
-Moreover, the IR design causes significant overhead~\cite{217563}.
-Transferring machine instructions into IR is time-consuming. For example,
+Moreover, the IR causes significant overhead~\cite{217563}.
+Translating machine instructions into IR is time-consuming. For example,
 REIL IR~\cite{dullien2009reil}, adopted in CacheS~\cite{236338}, has multiple
 transform processes, from binary to VEX IR, BAP IR, and finally REIL IR\@. 
 Also, IR increases the total number of instructions. For example, x86
@@ -65,15 +62,14 @@ instruction \textit{test eax, eax} transfers into 18 REIL IR instructions.
 
 %\vspace*{2pt}
 \textbf{Our Solution:}
-We abandon the IR design and take the \cready{engineer efforts}{engineering efforts} to implement 
-the symbolic execution directly on the top of x86 instructions from scratch. 
-Table~\ref{scala:ir} shows that eliminating the IR layer can reduce the number 
-of instructions executed during the analysis. Previous works~\cite{217563} also 
-has a similar approach to speed up the fuzzing. Our implementation is different
-from their works in two aspects: 1) We use complete constraints. 2) We run the
-symbolic execution on one execution path each time. Our result indicate the 
-design is around 30 times faster than the IR design (transferring ISA into IR and
-symbolically executing instructions).
+We abandoned IR and expended the effort to implement 
+symbolic execution directly on x86 instructions. 
+Table~\ref{scala:ir} shows that eliminating the IR reduces the number 
+of instructions examined during analysis. Previous works~\cite{217563} also 
+adopted a similar approach to speed up fuzzing. Our implementation differs
+from that work in two aspects: 1) We use complete constraints. 2) We run the
+symbolic execution on one execution path each time. Our approach is approximately 30 times faster than using an IR (transferring ISA into IR and
+symbolically executing it).
 
 \begin{table}%[ht]
       \centering\small\footnotesize
@@ -97,42 +93,42 @@ symbolically executing instructions).
 
 \subsubsection{Constraint Solving}
 As discussed in \S\ref{side-channel:condition}, the problem of identifying
-side-channels can be reduced to the question below.
+side-channels can be reduced to the question:
 
 \begin{quote}
       \textit{Can we find two different input variables $k_1, k_2 \in K$ that
             satisfy the formula $f_a(k_1) \neq f_a(k_2)$?}
 \end{quote}
 
-Existing \cready{approach relies}{approaches rely} on satisfiability modulo theories (SMT) solvers 
-(e.g, Z3~\cite{DeMoura:2008:ZES:1792734.1792766}) to find satisfying 
+Existing approaches rely on satisfiability modulo theories (SMT) solvers 
+(e.g, Z3~\cite{DeMoura:2008:ZES:1792734.1792766}) to find satisfying assignments to
 $k_1$ and $k_2$.
-We argue that while it is a universal approach to solving constraints 
-with SMT solvers, for constraints with the above formats, using custom 
+While this is a universal approach to solving constraints, 
+for constraints of this form, using custom 
 heuristics and testing is much more efficient in practice. Constraint 
 solving is a decision problem expressed in logic formulas. SMT solvers 
-transfer the inputted SMT formula into the boolean conjunctive normal 
+transfer the SMT formula into the boolean conjunctive normal 
 form (CNF) and feed it into the internal boolean satisfiability 
 problem (SAT) solver. The translation process, called ``bit blasting'', 
 is time-consuming. Also, as the SAT problem is a well-known NP-complete 
 problem, it is hard to deal when it comes to
-practical uses with huge formulas. Despite the rapid development 
-of SMT solvers in recent years, constraint solving remains one of 
-the obstacles to achieving the scalability of analyzing real-world cryptosystems.
+practical uses with huge formulas. Despite the rapid improvement 
+in SMT solvers in recent years, constraint solving remains one of 
+the obstacles to scaling the analysis of real-world crypto-systems.
 
 %\vspace*{2pt}
 \textbf{Our Solution:}
 Instead of feeding the formula $f_a(k_1) \neq f_a(k_2)$ into a SMT solver, we
-randomly pick up $k_1, k_2 \in K$ and test them if they can satisfy the
+randomly pick $k_1, k_2 \in K$ and test them if they satisfy the
 formula. Our solution is based on the following intuition. For most combination
-of $(k_{1}, k_{2} )$, the formula $f_a(k_1) \neq f_a(k_2)$ holds. As long as
+of $(k_{1}, k_{2} )$, $f_a(k_1) \neq f_a(k_2)$. As long as
 $f_a$ is not a constant function, such $k_1, k_2$ must exist. For example,
 suppose each time we only have 5\% chance to find such $k_1, k_2$, then after we
 test with different input combination with 100 times, we have $1 -
-(1-0.05)^{100} = 99.6\%$ chance find such $k_1, k_2$. Such random algorithms
-work well for our problem.
+(1-0.05)^{100} = 99.6\%$ chance find such $k_1, k_2$. This type of random algorithm
+works well for our problem.
 
-\subsection{Counting the Number}
+\subsection{Counting the Solutions}
 \label{MCreasons}
 %According to
 %Definition~\ref{def} introduced in \S\ref{sec:trace-qif},
@@ -172,10 +168,10 @@ based on Definition~\ref{def} (\S\ref{sec:trace-qif}), answering to
 \textbf{Challenge C3}.
 
 \subsubsection{Problem Statement}
-For each leakage site, we model it with a math formula constraint with the
+For each leakage site, we model it with a constraint using the
 method presented in~\S\ref{side-channel:condition}. Suppose the address of the
 leakage site is $\addr{i}$, we use $c_{\addr{i}}$ to denote the constraint
-that models the side-channel leakage. 
+that models its side-channel leakage. 
 %For
 %multiple leakage sites, we take the conjunction of those constraints to
 %represent those leakage sites.
@@ -191,8 +187,8 @@ $c_t({\addr{1}},{\addr{2}},\ldots,{\addr{n}}) = c_{\addr{1}} \land c_{\addr{2}}
 %%information can be reduced to the problem of counting the number of different
 %%solutions that satisfies the constraint
 %%$c_t({\addr{1}},{\addr{2}},\ldots,{\addr{n}})$. 
-A simple method is to \cready{pick elements $k$}{pick $k$ elements} from $K$ and check if the
-\cready{element also contained}{element is also contained} in $K^o$. Assume $q$ elements satisfy this condition. In
+A simple method is to pick elements $k$ from $K$ and check if an
+element is also contained in $K^o$. Assume $q$ elements satisfy this condition. In
 expectation, we can use $\frac{k}{q}$ to approximate the value of
 $\frac{|K|}{|K^o|}$.
 
@@ -202,8 +198,8 @@ However, the above sampling method fails in practice due to the following two pr
       \item The curse of dimensionality problem. $c_t({\addr{1}},\ldots,{\addr{n}})$ is
             the conjunction of many constraints. Therefore, the input variables
             of each constraints will also be the input variables of the
-            $c_t({\addr{1}},\ldots,{\addr{n}})$. The sampling method will fail
-            as $n$ increases. 
+            $c_t({\addr{1}},\ldots,{\addr{n}})$. The sampling method fails
+            as $n$ grows. 
 
             %For example, if the program has $2$ input whose size is 
             %one byte, the whole search space is a $256^2$ cube. If we want
@@ -233,10 +229,10 @@ problem:
 
             \item Each time when we sample $c_t({\addr{1}},{\addr{2}},\ldots,{\addr{n}})$
             with a point, the sampling result is \emph{Satisfied} or not \emph{Not Satisfied}.
-            The result is randomly generated in a way that does not depend on the result in 
+            The outcome does not depend on the result of 
             previous experiments. Also, as the amount of leaked information is calculated
-            by $\log$ function, we do not need to count the number of solutions for 
-            a given constraint precisely.
+            by a $\log$ function, we need not exactly count the number of solutions for 
+            a given constraint.
             %\item For each constraint $F(C_{{addr}_i})$, the satisfying assignments
             %are close to each other, which means if we find one satisfying assignment, we 
             %are more likely to find other satisfying assignments nearby than randomly
@@ -282,23 +278,23 @@ one.
 
 The reason we want a good partition of constraints is we want to reduce
 the dimensions. For example,
-A good partition of $F: ({k_1} = 1)\land({k_2} = 2)\land({k_3} > 4)\land({k_3} - {k_4} > 10)$ would be
+a good partition of $F: ({k_1} = 1)\land({k_2} = 2)\land({k_3} > 4)\land({k_3} - {k_4} > 10)$ would be
 $g_{1}: ({k_1} = 1)\quad g_{2}: ({k_2} = 2)\quad g_{3}: ({k_3} > 4) \land
 ({k_3} - {k_4} > 10)$  
-We can sample each constraint independently and combine them together
+We can sample each constraint independently and combine them
 with Theorem~\ref{IndependentConstraint}.
 
 \begin{theorem}
       \label{IndependentConstraint}
       Let $g_{1}, g_{2}, \ldots, g_{m}$ be a maximum independent partition of
       $c_t(\addr{1},\addr{2},\ldots,\addr{n})$.
-      $K_c$ is the input set that satisfies constraint $c$. We can have the following
+      $K_c$ is the input set that satisfies constraint $c$. We have the following
       equation in regard to the size of $K_c$
       $$|K_{c_t(\addr{1},\addr{2},\ldots,\addr{n})}| = |K_{g_{1}}|*|K_{g_{2}}|*\ldots*|K_{g_{n}}|$$
 \end{theorem}
 \vspace{-3pt}
-With Theorem~\ref{IndependentConstraint}, we transfer the problem of
-counting the number of solutions to a complicated constraint in high-dimension
+With Theorem~\ref{IndependentConstraint}, we change the problem of
+counting the number of solutions to a complicated constraint in a high-dimension
 space into counting solutions to several small constraints. We compute the
 maximum independent partition by iterating each $\addr{i}$ and applying the function
 $\pi$ over the constraint $\addr{i}$.
@@ -333,11 +329,11 @@ $\pi$ over the constraint $\addr{i}$.
 %% \end{algorithm}
 %% \DecMargin{1em}
 
-\subsubsection{Multiple Step Monte Carlo Sampling}
+\subsubsection{Multiple-step Monte Carlo Sampling}
 
 After we split those constraints into several small constraints, we count the
 number of solutions for each constraint. Even though the dimension has been
-significantly reduced after the previous step, this is still a \#P problem. 
+significantly reduced by the previous step, this is still a \#P problem. 
 %For our
 %project, we apply the approximate counting instead of exact counting for two
 %reasons. First, we do not need to have a very precise result of the exact number
@@ -352,12 +348,12 @@ the constraint $g_{i}= c_{i_1} \land c_{i_2} \land ,\ldots, \land c_{i_j} \land
 ,\ldots, \land c_{i_m}$, if the solution satisfies $g_{i}$, it should also
 satisfy any constraint from $c_{i_1}$ to $c_{i_m}$. In other words, $K_{c_gi}$
 should be the subset of $K_{c_1}$, $K_{c_2}$, \ldots , $K_{c_m}$. We notice that
-$c_i$ usually has less numbers of input compared to $g_{i}$. For example, if
+$c_i$ usually has fewer inputs than $g_{i}$. For example, if
 $c_{i_j}$ has only one 8-bit input variable, we can find the exact solution set
-$K_{c_{i_j}}$ of $c_{i_j}$ by trying every possible 256 solutions. After that,
-we can only generate random input numbers for the \cready{rest input variables}{rest of the input variables} in
-constraint $g_{i}$. With this simple yet effective trick, we can reduce the number of input
-while still \cready{ensure}{ensuring} the accuracy.
+$K_{c_{i_j}}$ of $c_{i_j}$ by trying every possible 256 solution. After that,
+we only generate random input numbers for the other input variables in
+constraint $g_{i}$. With this simple yet effective trick, we reduce the number of input
+while still ensuring accuracy.
 
 %% the algorithm
 %\IncMargin{1em}
@@ -397,18 +393,18 @@ while still \cready{ensure}{ensuring} the accuracy.
 
 \subsubsection{Error Estimation}
 \label{sssec:errest}
-Our result has the probabilistic guarantee that the error of the estimated amount of leaked 
+Our result has a probabilistic guarantee that the error of the estimated amount of leaked 
 information is less than 1 bit under the Central Limit Theorem (CLT) and uncertainty
 propagation theorem.
 
 Let $n$ be the number of samples and $n_s$ be the number of samples that satisfy
-the constraint $C$. Then we can get $\hat{p} = \frac{n_s}{n}$. If we repeat the
-experiment multiple times, each time we can get a $\hat{p}$. As each
+the constraint $C$. Then we get $\hat{p} = \frac{n_s}{n}$. If we repeat the
+experiment multiple times, each time we get a $\hat{p}$. As each
 $\hat{p}$ is independent and identically distributed, according to the central limit
 theorem, the mean value should follow normal distribution
 $ \frac{\bar{p}-E(p)}{\sigma\sqrt{n}} \rightarrow N(0,1) $. Here $E(p)$ is the
 mean value of $p$, and $\sigma$ is the standard variance of $p$. If we use the
-observed value $\hat{p}$ \cready{to the calculate}{to calculate} the standard deviation, we can claim that
+observed value $\hat{p}$ to calculate the standard deviation, we can claim that
 we have 95\%\footnote{For a normal distribution, 95\% of variable $\Delta p$ fall within two sigmas of the mean.} 
 confidence that the error $\Delta p= \bar{p} - E(p)$ falls in the interval:
 $$ |\Delta p| \leq 1.96\sqrt{\frac{ \hat{p} (1- \hat{p} )}{n}}$$
@@ -417,7 +413,7 @@ Since we use $L = \log_{2}p$ to estimate the amount of leaked information, we
 can have the following error propagation formula $\Delta L = \frac{\Delta
 p}{p\ln2}$ by taking the derivative from Definition~\ref{def}. For \tool, we want the error of estimated leaked
 information ($\Delta L$) to be less than 1 bit. So we get $\frac{\Delta
-p}{p\ln2} \leq 1$. Therefore, as long as $ n \geq \frac{1.96^2(1-p)}{p(\ln2)^2}$, we can have
+p}{p\ln2} \leq 1$. Therefore, as long as $ n \geq \frac{1.96^2(1-p)}{p(\ln2)^2}$, we have
 95\% confidence that the error of estimated leaked information is less than 1 bit.
-During the simulation, if $n$ and $p$ satisfy the above inequation, Monte Carlo
+During the simulation, if $n$ and $p$ satisfy this inequality, the Monte Carlo
 simulation will terminate.

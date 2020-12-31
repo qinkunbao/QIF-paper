@@ -1,7 +1,7 @@
 \section{Introduction} 
 %% side channels are important
 Side channels are ubiquitous in modern computer systems as sensitive
-information can be leaked through many mechanisms such as power,
+information can leak through many mechanisms such as power,
 electromagnetic radiation, and even
 sound~\cite{agrawal2002side,kar20178,chari1999towards,217605,genkin2014rsa}.
 Among them, software side-channel attacks, such as cache attacks, memory page
@@ -39,14 +39,14 @@ which is faster but vulnerable to fault attacks~\cite{aumuller2002fault}.
 Second, fixing vulnerabilities can introduce new 
 weaknesses.
 Third, most vulnerabilities pose a negligible risk. 
-Although some vulnerabilities can result in the key being 
+Although some vulnerabilities result in the key being 
 entirely compromised~\cite{184415, aumuller2002fault}, 
 many other vulnerabilities are less
 severe in reality. Therefore, we need a proper quantification metric to 
 assess the sensitivity of each side-channel vulnerability,
 so a developer can efficiently triage them.
 
-Previous work, such as static methods based on abstract interpretation~\cite{182946,5207642}, provides an upper bound on the amount of leakage, which can verify that an implementation is secure if it incurs zero leakage.
+Previous work, such as static methods based on abstract interpretation~\cite{182946,5207642}, provides an upper bound on the amount of leakage, which verifies that an implementation is secure if it incurs zero leakage.
 However, these techniques cannot quantify the severity of a leak because they
 over approximate the leakage. For example, CacheAudit~\cite{182946} 
 reports that the upper-bound leakage of AES-128 exceeds the original key size. By contrast, dynamic methods take another approach by running a program in a real
@@ -55,7 +55,7 @@ existing tool can precisely assess the severity of production
 software vulnerabilities. \jl{Can we say something more specific about dynamic techniques?}
 
 To overcome these limitations, we propose a novel method to quantify information 
-leakage precisely. We quantify the number of bits that can be leaked during a real 
+leakage precisely. We quantify the number of bits that can leak during a real 
 execution and define the amount of leaked information as the cardinality of 
 possible secrets based on an attacker's observation. Before an attack, an adversary has a large but finite input space. 
 Whenever the adversary observes a leakage site, they can eliminate some impossible 
@@ -63,7 +63,7 @@ inputs and reduce the input space's size. In an extreme case, if the input space
 leaked. By counting the number of inputs~\cite{10.1007/11499107_24}, we can quantify the information leakage precisely.
 We use symbolic execution to generate constraints to model the relation 
 between the original sensitive input and an attacker's observations. 
-Symbolic execution can provide fine-grained information, but it is expensive
+Symbolic execution provides fine-grained information, but it is expensive
 to compute. Therefore, prior dynamic symbolic
 execution work~\cite{203878,236338,Brotzman19Casym} either analyzes only
 small programs or applies domain knowledge~\cite{203878} to simplify the analysis. We
@@ -83,8 +83,8 @@ the execution trace file (e.g., leaks inside a loop).
 Finally, we introduce a Monte Carlo sampling method to estimate 
 the information leakage. 
 The experimental results confirm
-that \tool{} can precisely identify previously known vulnerabilities and 
-report how much information is leaked and which byte in the original sensitive 
+that \tool{} precisely identifies previously known vulnerabilities and 
+reports how much information is leaked and which byte in the original sensitive 
 buffer is leaked. We also test \tool{} on side-channel-free algorithms. 
 \tool{} produces no false positives.
 The result also shows the newer version of crypto libraries leak less information 

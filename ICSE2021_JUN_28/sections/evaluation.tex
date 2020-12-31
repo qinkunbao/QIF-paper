@@ -4,8 +4,8 @@
 \begin{table}[]
     \centering\small\footnotesize
     \caption{Evaluation results overview: Name, Side-channel Leaks\,(Leaks), 
-        Secret-dependent Control-flows\,(CF), Secret-dependent Data-flows\,(DA),
-        The number of instructions\,(\# Instructions), Symbolic Execution\,(SE), and Monte Carlo\,(MC).
+        Secret-dependent Control-flows\,(CF), Secret-dependent Data-flows\,(DF),
+        The number of instructions\,(\# Instructions), Symbolic Execution\,(SE) and Monte Carlo\,(MC) time.
     }\label{table:over_result}
     \vspace*{-5pt}
     \newlength{\x}
@@ -74,7 +74,7 @@
 
 \end{table}
 
-We evaluate \tool{} on real-world crypto libraries including OpenSSL, mbedTLS, Libgcrypt and Monocypher\@. 
+We evaluate \tool{} on widely used crypto libraries including OpenSSL, mbedTLS, Libgcrypt and Monocypher\@. 
 %OpenSSL is the most commonly used crypto libraries in today's software. mbedTLS\@
 %(previous known as PolarSSL) is designed to be easy to understand and fit on
 %embedded devices. We also evaluate Monocypher, a new cryptographic library that
@@ -82,16 +82,13 @@ We evaluate \tool{} on real-world crypto libraries including OpenSSL, mbedTLS, L
 %Monocypher is designed to have no 
 %secret dependent indices and secret dependent branches. Therefore,
 %Monocypher should be secure under our threat model.
-We mark variables and buffers that store the secret. 
-The operation can be done either by adding an annotation on the source code 
-or telling the Pin tool the address and the length of secrets.
+We mark variables and buffers that store a secret.
 For DES and AES, we mark symmetric keys as secrets. 
 For RSA, we mark private keys as secrets. For ECDSA, 
 we mark nonces and private keys as secrets.
 
-
-We build the source code into 32-bit x86 Linux executables with GCC 8.0
-under Ubuntu 16.04. 
+We build the source program into 32-bit x86 Linux executables with GCC 8.0
+running on Ubuntu 16.04. 
 We run our experiments on a 2.90GHz Intel Xeon(R) E5-2690 CPU with 128GB
 RAM. The execution time is calculated on a single-core.
 During our evaluation process, we are interested in the following
@@ -108,47 +105,47 @@ aspects:
 \end{enumerate}
 
 \subsection{Evaluation Result Overview} \label{sec:eval_overview}
-Table~\ref{table:over_result} shows the overview of evaluation results. 
-\tool{} finds 904 leakages in total from real-world crypto libraries. 
-Among those 904 leak points, 241 of them are leaked due to secret-dependent 
-control-flow transfers, and 663 of them are leaked due to secret-dependent memory accesses.
+Table~\ref{table:over_result} summarizes the results. 
+\tool{} finds 904 leaks in the crypto libraries. 
+Among these 904 leaks, 241 are due to secret-dependent 
+control-flow transfers and 663 are due to secret-dependent memory accesses.
 
-\tool{} also identifies that most side-channel
+\tool{} also finds that most side-channel
 vulnerabilities leak very little information in practice, which confirms our
 initial assumption.  
-However, we do find some vulnerabilities that \tool{} reports with severe
-leakages. Some of them have been confirmed by existing research that those
-vulnerabilities can be exploited to realize real attacks.
-With our tool, developers will be able to
-distinguish those ``vulnerabilities'' from severe ones and ignore others easily.
+However, \tool{} finds some vulnerabilities with severe
+leakages. Prior research has confirmed that some of these
+vulnerabilities can be exploited in real attacks.
+With our tool, developers can
+distinguish non-critical ``vulnerabilities'' from severe ones.
 
 Symmetric encryption implementations in OpenSSL and mbedTLS have significant
-leakages due to the lookup table implementation. 
-\tool{} confirms that all those leakages come from table
-lookups. We find the new
-implementation of OpenSSL instead uses typical four 1K tables. It only uses one 1K
- table. This implementation is rather easy but does somehow decrease the total
+leakage due to their lookup table implementations. 
+\tool{} confirms that all leakage comes from table
+lookups. The new
+implementation of OpenSSL uses four 1K
+ tables with smaller entries instead of the previous 1K table. \jl{Is this right?} The change is rather easy but significantly decreases the total
 amount of leaked information as the quantification result shown in the next
 section.
 
 We also evaluate our tool on the RSA implementation. With the optimization
-introduced in \S\ref{sec:scala}, we do not apply any domain knowledge to
-simplify the analysis. Therefore, our tool can identify all the leakage sites
-reported by CacheD~\cite{203878} and find new leakages in a shorter time. 
+introduced in \S\ref{sec:scala}, we need not apply domain knowledge to
+simplify the analysis. Our tool identifies all leakage sites
+reported by CacheD~\cite{203878} and find new leaks in less time. 
 We also find newer
-versions of RSA in OpenSSL tend to have fewer leakages detected by \tool{}. We
+versions of RSA in OpenSSL have fewer leaks. We
 will discuss the version changes and corresponding leakages in \S\ref{eval:asym}.
 
 \tool{} can estimate how
 much information is leaked from each vulnerability. During the evaluation,
 for each leakage site, \tool{} will stop once 1) it has 95\% confidence
-possibility that the error of estimated leaked information is less than 1 bit,
-which gives us confidence on the leakage quantification with the \emph{precision guarantee}, 
-or 2) it cannot reach the termination condition after 10 minutes. In
+that the error of the estimated leaked information is less than 1 bit,
+which gives the leakage quantification a \emph{precision guarantee}, 
+or 2) it cannot reach the termination condition after 10 minutes. \jl{Doesn't this belong in the implementation section?} In
 the latter case, it means \tool{} cannot estimate the amount of leakage with a
 probabilistic guarantee.
 \label{loc:timeout}
-We manually check those leakage sites and find most of them are quite severe.
+We manually check these \jl{timeout?} leakage sites and find most of them are quite severe.
 We will present the details in the subsequent sections.
 
 \subsection{Comparison with the Existing Tools}
@@ -182,9 +179,9 @@ number of instructions. For example, when we test~\tool{} on AES from OpenSSL
 0.9.7, \tool{} is over 100x faster than CacheD.
 
 \cready{Since DATA~\cite{217537} needs to compare several execution traces to identify
-side-channel leakages, \tool{} also outperforms DATA in terms of performance.}{DATA~\cite{217537} identifies side-channel leakages by finding differences in execution traces of the test program under \emph{various secret inputs}. According to the original DATA paper, it uses 443 different traces to detect the side-channel vulnerabilities in symmetric cyphers and 450 different traces to detect the side-channel vulnerabilities in asymmetric cyphers. On the other hand, \tool{} detect side-channel vulnerabilities from one execution trace. Abacus uses symbolic analysis to extract formulas that model each side-channel leakages. After that, we sample the formula with \emph{various secret inputs} to detect and quantify each leakage site. In theory, DATA can have better code coverage than \tool{} because it uses more execution traces. But \tool{} has the following advantages. a) \tool{} is faster than DATA. For example, it takes 234 minutes for DATA to analyze the RSA of implementation in OpenSSL 1.1.0f. \tool{} only spends 34 minutes according to Table~\ref{table:over_result}. It takes 13 minutes and 20 minutes for DATA to detect the side-channel leakages in AES and DES respectively. On the other hand, \tool{} can finish the analysis in less than ten seconds while finding all the leakages reported by DATA. b) Because \tool{} does not run the test program again when we have a new \emph{secret input}, \tool{} can test more input secrets on those formulas to have a better precision. DATA reports report 278 control-flow and 460 memory-access leaks. Among those leakages, they find one new vulnerability in RSA after some manual analysis.  
+side-channel leakages, \tool{} also outperforms DATA in terms of performance.}{DATA~\cite{217537} identifies side-channel leakages by finding differences in execution traces of the test program under \emph{various secret inputs}. According to the original DATA paper, it uses 443 different traces to detect the side-channel vulnerabilities in symmetric cyphers and 450 different traces to detect the side-channel vulnerabilities in asymmetric cyphers. On the other hand, \tool{} detect side-channel vulnerabilities from one execution trace. \tool{} uses symbolic analysis to extract formulas that model each side-channel leakages. After that, we sample the formula with \emph{various secret inputs} to detect and quantify each leakage site. In theory, DATA might have better code coverage than \tool{} because it uses more execution traces. But \tool{} has the following advantages. a) \tool{} is faster than DATA. For example, it takes 234 minutes for DATA to analyze the RSA of implementation in OpenSSL 1.1.0f. \tool{} only spends 34 minutes according to Table~\ref{table:over_result}. It takes 13 minutes and 20 minutes for DATA to detect the side-channel leakages in AES and DES, respectively. On the other hand, \tool{} finishes its analysis in less than ten seconds while finding all the leakages reported by DATA. b) Because \tool{} does not run the test program again when we have a new \emph{secret input}, \tool{} can test more input secrets on those formulas to achieve better precision. DATA reports report 278 control-flow and 460 memory-access leaks. Among those leakages, they find one new vulnerability in RSA after some manual analysis.  
 \tool{} finds the vulnerability and reports the vulnerability is severe 
-(\textsf{int\_bn\_mod\_inverse} leaks more than 14.9 bits and \textsf{BN\_div} leaks more than 17.2 bits), which eases the pain to identify real sensitive leaks.
+(\textsf{int\_bn\_mod\_inverse} leaks more than 14.9 bits and \textsf{BN\_div} leaks more than 17.2 bits), which helps identify real sensitive leaks.
 For each leakages site, \tool{} can provide concrete examples to trigger the issue and give an estimation to assess the severity level of the vulnerability.}
 \cready{For example, it takes 234 minutes for DATA to analyze the RSA of implementation
 in OpenSSL 1.1.0f. \tool{} only spends 34 minutes according to Table~\ref{table:over_result}.
@@ -217,25 +214,24 @@ they find one new vulnerability in RSA after some manual analysis.
 
 \subsubsection{Symmetric Ciphers: DES and AES}\label{eval:sym}
 We test both DES and AES ciphers from mbedTLS and OpenSSL\@. Both cipher
-implementations apply lookup tables, which can
-speed up the performance, but can also introduce additional side-channels
+implementations apply lookup tables, which improve performance but can also introduce side-channels
 as well. During our evaluation, we find mbedTLS 2.5 and 2.15.1 have the same
-implementation of AES and DES\@. Therefore, our tool also provides the same 
-leakage report for both
+implementation of AES and DES\@. Therefore, our tool reports the same 
+leakages for both
 versions. 
 
-According to \tool{}, we find the DES implementations in both mbedTLS and OpenSSL have several
+We find that the DES implementations in both mbedTLS and OpenSSL have several
 severe information leakages in the key schedule function.
 We do not see any mitigation
 in the new version. We think it is not seen as worth the engineering
 efforts given the life cycles of DES\@.
 
 \tool{} shows that the AES in OpenSSL 1.1.1 
-has less amount of leakages compared to other versions by our tools. 
-We find that OpenSSL 1.1.1 
-instead uses the 1KB lookup tables with 32-bit entries like older versions, it uses a 
-table with 8-bit entries. Our tool suggests a smaller lookup
-table can mitigate side-channel vulnerabilities. 
+has less leakage than other versions. 
+OpenSSL 1.1.1 
+uses 1KB lookup tables with 8-bit entries, unlike older versions that use a 
+table with 32-bit entries. Our tool suggests a smaller lookup
+table might mitigate side-channel vulnerabilities. \jl{Is my change right?}
 
 %For example, Shown in Appendix~\ref{appendix:mbedtls_aes},
 %\tool{} identify seven leakages from function \textsf{mbedtls\_internal\_aes\_decrypt}.
@@ -249,25 +245,26 @@ table can mitigate side-channel vulnerabilities.
 
 \subsubsection{Asymmetric Ciphers: RSA}\label{eval:asym}
 We also evaluate \tool{} on RSA. Due to the page limit,
-we do not list the detailed leakage report. In general,
-developers are more interested in fixing side-channel vulnerabilities for RSA implementations.
+we do not present the detailed leakage report, which is available online \jl{where?}. In general,
+developers are interested in fixing side-channel vulnerabilities for RSA implementations.
+\jl{Then maybe find some space to present these results?}
 As shown in Figure~\ref{fig:rsa}, the result indicates that the newer
-version of OpenSSL leaks less amount of information than previous
+versions of OpenSSL leak less information than earlier
 versions. After version 0.9.7g, OpenSSL adopts a fixed-window \textsf{mod\_exp\_mont}
-implementation for RSA\@. With the new design, the sequence of squares and
+implementation for RSA\@. With this design, the sequence of squares and
 multiples and the memory access patterns are independent of the secret key.
 \tool{}'s result confirms the new exponentiation implementation has mitigated 
-most of the leakages effectively because the other four versions have fewer
-leakages compared with version 0.9.7. 
+most leakages effectively because the four newer versions have fewer
+leakages than version 0.9.7, which introduced this change.
 OpenSSL version 1.0.2f, 1.0.2k, and 1.1.0f almost have the
-same amount of leakage. We check the changelog and find only one change for
-patching the vulnerability CVE-2016-0702. 
-\tool{} finds OpenSSL 1.1.1 and 1.1.1g have significantly less amount of 
-leaked information compared to other versions.
-We check the changelog of those two versions and find it claims
+same amount of leakage. We check the ChangeLog and find only one change to
+patch vulnerability CVE-2016-0702. 
+\tool{} finds OpenSSL 1.1.1 and 1.1.1g have significantly less
+leaked information than other versions.
+We check the ChangeLog of these two versions and find a claim that
 the new RSA implementation adopts ``numerous side-channel attack mitigation'', 
 which proves the effectiveness of our quantifying method.
-We also observe the latest version (1.1.1g) has some new leakages. We have
+We also observe the latest version (1.1.1g) contains some new leakages. We have
 contacted the developers and they have confirmed our findings.
 
 \begin{figure*}
@@ -306,7 +303,7 @@ contacted the developers and they have confirmed our findings.
 \end{figure*}
 
 Our quantification result shows vulnerabilities
-that leak more information by \tool{} 
+that leak significant amounts of information
 are more likely to be fixed in the updated version.
 As presented in Figure~\ref{fig:rsa}, 
 OpenSSL 0.9.7 has several severe leaks from
@@ -319,31 +316,31 @@ the secret key.
 As function \textsf{bn\_sqr\_comba8}
 calls the macro (\textsf{sqr\_add\_c2}) multiple times, 
 and the code can leak some information each time.
-\tool{} thinks the vulnerability is quite serious. 
-The vulnerability has been patched in OpenSSL 1.1.1. Seen in 
-Figure~\ref{fig:new_sqr2}, control-flows transfers are replaced. 
-So there is no leaks in the function
-\textsf{sqr\_add\_c2} in OpenSSL 1.1.1. We mention
-that line 4 and 9 in Figure~\ref{fig:old_sqr2} both have if branches.
-However, it is not a leak site because
-most compilers will use \emph{add with carry} instruction to remove the branch.
-Besides, branches can also be compiled into non-branch machine instructions 
-like conditional moves. 
+\tool{} indicates the vulnerability is quite serious. 
+It was patched in OpenSSL 1.1.1. In 
+Figure~\ref{fig:new_sqr2}, control-flows transfers are replaced
+so there are no leaks in the function
+\textsf{sqr\_add\_c2} in OpenSSL 1.1.1. We note
+that line 4 and 9 in Figure~\ref{fig:old_sqr2} both contain if branches.
+However, they are not leaks because
+most compilers use \emph{add with carry} instruction to eliminate the branch.
+In addition, branches can be compiled into non-branch machine instructions 
+with conditional moves. 
 We notice a bitwise operation in Libgcrypt 1.8.5 is compiled to a conditional 
 jump, which leads to a side-channel leakage.
-Therefore, simple code reviews are not accurate
+Therefore, source-level code reviews are not accurate
 enough to detect side-channels. 
 
-For vulnerabilities that leak less amount of information,
+For vulnerabilities that leak less information,
 developers are more reluctant to fix them. 
 For example, OpenSSL 0.9.7 adopts a fixed windows version of 
 function \textsf{BN\_mod\_exp\_mont\_consttime} to replace original function
 \textsf{BN\_mod\_exp\_mont}.
 \tool{} detects a minor vulnerability in the original function that can
 leak the last bit of the big number \textbf{m}. In the updated version,
-developers make the fixed windows become the default option and rewrite most parts of the 
+developers make the fixed windows the default option and rewrite most of the 
 function. However, the leakage site still exists in OpenSSL 1.1.1,
-despite it is quite blunt. 
+despite it is quite blunt. \jl{What do you mean by blunt?}
 \begin{figure}
     \centering
     \begin{lstlisting}[xleftmargin=.02\textwidth,xrightmargin=.01\textwidth]
@@ -385,14 +382,12 @@ despite it is quite blunt.
 
 
 \subsubsection{Monocypher}\label{eval:mono}
-Monocypher is a small, easy to use cryptographic library with a
-comparable performance as LibSodium~\cite{libsodium} and NaCl~\cite{bernstein2012security}. 
+Monocypher is a small, easy to use cryptographic library with
+performance comparable to LibSodium~\cite{libsodium} and NaCl~\cite{bernstein2012security}. 
 We choose four ciphers that are 
 designed to be side-channel resistant from the library.
 Because those ciphers have no 
 data flow from secrets to branch conditions and load addresses.
 Monocypher should be safe under our threat models. 
 We analyze those ciphers with \tool{}, and it reports no leaks.
-This indicates that \tool{} can be used for countermeasure confirmation.
-
-
+This indicates that \tool{} is effective for validating countermeasures.

@@ -1,55 +1,52 @@
 \section{Discussions and Limitations}
-While recent works reported lots of side-channel vulnerabilities, 
-we find many of them are not patched by developers.
-However, side-channels are inevitable in software and it is hard to fix all of them. 
-Addressing old vulnerabilities may also introduce new leakage
-sites. We need a
-tool that can automatically estimate the sensitivity level of each vulnerability.
-So software engineers can focus on
-``severe'' leakages. For example, our tool will report that 
+While recent work found many side-channel vulnerabilities, 
+we note that many of them have not been patched by developers.
+Side-channels are inevitable in software and it would be difficult to fix all of them. 
+We need a
+tool that estimates the sensitivity of each vulnerability
+so software engineers can focus on
+``severe'' leakages. For example, \tool{} reports that 
 the modular exponentiation using square and multiply algorithms can
 leak more information than a key validation function.
 
-\tool{} can be used by software developers to find severe vulnerabilities
+Software developers can use \tool{} to find severe vulnerabilities
 and reason about countermeasures.
 \tool{} estimates the amount of leaked information for each side-channel leakage
 in one execution trace. \tool{} is useful for software
 engineers to test programs and fix vulnerabilities.
-The design, which is very precise in terms of true leakages compared to other static source code
-method~\cite{197207,BacelarAlmeida:2013:FVS:2483313.2483334}, can omit some
-leakages on other traces. The amount of leaked information also depends on the secret key.
+The design, which is more precise in reporting true leakages as compared with other static
+methods~\cite{197207,BacelarAlmeida:2013:FVS:2483313.2483334}, obviously misses
+leakages on unexplored traces. The amount of leaked information also depends on the secret key.
 However, as the tool is intended for debugging and testing,
-we think it is software engineers' responsibility to select the input key and trigger 
+we think it is a software engineer's responsibility to select the input key and trigger 
 the path in which they are interested. It is not a problem for crypto software 
 since virtually all keys follow similar computational paths.
 
 We use the amount of leaked information to represent the sensitivity level of 
 each side-channel vulnerability. Although imperfect, \tool{} produces a reasonable 
 measurement for each leak. For example, the simple modular exponentiation is 
-notoriously famous for various side-channel attacks~\cite{kocher1996timing}. 
-During the execution, the single leak points will be executed multiple times, 
-and each time it leaks one different bit. Therefore, \tool{} reports that the 
+notoriously famous for multiple side-channel attacks~\cite{kocher1996timing}. 
+During the execution, a single leak point may execute multiple times
+and each time leak a different bit. In this case, \tool{} reports that the 
 vulnerability can leak the whole key. However, not every leak point inside a 
-loop is severe. Because very often the leakages may leak the same bit in the 
-original key, and those leaks are not independent. \tool{} can capture the most 
-fine-grained information by modeling each leak during the execution as a math 
-formula and use the conjunction of those formulas to describe the total effect. 
+loop is severe. Often a leakage leaks the same bit from the 
+original key, and these leaks are not independent. \tool{} captures most 
+fine-grained information by modeling each leak during the execution as a 
+formula and the conjunction of the formulas to describe its total effect. 
 Some leakage sites (e.g., square and multiply) 
 can leak one particular bit of the original key, but some leakage sites leak one bit 
-from several bytes in the original key. 
+from several bytes in the original key. \jl{This is confusing. What are you trying to say?}
 
 \tool{} reaches full precision if the number of estimated leaked bits 
 equals to Definition~\ref{def}. 
 \tool{} may lose precision from the 
-memory model it uses in theory. However, we do not find false positives 
-caused by the imprecise memory model during the evaluation. 
-Sampling can also introduce imprecision but with a probabilistic guarantee. 
+memory model it uses in theory. However, we did not find false positives 
+caused by the imprecise memory model during our evaluation. 
+Sampling introduces imprecision but with a probabilistic guarantee. 
 However, during the evaluation, we find that \tool{} cannot estimate 
 the amount of leakage for some leakage sites in a reasonable time, 
 which means the number of $K^o$ is very small. According to Definition~\ref{def}, 
 it means the leakage is very severe. The sampling method in \S\ref{sec:scala} seems
 simple and may miss some leakages (e.g., chosen ciphertext attacks) in theory. 
 However, the evaluation result 
-shows \tool{} can identify all the leakages that can be found by the previous work~\cite{203878,236338,Brotzman19Casym}
-when we evaluate the same victim program.
-
+shows \tool{} can identify all leakages found by the previous work~\cite{203878,236338,Brotzman19Casym}.

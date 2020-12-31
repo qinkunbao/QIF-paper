@@ -126,16 +126,16 @@ that would otherwise be difficult, if not impossible, for a developer to find.
 We model an attacker's observation of each leakage site as a constraint.  
 We use symbolic execution to generate these
 constraints and then run Monte Carlo sampling to estimate the number of leaked
-bits for each leakage site. With the Central Limit Theorem, 
-we can also provide an error bound for these estimation.
+bits for each leakage site. By applying the Central Limit Theorem, 
+we provide an error bound for these estimation.
   
-We have implemented the technique in a tool called \tool{}, which can
-not only find very fine-grained side-channel vulnerabilities but can also estimate how many
+We have implemented the technique in a tool called \tool{}, which
+not only finds very fine-grained side-channel vulnerabilities but also estimates how many
 bits are leaked. \tool{} outperforms existing dynamic side-channel
 detection tools in performance and accuracy. 
 We evaluate \tool{} on OpenSSL, mbedTLS, Libgcrypt, and Monocypher\@.  
 Our results demonstrate that most reported vulnerabilities are difficult to
-exploit in practice and can be de-prioritized by developers.
+exploit in practice and should be de-prioritized by developers.
 We also find several sensitive vulnerabilities that
 are missed by the existing tools. We confirm those vulnerabilities with
 manual checks and by contacting the developers.
