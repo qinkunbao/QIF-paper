@@ -65,7 +65,7 @@ Phan et al.~\cite{Phan:2012:SQI:2382756.2382791} propose symbolic QIF. The goal 
 work is to ensure a program is non-interference. They adopt an over
 approximation method to estimate the total information leakage and their method
 does not work for secret-dependent memory access side-channels.
-\cready{}{Pasareanu et al.~\cite{pasareanu2016multi} combine symbolic analysis and Max-SMT solving to synthesize the concrete public input ($m \in M$ in this paper) that can lead to the worst case leakage. They assume the target problem has multiple different input secrets and calculate the average leakage for one-fixed public input.}
+\cready{}{Pasareanu et al.~\cite{pasareanu2016multi} combine symbolic analysis and Max-SMT solving to synthesize the concrete public input that can lead to the worst case leakage. They assume the target program has multiple different input secrets and calculate the average leakage for one-fixed public input.}
 CHALICE~\cite{Chattopadhyay:2017:QIL:3127041.3127044} quantifies the leaked
 information for a given cache behavior. 
 It symbolically reasons about cache

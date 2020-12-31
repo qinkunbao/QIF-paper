@@ -50,7 +50,7 @@ Previous work, such as static methods based on abstract interpretation~\cite{182
 However, these techniques cannot quantify the severity of a leak because they
 over approximate the leakage. For example, CacheAudit~\cite{182946} 
 reports that the upper-bound leakage of AES-128 exceeds the original key size. By contrast, dynamic methods take another approach by running a program in a real
-environment. Although they are very precise in terms of true leakages, no
+environment. Although they are precise in terms of true leakages, no
 existing tool can precisely assess the severity of production
 software vulnerabilities. \jl{Can we say something more specific about dynamic techniques?}
 
@@ -134,9 +134,8 @@ In summary, we make the following contributions:
       \item We implement the method into a tool and apply it
             to several pieces of real software. \tool{} successfully identifies
             previous unknown and known side-channel vulnerabilities and calculates the corresponding information leakage. 
-            Our results are surprisingly different, much more useful in practice.
-            \jl{Different from what?}
-            The information leakage estimates provide information that can 
+            Our results are useful in practice.
+            The leakage estimates and the corresponding trigger inputs can 
             help developers to triage and fix the vulnerabilities.
 \end{itemize}
 
