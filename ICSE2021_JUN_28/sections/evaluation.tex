@@ -124,7 +124,7 @@ leakage due to their lookup table implementations.
 \tool{} confirms that all leakage comes from table
 lookups. The new
 implementation of OpenSSL uses four 1K
- tables with smaller entries instead of the previous 1K table. \jl{Is this right?} The change is rather easy but significantly decreases the total
+ tables with smaller entries instead of the previous 1K table. \jl{Is this right? DW: 4K in the previous sentences?} The change is rather easy but significantly decreases the total
 amount of leaked information as the quantification result shown in the next
 section.
 
@@ -145,7 +145,7 @@ or 2) it cannot reach the termination condition after 10 minutes. \jl{Doesn't th
 the latter case, it means \tool{} cannot estimate the amount of leakage with a
 probabilistic guarantee.
 \label{loc:timeout}
-We manually check these \jl{timeout?} leakage sites and find most of them are quite severe.
+We manually check these leakage sites and find most of them are quite severe.
 We will present the details in the subsequent sections.
 
 \subsection{Comparison with the Existing Tools}
@@ -276,10 +276,11 @@ table might mitigate side-channel vulnerabilities. \jl{Is my change right?}
 
 \subsubsection{Asymmetric Ciphers: RSA}\label{eval:asym}
 We also evaluate \tool{} on RSA. Due to the page limit,
-we do not present the detailed leakage report, which is available online \jl{where?}. In general,
-developers are interested in fixing side-channel vulnerabilities for RSA implementations.
-\jl{Then maybe find some space to present these results?}
-As shown in Figure~\ref{fig:rsa}, the result indicates that the newer
+we do not present the detailed leakage report. %, which is available online at the tool release website.
+%% \jl{where?}. In general,
+%% developers are interested in fixing side-channel vulnerabilities for the RSA implementations.
+%% \jl{Then maybe find some space to present these results?}
+ As shown in Figure~\ref{fig:rsa}, the result indicates that the newer
 versions of OpenSSL leak less information than earlier
 versions. After version 0.9.7g, OpenSSL adopts a fixed-window \textsf{mod\_exp\_mont}
 implementation for RSA\@. With this design, the sequence of squares and

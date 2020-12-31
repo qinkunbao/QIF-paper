@@ -29,13 +29,14 @@ notoriously famous for multiple side-channel attacks~\cite{kocher1996timing}.
 During the execution, a single leak point may execute multiple times
 and each time leak a different bit. In this case, \tool{} reports that the 
 vulnerability can leak the whole key. However, not every leak point inside a 
-loop is severe. Often a leakage leaks the same bit from the 
+loop is severe. If a site in the loop leaks the same bit from the 
 original key, and these leaks are not independent. \tool{} captures most 
 fine-grained information by modeling each leak during the execution as a 
 formula and the conjunction of the formulas to describe its total effect. 
 Some leakage sites (e.g., square and multiply) 
 can leak one particular bit of the original key, but some leakage sites leak one bit 
-from several bytes in the original key. \jl{This is confusing. What are you trying to say?}
+from several bytes in the original key. \tool{} can capture the dependency among the leaks and
+reports more precise leakage information.
 
 \tool{} reaches full precision if the number of estimated leaked bits 
 equals to Definition~\ref{def}. 
