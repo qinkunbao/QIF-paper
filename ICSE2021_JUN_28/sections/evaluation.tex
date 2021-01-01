@@ -123,8 +123,8 @@ Symmetric encryption implementations in OpenSSL and mbedTLS have significant
 leakage due to their lookup table implementations. 
 \tool{} confirms that all leakage comes from table
 lookups. The new
-implementation of OpenSSL uses four 1K
- tables with smaller entries instead of the previous 1K table. \jl{Is this right? DW: 4K in the previous sentences?} The change is rather easy but significantly decreases the total
+implementation of OpenSSL uses one 1K
+ tables with smaller entries instead of the previous four 1K table. \jl{Is this right? DW: 4K in the previous sentences?} The change is rather easy but significantly decreases the total
 amount of leaked information as the quantification result shown in the next
 section.
 
