@@ -33,7 +33,7 @@
 
 
 \newcommand{\cready}[2]{{\color{red}{\ifx&#1&\else- #1\fi}} {\color{green}{\ifx&#2&\else+ #2\fi}}}%
-%\renewcommand{\cready}[2]{#2}%
+\renewcommand{\cready}[2]{#2}%
 
 
 \let\oldemptyset\emptyset
@@ -65,6 +65,8 @@ showlines=true
 \renewcommand{\tool}{Du-Ta-De-Ta}
 \renewcommand{\tool}{\textsf{Abacus}}
 \newcommand{\tana}{\tool}
+
+%\renewcommand{\jl}[1]{}
 
 \newtheorem{mydef}{Definition}
 \newtheorem{theorem}{Theorem}
