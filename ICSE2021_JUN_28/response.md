@@ -11,6 +11,7 @@ We cited the missed work pointed by reviewers. We also included a short discussi
 In addition, we added citations to the following work.
 
 D. Moghimi et al. "CopyCat: Controlled Instruction-Level Attacks on Enclaves", USENIX Security 2020
+
 L. Bang et al. "String analysis for side channels with segmented oracles", FSE 2016
 
 We expanded the discussion on DATA and CacheD in Section VIII. 
