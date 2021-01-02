@@ -31,6 +31,6 @@ We have included some additional discussion and analysis on p.8 and p.10.
 
 - Add more implementation details.
 
-We expended Section V to explain more technical details about Abacus.
+We expanded Section V to explain more technical details about Abacus.
 
-We are still running some additional experiments. If time allows, we hope to include more results in the paper in the next submission.
+We are still running some additional experiments. If time allows, we hope to include more results in the paper for the next submission.
