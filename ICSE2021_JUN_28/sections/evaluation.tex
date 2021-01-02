@@ -119,14 +119,8 @@ vulnerabilities can be exploited in real attacks.
 With our tool, developers can
 distinguish non-critical ``vulnerabilities'' from severe ones.
 
-Symmetric encryption implementations in OpenSSL and mbedTLS have significant
-leakage due to their lookup table implementations. 
-\tool{} confirms that all leakage comes from table
-lookups. The new
-implementation of OpenSSL uses one 1K
- tables with smaller entries instead of the previous four 1K table. \jl{Is this right? DW: 4K in the previous sentences?} The change is rather easy but significantly decreases the total
-amount of leaked information as the quantification result shown in the next
-section.
+Symmetric encryption implementations in OpenSSL and mbedTLS have significant leakage due to their lookup table implementations. 
+\tool{} confirms that those leakage comes from table lookups. The new implementation of OpenSSL has adopted several methods (e.g., one single S-box instead of four lookup tables, smaller lookup tables) to mitigate the problem. Those changes are rather easy but significantly decrease the total amount of leaked information as the quantification result indicates.
 
 We also evaluate our tool on the RSA implementation. With the optimization
 introduced in \S\ref{sec:scala}, we need not apply domain knowledge to
@@ -167,12 +161,12 @@ existing trace-based side-channel detection tools.
 As shown in Table~\ref{eval:cacheD},
 \tool{} not only discovers all the leakage sites reported by CacheD~\cite{203878}, but also
 finds many new ones. CacheD fails to detect many vulnerabilities for two
-reasons. First, CacheD can only detect secret-dependent memory access
+reasons. First, CacheD can only detect secret-dependent data access
 vulnerabilities. \tool{} can detect secret-dependent control-flows as well.
 Second, CacheD uses some domain
 knowledge to simplify symbolic execution to trim the traces before
 processing, which does not introduce false positives, but may miss some
-vulnerabilities. The table~\ref{eval:cacheD} shows that
+vulnerabilities. Table~\ref{eval:cacheD} shows that
 \tool{} is three times faster than CacheD. As the time of symbolic execution
 grows quadratically, \tool{} is much faster than CacheD when analyzing the same
 number of instructions. For example, when we test~\tool{} on AES from OpenSSL
@@ -192,28 +186,27 @@ number of instructions. For example, when we test~\tool{} on AES from OpenSSL
   which eases the pain to identify real sensitive leaks.}{DATA~\cite{217537} identifies
   side-channel leakages by finding differences in execution traces of
   the test program under \emph{various secret inputs}. According to
-  the original DATA paper, it uses 443 different traces to detect the
+  the original DATA paper, it uses 443 different traces to analyze the
   side-channel vulnerabilities in symmetric cyphers and 450 different
-  traces to detect the side-channel vulnerabilities in asymmetric
+  traces to analyze the side-channel vulnerabilities in asymmetric
   cyphers. On the other hand, \tool{} detects side-channel
   vulnerabilities from one execution trace. \tool{} uses symbolic
   analysis to extract formulas that model each side-channel
-  leakages. After that, we sample the formula with \emph{various
+  leakage. After that, we sample the formula with \emph{various
     secret inputs} to detect and quantify each leakage site. In
   theory, DATA might have better code coverage than \tool{} because it
   uses more execution traces,  but \tool{} has the following
   advantages. a) \tool{} is faster than DATA. For example, it takes
-  234 minutes for DATA to analyze the RSA implementation in OpenSSL
-  1.1.0f. \tool{} only spends 34 minutes, as shown in 
-  Table~\ref{table:over_result}. It takes 13 minutes and 20 minutes
-  for DATA to detect the side-channel leakages in AES and DES,
+  116 minutes for DATA to detect vulnerabilities in the RSA implementation in OpenSSL 1.1.0f\@. \tool{} only spends 34 minutes, as shown in Table~\ref{table:over_result}. It takes 13 minutes and 20 minutes
+  for DATA to analyze the side-channel leakages in AES and DES,
   respectively. On the other hand, \tool{} finishes its analysis in
   less than ten seconds while finding all the leakages reported by
   DATA. b) Because \tool{} does not run the test program again when we
   have a new \emph{secret input}, \tool{} can test more input secrets
-  on those formulas to achieve better precision. DATA reports 
-  278 control-flow and 460 memory-access leaks. Among those leakages,
-  they find one new vulnerability in RSA after some manual analysis.
+  on those formulas within the same time to achieve better precision. 
+  c) DATA tries to use leakage models (domain knowledge) to classify each leakage.
+  The strength of Abacus is that it does not need such domain knowledge.
+  DATA reports 278 control-flow and 460 memory-access leaks for the RSA implementation in OpenSSL 1.1.0f. Among those leakages, they find one new vulnerability in RSA after some manual analysis.
   \tool{} finds the vulnerability and reports the vulnerability is
   severe (\textsf{int\_bn\_mod\_inverse} leaks more than 14.9 bits and
   \textsf{BN\_div} leaks more than 17.2 bits), which helps identify
@@ -245,11 +238,7 @@ number of instructions. For example, when we test~\tool{} on AES from OpenSSL
 
 \subsubsection{Symmetric Ciphers: DES and AES}\label{eval:sym}
 We test both DES and AES ciphers from mbedTLS and OpenSSL\@. Both cipher
-implementations apply lookup tables, which improve performance but can also introduce side-channels
-as well. During our evaluation, we find mbedTLS 2.5 and 2.15.1 have the same
-implementation of AES and DES\@. Therefore, our tool reports the same 
-leakages for both
-versions. 
+implementations apply lookup tables, which improve performance but can also introduce side-channels as well. During our evaluation, we find mbedTLS 2.5 and 2.15.1 have the same implementation of AES and DES\@. Therefore, our tool reports the same leakages for both versions. 
 
 We find that the DES implementations in both mbedTLS and OpenSSL have several
 severe information leakages in the key schedule function.
@@ -257,12 +246,8 @@ We do not see any mitigation
 in the new version. We think it is not seen as worth the engineering
 efforts given the life cycles of DES\@.
 
-\tool{} shows that the AES in OpenSSL 1.1.1 
-has less leakage than other versions. 
-OpenSSL 1.1.1 
-uses 1KB lookup tables with 8-bit entries, unlike older versions that use a 
-table with 32-bit entries. Our tool suggests a smaller lookup
-table might mitigate side-channel vulnerabilities. \jl{Is my change right?}
+\tool{} shows that the AES in OpenSSL 1.1.1 has less leakage than other versions. 
+OpenSSL 1.1.1 uses 1KB lookup tables with 8-bit entries, unlike older versions that use a table with 32-bit entries. Our tool suggests a smaller lookup table might mitigate side-channel vulnerabilities. 
 
 %For example, Shown in Appendix~\ref{appendix:mbedtls_aes},
 %\tool{} identify seven leakages from function \textsf{mbedtls\_internal\_aes\_decrypt}.
@@ -349,10 +334,10 @@ As function \textsf{bn\_sqr\_comba8}
 calls the macro (\textsf{sqr\_add\_c2}) multiple times, 
 and the code can leak some information each time.
 \tool{} indicates the vulnerability is quite serious. 
-It was patched in OpenSSL 1.1.1. In 
+It was patched in OpenSSL 1.1.1\@. In 
 Figure~\ref{fig:new_sqr2}, control-flows transfers are replaced
 so there are no leaks in the function
-\textsf{sqr\_add\_c2} in OpenSSL 1.1.1. We note
+\textsf{sqr\_add\_c2} in OpenSSL 1.1.1\@. We note
 that line 4 and 9 in Figure~\ref{fig:old_sqr2} both contain if branches.
 However, they are not leaks because
 most compilers use \emph{add with carry} instruction to eliminate the branch.
@@ -371,8 +356,7 @@ function \textsf{BN\_mod\_exp\_mont\_consttime} to replace original function
 \tool{} detects a minor vulnerability in the original function that can
 leak the last bit of the big number \textbf{m}. In the updated version,
 developers make the fixed windows the default option and rewrite most of the 
-function. However, the leakage site still exists in OpenSSL 1.1.1,
-despite it is quite blunt. \jl{What do you mean by blunt?}
+function. However, the leakage site still exists in OpenSSL 1.1.1.
 \begin{figure}
     \centering
     \begin{lstlisting}[xleftmargin=.02\textwidth,xrightmargin=.01\textwidth]
