@@ -217,7 +217,7 @@ number of instructions. For example, when we test~\tool{} on AES from OpenSSL
     Secret-dependent Control-flows\,(CF), Secret-dependent Data-flows\,(DF), The Number of Instructions\,(\# Instructions).}
     \label{eval:cacheD}
     \begin{threeparttable}
-        \begin{tabular}{c|r@{~~}r@{~~}r|r@{~~}r@{~~}r}
+        \begin{tabular}{@{}c|r@{~~}r@{~~}r|r@{~~}r@{~}r@{}}
             \hline
             \multicolumn{1}{l|}{} & \multicolumn{3}{c|}{CacheD} & \multicolumn{3}{c}{Abacus} \\ 
             Name & Time (s) &\# Instructions & DF & Time (s) & \# Instructions & CF+DF \\ \hline
@@ -233,8 +233,7 @@ number of instructions. For example, when we test~\tool{} on AES from OpenSSL
     \end{threeparttable}
     \begin{tablenotes}
         \scriptsize
-        \item[1] OpenSSL\,0.9.7  \item[2] OpenSSL\,1.0.2f   
-        \item[3] Libgcrypt\,1.6.1 \item[4] Libgcrypt\,1.7.3 \\
+        \item[1] OpenSSL\,0.9.7  \item[2] OpenSSL\,1.0.2f   \item[3] Libgcrypt\,1.6.1 \item[4] Libgcrypt\,1.7.3 \\
     \end{tablenotes}
     \vspace*{-20pt}
     \end{table}
