@@ -58,7 +58,9 @@
         RSA\tnote{7}                & 31                     & 22                  & 9                    & 16,390,750   & 34      & 490         \\
         RSA\tnote{8}                & 4                      &  4                  & 0                    & 18,207,016   & 8      & 53          \\
         RSA\tnote{9}                & 8                      &  8                  & 0                    & 18,536,796    & 5      & 780         \\
-        RSA\tnote{10}               & 8                      &  8                  & 0                    & 27,407,986    & 113    & 6560       \\
+        RSA\tnote{10} & 11& 9& 2& 9,527,231& 2 &38\\
+        RSA\tnote{11} & 14& 14& 0& 10,513,606& 14 &503 \\
+        RSA\tnote{12}               & 8                      &  8                  & 0                    & 27,407,986    & 113    & 6560       \\
 
         Total              & 904                    & 241                 & 663                & 167,141,947      & 341m  & 10,232m     \\\hline
     \end{tabular}
@@ -68,7 +70,8 @@
 
     \item[1] mbedTLS\,2.5  ~~~~\item[2] mbedTLS\,2.15 ~\item[3] Monocypher\,3.0 \\
     \item[4] OpenSSL\,0.9.7  ~~\item[5] OpenSSL\,1.0.2f  \item[6] OpenSSL\,1.0.2k \\
-    \item[7] OpenSSL\,1.1.0f ~\item[8] OpenSSL\,1.1.1 ~\item[9] OpenSSL\,1.1.1g ~\item[10] Libgcrypt\,1.8.5\\
+    \item[7] OpenSSL\,1.1.0f ~\item[8] OpenSSL\,1.1.1 ~\item[9] OpenSSL\,1.1.1g \\
+    \item[10] Libgcrypt\,1.6.1 \item[11] Libgcrypt\,1.7.3 \item[12] Libgcrypt\,1.8.5\\
 \end{tablenotes}
 \vspace*{-20pt}
 
@@ -143,31 +146,26 @@ We manually check these leakage sites and find most of them are quite severe.
 We will present the details in the subsequent sections.
 
 \subsection{Comparison with the Existing Tools}
-%\subsection{Scalability}
 \label{eval:scala}
 
-%% Fix tonight
-%\subsubsection{Running Time}
-%\begin{figure}
-%    \centering
-%    \includegraphics[width=.8\columnwidth]{./figures/result/running_time.pdf}
-%    \caption{With the optimization introduced, \tool{} can be scalable to RSA}
-%\end{figure}
-
-%\subsubsection{Comparison with the Existing Tools}
 In this section, we compare \tool{} with the
-existing trace-based side-channel detection tools.
+existing trace-based side-channel detection tools on vulnerability detections.
+We exclude the time of quantifying each leakage to perform a fair comparison.
 
-As shown in Table~\ref{eval:cacheD},
-\tool{} not only discovers all the leakage sites reported by CacheD~\cite{203878}, but also
-finds many new ones. CacheD fails to detect many vulnerabilities for two
+The comparison result with CacheD~\cite{203878} is shown in Table~\ref{eval:cacheD}.
+We have confirmed that \tool{} can identify all the secret-dependent data access vulnerabilities reported by CacheD. In addition, \tool{} find many new ones. 
+CacheD fails to detect some vulnerabilities for two
 reasons. First, CacheD can only detect secret-dependent data access
 vulnerabilities. \tool{} can detect secret-dependent control-flows as well.
-Second, CacheD uses some domain
-knowledge to simplify symbolic execution to trim the traces before
-processing, which does not introduce false positives, but may miss some
-vulnerabilities. Table~\ref{eval:cacheD} shows that
-\tool{} is three times faster than CacheD. As the time of symbolic execution
+Second, according to the CacheD paper, CacheD times out after 20 hours to process
+asymmetric ciphers. Therefore, CacheD applies some domain knowledge to simplify 
+the analysis. 
+While those optimizations do not introduce false positives, they may miss some
+vulnerabilities. 
+We notice that the number of instructions are different due to the different analysis starting 
+functions and building options. 
+However, Table~\ref{eval:cacheD} shows that
+\tool{} is faster than CacheD. As the time of symbolic execution
 grows quadratically, \tool{} is much faster than CacheD when analyzing the same
 number of instructions. For example, when we test~\tool{} on AES from OpenSSL
 0.9.7, \tool{} is over 100x faster than CacheD.
@@ -213,26 +211,32 @@ number of instructions. For example, when we test~\tool{} on AES from OpenSSL
   real sensitive leaks.  For each leakage site, \tool{} can provide
   concrete examples to trigger the issue and give an estimation to
   assess the severity level of the vulnerability.}
-
-\begin{table}[]
-    \caption{Comparison with CacheD}
+  
+  \begin{table}[]
+    \caption{Comparison with CacheD: Time, 
+    Secret-dependent Control-flows\,(CF), Secret-dependent Data-flows\,(DF), The Number of Instructions\,(\# Instructions).}
     \label{eval:cacheD}
-    \vspace*{-5pt}
-    \resizebox{\columnwidth}{!}{%
-        \begin{tabular}{c|c|c|c|ccc}
+    \begin{threeparttable}
+        \begin{tabular}{@{}c|r@{~~}r@{~~}r|r@{~~}r@{~}r@{}}
             \hline
-            \multicolumn{1}{l|}{} & \multicolumn{2}{c|}{Number of Instructions} & \multicolumn{2}{c|}{Time (s)} & \multicolumn{2}{c}{Number of Leakages}                                                                                         \\ \cline{2-7}
-            \multicolumn{1}{l|}{} & \multicolumn{1}{c|}{CacheD}                 & \multicolumn{1}{c|}{\tool}    & \multicolumn{1}{c|}{CacheD}            & \multicolumn{1}{c|}{\tool}  & \multicolumn{1}{c|}{CacheD} & \multicolumn{1}{c}{\tool} \\ \hline
-            AES 0.9.7             & 791                                         & 1,704                         & 43.4                                   & \multicolumn{1}{c|}{0.30}   & \multicolumn{1}{c|}{48}     & 75                        \\
-            AES 1.0.2f            & 2,410                                       & 1,350                         & 48.5                                   & \multicolumn{1}{c|}{0.08}   & \multicolumn{1}{c|}{32}     & 88                        \\
-            RSA 0.9.7             & 674,797                                     & 16,980,109                    & 199.3                                  & \multicolumn{1}{c|}{1681}   & \multicolumn{1}{c|}{2}      & 105                       \\
-            RSA 1.0.2f            & 473,392                                     & 14,468,307                    & 165.6                                  & \multicolumn{1}{c|}{1692}   & \multicolumn{1}{c|}{2}      & 38                        \\ \hline
-            Total                 & 1,151,390                                   & 31,451,470                    & 456.8                                  & \multicolumn{1}{c|}{3373.4} & \multicolumn{1}{c|}{84}     & 317                       \\ \hline
-            \multicolumn{7}{l}{\# of Instructions per second \qquad  CacheD: 2,519 \qquad \tool: 9,324}                                                                                                                                          \\ \hline
+            \multicolumn{1}{l|}{} & \multicolumn{3}{c|}{CacheD} & \multicolumn{3}{c}{Abacus} \\ 
+            Name & Time (s) &\# Instructions & DF & Time (s) & \# Instructions & CF+DF \\ \hline
+            AES\tnote{1}  & 43.4 & 791& 48&0.23 & 1,704 & 0+75\\
+            AES\tnote{2}  & 48.5 & 2,410 & 32&0.04 & 1,350 & 0+88\\
+            RSA\tnote{1}  & 199.3 & 674,797& 1 & 1,351.6&17,002,523 & 105+2\\
+            RSA\tnote{2}   & 165.6& 473,392& 1 & 1,753.3&14,468,307 & 27+11\\
+            RSA\tnote{3}  & 11542.3 & 26,848,103 & 2& 128.1&9,527,231& 9+2\\
+            RSA\tnote{4}  & 10788.9 & 27,775,053& 0 &891.7 &10,513,606 &14+0\\ \hline
+            Total & 22,788.0& 55,738,546& 84&4,125.0&51,514,721& 155+178\\ \hline
+            \multicolumn{7}{l}{\# of Instructions per second \qquad  CacheD: 2,445 \qquad \tool: 12,489} \\ \hline
         \end{tabular}
-    }
-    \vspace*{-15pt}
-\end{table}
+    \end{threeparttable}
+    \begin{tablenotes}
+        \scriptsize
+        \item[1] OpenSSL\,0.9.7  \item[2] OpenSSL\,1.0.2f   \item[3] Libgcrypt\,1.6.1 \item[4] Libgcrypt\,1.7.3 \\
+    \end{tablenotes}
+    \vspace*{-20pt}
+    \end{table}
 
 \subsection{Case Studies}
 
