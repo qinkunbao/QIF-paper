@@ -157,8 +157,8 @@ We have confirmed that \tool{} can identify all the secret-dependent data access
 CacheD fails to detect some vulnerabilities for two
 reasons. First, CacheD can only detect secret-dependent data access
 vulnerabilities. \tool{} can detect secret-dependent control-flows as well.
-Second, according to the CacheD paper, CacheD times out after 20 hours to process the
-Libgcrypt 1.6.1\@. Therefore, CacheD applies some domain knowledge to simplify 
+Second, according to the CacheD paper, CacheD times out after 20 hours to process
+asymmetric ciphers. Therefore, CacheD applies some domain knowledge to simplify 
 the analysis. 
 While those optimizations do not introduce false positives, they may miss some
 vulnerabilities. 
