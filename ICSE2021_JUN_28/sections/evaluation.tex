@@ -153,6 +153,7 @@ existing trace-based side-channel detection tools on vulnerability detections. F
 we only include the time of detecting vulnerabilities to perform a fair comparison.
 
 The comparison result with CacheD~\cite{203878} is shown in Table~\ref{eval:cacheD}.
+Note that one statement in the source code can be compiled into several machine instructions. So it is possible that one statement can have multiple leakage points. Under the circumstance, we think it is only a leakage.
 We have confirmed that \tool{} can identify all the secret-dependent data access vulnerabilities reported by CacheD. In addition, \tool{} finds many new ones. 
 CacheD fails to detect some vulnerabilities for two
 reasons. First, CacheD can only detect secret-dependent data access
@@ -162,12 +163,12 @@ asymmetric ciphers. CacheD applies some domain knowledge to simplify and speed u
 the analysis. 
 While those optimizations do not introduce false positives, they may miss some
 vulnerabilities. 
-We notice that the number of instructions are different due to the different analysis starting 
-functions and building options during the evaluation. Table~\ref{eval:cacheD} shows that
-\tool{} is faster than CacheD. As the time of symbolic execution
-grows quadratically, \tool{} is much faster than CacheD when analyzing the same
+We notice that the number of instructions in those traces are different due to the different analysis starting 
+functions and building options during the evaluation. 
+Table~\ref{eval:cacheD} shows that
+\tool{} is faster than CacheD. \tool{} is much faster than CacheD when analyzing the same
 number of instructions. For example, when we test~\tool{} on AES from OpenSSL
-0.9.7, \tool{} is over 100x faster than CacheD.
+0.9.7, \tool{} is over 100x faster than CacheD.  
 
 \cready{Since DATA~\cite{217537} needs to compare several execution
   traces to identify side-channel leakages, \tool{} also outperforms
