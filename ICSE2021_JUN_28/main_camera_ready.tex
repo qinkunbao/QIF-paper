@@ -1,0 +1,187 @@
+\documentclass[10pt,conference]{IEEEtran}
+\usepackage{adjustbox}
+\usepackage{booktabs}
+
+\usepackage{listings}
+\usepackage{epsfig}
+\usepackage{url}
+\usepackage{cite}
+\usepackage{fancybox}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{tikz}
+\usepackage{multirow}
+\usepackage{balance}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{subfig}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\usepackage[ruled,linesnumbered]{algorithm2e}
+\usepackage[para,online,flushleft]{threeparttable}
+\usepackage{xspace}
+\usepackage[scaled]{beramono}
+\usepackage[T1]{fontenc}
+
+
+
+\usepackage[english]{babel} % handle hyphenation
+
+\usepackage{amssymb}
+\usepackage{ulem}
+\normalem
+
+
+\newcommand{\cready}[2]{{\color{red}{\ifx&#1&\else- #1\fi}} {\color{green}{\ifx&#2&\else+ #2\fi}}}%
+\renewcommand{\cready}[2]{#2}%
+
+
+\let\oldemptyset\emptyset
+\let\emptyset\varnothing
+
+\lstset{
+numbers=left,
+frame=single,
+language=C,
+basicstyle=\fontfamily{fvm}\scriptsize,
+showlines=true
+%xleftmargin=.2\textwidth, xrightmargin=.2\textwidth,
+}
+
+\newcommand{\highlight}[1]{\colorbox{yellow}{\textbf{#1}}}
+\newcommand{\fixme}[1]{\highlight{FIXME:} \emph{#1}}
+\newcommand{\todo}[1]{\highlight{TODO:} \emph{#1}}
+\newcommand{\Qinkun}[1]{\highlight{Qinkun's Response:} \emph{#1}}
+\newcommand{\jl}[1]{\highlight{JL}{\textbf{#1}}}
+\renewcommand{\jl}[1]{}
+
+\newcommand{\cut}[1]{}
+\newcommand{\replace}[2]{#2}
+
+\newcommand{\tool}{TANA}
+\renewcommand{\tool}{CleverHans}
+\renewcommand{\tool}{Cygne}
+\renewcommand{\tool}{Do-Re-Mi}
+\renewcommand{\tool}{Ta-fa Te-fe}
+\renewcommand{\tool}{Ti-ri-ti-ri}
+\renewcommand{\tool}{Du-Ta-De-Ta}
+\renewcommand{\tool}{\textsf{Abacus}}
+\newcommand{\tana}{\tool}
+
+\newtheorem{mydef}{Definition}
+\newtheorem{theorem}{Theorem}
+%\renewcommand{\baselinestretch}{0.98}\selectfont
+
+
+% *** Do not adjust lengths that control margins, column widths, etc. ***
+% *** Do not use packages that alter fonts (such as pslatex).         ***
+% There should be no need to do such things with IEEEtran.cls V1.6 and later.
+% (Unless specifically asked to do so by the journal or conference you plan
+% to submit to, of course. )
+
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+
+\begin{document}
+%
+% paper title
+% can use linebreaks \\ within to get better formatting as desired
+%\title{\tool{}: Precise, Scalable, and Fine-grained Side-channel Information Leakage Quantification for Production Software}
+%\title{\tool{}: Precise and Scalable Fine-grained Side-channel Information Leakage Quantification for Production Software Using Program Analysis and Monte Carlo Sampling}
+\title{\tool{}: Precise Side-Channel Analysis}
+\author{Anonymous}
+
+% author names and affiliations
+% use a multiple column layout for up to three different
+% affiliations
+
+
+% conference papers do not typically use \thanks and this command
+% is locked out in conference mode. If really needed, such as for
+% the acknowledgment of grants, issue a \IEEEoverridecommandlockouts
+% after \documentclass
+
+
+
+
+% make the title area
+\maketitle
+
+
+
+\begin{abstract}
+
+Side-channel attacks allow adversaries to infer sensitive information from non-functional characteristics. Prior side-channel
+detection work is able to identify numerous potential vulnerabilities. 
+However, in practice, many such vulnerabilities leak a negligible amount of
+sensitive information, and thus developers are often reluctant to address
+them. Existing tools do not provide information to evaluate a leak's severity, such as the number of
+leaked bits.
+  
+To address this issue, we propose a new program analysis method to precisely quantify the 
+leaked information in a single-trace attack through side-channels.
+It can identify covert information flows in programs that expose 
+confidential information and can reason about security flaws 
+that would otherwise be difficult, if not impossible, for a developer to find.
+We model an attacker's observation of each leakage site as a constraint.  
+We use symbolic execution to generate these
+constraints and then run Monte Carlo sampling to estimate the number of leaked
+bits for each leakage site. By applying the Central Limit Theorem, 
+we provide an error bound for these estimations.
+  
+We have implemented the technique in a tool called \tool{}, which
+not only finds very fine-grained side-channel vulnerabilities but also estimates how many
+bits are leaked. \tool{} outperforms existing dynamic side-channel
+detection tools in performance and accuracy. 
+We evaluate \tool{} on OpenSSL, mbedTLS, Libgcrypt, and Monocypher\@.  
+Our results demonstrate that most reported vulnerabilities are difficult to
+exploit in practice and should be de-prioritized by developers.
+We also find several sensitive vulnerabilities that
+are missed by the existing tools. We confirm those vulnerabilities with
+manual checks and by contacting the developers.
+\end{abstract}
+% IEEEtran.cls defaults to using nonbold math in the Abstract.
+% This preserves the distinction between vectors and scalars. However,
+% if the conference you are submitting to favors bold math in the abstract,
+% then you can use LaTeX's standard command \boldmath at the very start
+% of the abstract to achieve this. Many IEEE journals/conferences frown on
+% math in the abstract anyway.
+
+% no keywords
+\IEEEpeerreviewmaketitle
+\pagenumbering{arabic}
+\pagestyle{plain}
+\input{sections/introduction}
+\input{sections/background}
+\input{sections/trace_qif}
+\input{sections/scalability}
+\input{sections/design}
+\input{sections/implementation}
+\input{sections/evaluation}
+\input{sections/discussion}
+\input{sections/related_work}
+\input{sections/conclusion}
+
+\section{Acknowledgement}
+We thank Ziqi Wang, Pei Wang, and Zhaofeng Chen for their valuable comments, and the anonymous reviewers for their valuable feedback. The work was supported in part by the National Science Foundation (NSF) under grant CNS-1652790, and the Office of Naval Research (ONR) under grants N00014- 16-1-2912, N00014-16-1-2265, and N00014-17-1-2894.
+\newpage
+
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+
+\newpage
+\clearpage
+%\appendices
+\setcounter{section}{0}
+\section*{Supplementary Materials to Submission \#63}
+%\setcounter{section}{1}
+\setcounter{page}{1}
+\input{sections/appendix}
+
+\end{document}
+
+
