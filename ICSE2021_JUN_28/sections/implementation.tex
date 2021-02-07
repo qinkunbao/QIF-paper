@@ -2,7 +2,26 @@
 \tool{} consists of 16,729 lines of code in C++17 and Python. It has three
 components: an Intel Pin tool that collects the execution trace, the
 instruction-level symbolic execution engine, and the backend that estimates
-the information leakage. 
+the information leakage. The breakdown is shown in
+Table~\ref{appendix:code}. 
+
+\label{appendix:code}
+\begin{table}[h!]
+    \centering
+    %    \resizebox{.8\columnwidth}{!}{
+    \caption{\tool{}' main components and sizes}\label{tbl:implementation}
+    \begin{tabular}{lr@{~}@{}l}
+        \hline
+        Component            & \multicolumn{2}{c}{Lines of Code (LOC)}             \\ \hline
+        Trace Logging        & 501 lines                               & of C++    \\
+        Symbolic Execution   & 14,963 lines                            & of C++    \\
+        Data Flow            & 451 lines                               & of C++    \\
+        Monte Carlo Sampling & 603 lines                               & of C++    \\
+        Others               & 211 lines                               & of Python \\ \hline
+        Total                & 16,729 lines                            &           \\\hline
+    \end{tabular}
+    %    }
+\end{table}
 
 Our current implementation supports most Intel 32-bit instructions that are essential to find memory-based side-channel
 vulnerabilities, including bitwise operations, control transfer, data movement, and logic
