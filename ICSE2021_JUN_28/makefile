@@ -1,4 +1,4 @@
-WHAT = main main_camera_ready
+WHAT = main_camera_ready
 
 best: 
 	pdflatex $(WHAT).tex
