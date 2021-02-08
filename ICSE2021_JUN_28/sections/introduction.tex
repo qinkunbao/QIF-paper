@@ -53,6 +53,11 @@ reports that the upper-bound leakage of AES-128 exceeds the original key size. B
 environment. Although they are precise in terms of true leakages, no
 existing tool can precisely assess the severity of production
 software vulnerabilities. \jl{Can we say something more specific about dynamic techniques?}
+Besides, existing work 
+assumes an attacker runs the target program multiple times with different
+input keys, which is different from real attack scenarios and gets imprecise
+quantification results. As a consequence, those results are less useful to 
+assess the severity level of each leakage site.
 
 To overcome these limitations, we propose a novel method to quantify information 
 leakage precisely. We quantify the number of bits that can leak during a real 
