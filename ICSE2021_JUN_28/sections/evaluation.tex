@@ -320,8 +320,8 @@ leaked information than other versions.
 We check the ChangeLog of these two versions and find a claim that
 the new RSA implementation adopts ``numerous side-channel attack mitigation'', 
 which proves the effectiveness of our quantifying method.
-We also observe the latest version (1.1.1g) contains some new leakages. We have
-contacted the developers and they have confirmed our findings.
+%We also observe the latest version (1.1.1g) contains some new leakages. We have
+%contacted the developers and they have confirmed our findings.
 
 
 
@@ -354,9 +354,9 @@ jump, which leads to a side-channel leakage.
 Therefore, source-level code reviews are not accurate
 enough to detect side-channels. 
 
-For vulnerabilities that leak less information,
+For vulnerabilities that leak less amount of information,
 developers are more reluctant to fix them. 
-For example, OpenSSL 0.9.7 adopts a fixed windows version of 
+For example, OpenSSL 0.9.7 adds a fixed windows version of 
 function \textsf{BN\_mod\_exp\_mont\_consttime} to replace original function
 \textsf{BN\_mod\_exp\_mont}.
 \tool{} detects a minor vulnerability in the original function that can
