@@ -48,7 +48,7 @@ so a developer can efficiently triage them.
 
 Previous work~\cite{182946,5207642} can identify numerous leakages or even provide an upper bound on the amount of leakage, which is useful to verify that an implementation is secure if it incurs zero leakage.
 However, these techniques cannot quantify the severity of a leak because they over approximate the leakage. For example, CacheAudit~\cite{182946} 
-reports that the upper-bound leakage of AES-128 exceeds the original key size. Besides, existing quantification work~\cite{182946,5207642} assumes an attacker runs the target program multiple times with different
+reports that the upper-bound leakage of AES-128 exceeds the original key size. Besides, existing side-channel quantification work~\cite{182946,5207642} assumes an attacker runs the target program multiple times with different
 input secrets and calculates an ``average'' estimation, which is different from real attack scenarios when the secret that an attacker wants to retrieve is fixed. As a consequence, those results are less useful to assess the severity level of each leakage site.
 
 To overcome these limitations, we propose a novel method to quantify information 
