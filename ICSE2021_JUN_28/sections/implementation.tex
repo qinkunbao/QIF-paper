@@ -21,7 +21,7 @@ the information leakage.
 %    %    }
 %\end{table}
 
-Our current implementation supports most Intel 32-bit instructions that are essential to find memory-based side-channel
+Our current implementation supports most Intel 32-bit instructions that are essential to find address-based side-channel
 vulnerabilities, including bitwise operations, control transfer, data movement, and logic
 instructions. The tool uses the real values to update the registers and memory for instructions that the implementation does not support. 
 Therefore, the tool may miss some leakages but will not raise false positives. 

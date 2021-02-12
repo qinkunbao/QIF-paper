@@ -91,7 +91,7 @@ can observe the memory accesses at the granularity of memory pages.
 %value of a key, the code will access the different entry in the predefined
 %table. At the line 13, the code will do a series of computation and determine
 %if the code in the if branch is executed or not. Such vulnerabilities are
-%called the memory-based side-channles. We identify and quantify the leakage of
+%called the address-based side-channles. We identify and quantify the leakage of
 %the two kinds of vulnerabilities in the paper.
 
 
@@ -228,6 +228,6 @@ but it can probe its memory or cache at each program point. In reality, the
 attacker will face many possible obstacles such as the noisy observations 
 of the memory or cache. However, for this project, we assume
 the attacker has noise-free observations as in previous work~\cite{203878,182946,Brotzman19Casym}. 
-The threat model captures most cache-based and memory-based side-channel attacks. 
+The threat model captures most cache-based and address-based side-channel attacks. 
 We only consider deterministic programs and assume an attacker 
 has access to the source code \cready{}{or binary executable} of the target program.
