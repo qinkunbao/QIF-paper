@@ -1,0 +1,83 @@
+\documentclass[10pt,conference]{IEEEtran}
+
+\usepackage{adjustbox}
+\usepackage{booktabs}
+
+\usepackage{listings}
+\usepackage{epsfig}
+\usepackage{url}
+\usepackage{cite}
+\usepackage{fancybox}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{tikz}
+\usepackage{multirow}
+\usepackage{balance}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{subfig}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\usepackage[ruled,linesnumbered]{algorithm2e}
+\usepackage[para,online,flushleft]{threeparttable}
+\usepackage{xspace}
+\usepackage[scaled]{beramono}
+\usepackage[T1]{fontenc}
+
+
+
+\usepackage[english]{babel} % handle hyphenation
+
+\usepackage{amssymb}
+\usepackage{ulem}
+\normalem
+
+\newcommand{\tool}{\textsf{Abacus}}
+
+\begin{document}
+
+\title{}
+\author{\IEEEauthorblockN{
+Qinkun Bao\IEEEauthorrefmark{1},
+Zihao Wang\IEEEauthorrefmark{1},
+James R. Larus\IEEEauthorrefmark{2}, and
+Dinghao Wu\IEEEauthorrefmark{1}}
+\IEEEauthorblockA{\IEEEauthorrefmark{1}The Pennsylvania State University}
+\IEEEauthorblockA{\IEEEauthorrefmark{2}EPFL}
+}
+
+
+\maketitle
+
+\begin{abstract}
+Abacus is a precise side-channel analysis and vulnerability detection
+tool. Different from previous tools, it can also give an estimation
+of the amount of the leaked information for each leakage site.
+This document is to help users make use of Abacus and reproduce the
+results in the paper.
+\end{abstract}
+
+
+\section{Introduction}
+Abacus~\cite{bao2021abacus} is an address-based side-channel vulnerabilities detection tool. Different from previous tools, it can also give an estimation of the amount of the leaked information for each leakage site.
+
+\section{Requirements}
+
+
+Supported OS: Ubuntu 18.04
+RAM: 32 GB (If you want to run experiments concurrently, update the size of RAM
+     accordingly. Otherwise the program may be terminated by the system.)  
+
+
+\section{Ease of Use}
+
+
+\section*{Acknowledgment}
+
+
+
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+\end{document}
