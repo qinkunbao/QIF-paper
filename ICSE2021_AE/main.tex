@@ -38,7 +38,7 @@
 
 \begin{document}
 
-\title{}
+\title{\tool{}: A Tool for Precise Side-channel Analysis}
 \author{\IEEEauthorblockN{
 Qinkun Bao\IEEEauthorrefmark{1},
 Zihao Wang\IEEEauthorrefmark{1},
@@ -55,6 +55,7 @@ Dinghao Wu\IEEEauthorrefmark{1}}
 Abacus is a precise side-channel analysis and vulnerability detection
 tool. Different from previous tools, it can also give an estimation
 of the amount of the leaked information for each leakage site.
+
 This document is to help users make use of Abacus and reproduce the
 results in the paper.
 \end{abstract}
@@ -63,15 +64,20 @@ results in the paper.
 \section{Introduction}
 Abacus~\cite{bao2021abacus} is an address-based side-channel vulnerabilities detection tool. Different from previous tools, it can also give an estimation of the amount of the leaked information for each leakage site.
 
+We quantify the amount of each leakage site based on the search space. For example, if the length of the key is 128 bits, an attacker needs to brute force $2^128$ possible keys without any domain knowledge. However, suppose an attacker observes some information an can reduce the size of the search space to $2^120$. Then we can conclude 8 bits of the information are leaked.
+
 \section{Requirements}
+\begin{itemize}
+\item Supported OS: Ubuntu 18.04
+\item Memory: 32 GB (If you want to run experiments concurrently, update the size of RAM
+     accordingly. Otherwise the program may be terminated by the system.)
+\item Docker
+\end{itemize}
 
+\section{License}
+Apache License 2.0
 
-Supported OS: Ubuntu 18.04
-RAM: 32 GB (If you want to run experiments concurrently, update the size of RAM
-     accordingly. Otherwise the program may be terminated by the system.)  
-
-
-\section{Ease of Use}
+\section{Installation}
 
 
 \section*{Acknowledgment}
