@@ -34,6 +34,15 @@
 \usepackage{ulem}
 \normalem
 
+\lstset{
+%numbers=left,
+%frame=single,
+%language=C,
+basicstyle=\fontfamily{fvm}\scriptsize,
+showlines=true
+%xleftmargin=.2\textwidth, xrightmargin=.2\textwidth,
+}
+
 \newcommand{\tool}{\textsf{Abacus}}
 
 \begin{document}
@@ -80,11 +89,94 @@ Apache License 2.0
 \section{Installation}
 
 \subsection{Download and build the artifact}
+\tool{} can be built within a docker, simply run the following command
 
+\begin{lstlisting}[language=bash]
+$ git clone https://github.com/s3team/Abacus.git
+$ cd Abacus
+$ ./docker.sh
+\end{lstlisting}
+
+After you build the docker image and enter the container, run the
+following command to build Abacus.
+
+\begin{lstlisting}[language=bash]
+$ ./build.sh
+\end{lstlisting}
 \subsection{Run the hello world example}
+\emph{Ensure from here on that you are in the Docker Container.}
+
+In order to test this function with Abacus, we need to tell Abacus 
+which variables are the secret data. We use the function `abacus\_make\_symbolic`. 
+The function takes three arguments: the type of the symbol, the address of 
+the secret, and the length of the secret input. In the example below, 
+the secret input is the variable `secret`, and its length is two bytes.
+
+\subsubsection{Build the example}
+
+Abacus works directly on the machine instruction. Here we build it into 
+a 32-bit ELF executable. Note that while Abacus can work on stripped binaries 
+without the source code. However, in the example, we use debug information 
+to get a more clear result.
+\begin{lstlisting}[language=bash]
+$ cd examples
+$ gcc -m32 -g example1.c
+\end{lstlisting}
 
 
+\begin{figure}[tbp]
+
+\begin{lstlisting}[frame=single, numbers = none, language=bash]
+int main() {
+  uint16_t secret = 6;
+  char *type = "1";
+  abacus_make_symbolic(type, &secret, 2); 
+  is_odd(secret);
+  return 0;
+}
+\end{lstlisting}
+\caption{Secret-dependent data accesses}
+\label{fig:secret:da}
+\end{figure}
+
+\subsubsection{Collect the trace}
+We use the pin tool to collect the execution trace. The tool can automatically 
+collect the trace and other necessary runtime information.
+\begin{lstlisting}[language=bash]
+$ cd /abacus/Pintools
+$ make PIN_ROOT=/abacus/Intel-Pin-Archive/ TARGET=ia32
+$ cd /abacus
+$ /abacus/Intel-Pin-Archive/pin -t Pintools/obj-ia32/MyPinToolLinux.so \
+  -- ./examples/a.out 
+\end{lstlisting}
+
+You will get two files Function.txt and Inst\_data.txt, which are 
+the inputs of the Abacus.
+
+\subsubsection{Quantify the leakage}
+To run Abacus on the execution trace and get the analysis result.
+\begin{lstlisting}[language=bash]
+
+$ ./build/App/QIF/QIF ./Inst_data.txt -f Function.txt \ 
+  -d ./examples/a.out -o result.txt
+\end{lstlisting}
+
+
+\section{Analyze Cryptography Function}
+The results (Table II in the accepted paper) in the evaluation section can be 
+verified by running the simple command after you build Abacus successfully in 
+the docker (step 1). We have prepared scripts to test each crypto algorithm 
+automatically.
+
+For example, if you want to test AES in mbedTLS 2.5, you can try the 
+following command.
+
+\begin{lstlisting}[language=bash]
+$ cd /abacus/script/AES_MBEDTLS_2.5
+$ ./start.sh
+\end{lstlisting}
 \section*{Acknowledgment}
+We thank anonymous reviewers for their valuable feedback. The work was supported in part by the National Science Foundation (NSF) under grant CNS-1652790, and the Office of Naval Research (ONR) under grants N00014-16-1-2912, N00014-16-1-2265, and N00014-17-1-2894. 
 
 
 
