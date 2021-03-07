@@ -107,7 +107,6 @@ We have tested~\tool{} on both macOS and Ubuntu. You can refer to the continuous
 
 \section{Installation}
 
-\subsection{Download and build the artifact}
 \tool{} can be built within a docker, simply run the following command:
 
 \begin{lstlisting}[language=bash]
@@ -244,7 +243,10 @@ $ ./start.sh
 \\ Set the times of Monte Carlo Sampling when~\tool{} estimates the amount of leakage information. If you do not specify the option, ~\tool{} can automatically terminate the sampling when the tool reach the error bound. Please refer to the paper if you want to learn more about the details.
 \vspace{5pt}
 \\-a {The address of the secret buffer} -s {The size of the buffer}
-The two input options must be used together. In the previous example, we use abacus\_make\_symbolic to mark the secret buffer. For a raw binary, we use the two options to tell~\tool{} which buffer is the secret and its length. 
+The two input options must be used together. In the previous example, we use abacus\_make\_symbolic to mark the secret buffer. For a raw binary, we use the two options to tell~\tool{} which buffer is the secret and its length.
+
+\section{CONTRIBUTING}
+~\tool{} is open source with an Apache 2.0 license. Any pull requests and feature requests are welcome.
 
 \section*{Acknowledgment}
 We thank anonymous reviewers for their valuable feedback. The work was supported in part by the National Science Foundation (NSF) under grant CNS-1652790, and the Office of Naval Research (ONR) under grants N00014-16-1-2912, N00014-16-1-2265, and N00014-17-1-2894. 
