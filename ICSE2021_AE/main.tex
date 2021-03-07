@@ -42,6 +42,7 @@ xleftmargin=.1\textwidth, xrightmargin=.1\textwidth,
 }
 
 \newcommand{\tool}{\textsf{Abacus}}
+\renewcommand{\baselinestretch}{0.97}
 
 \begin{document}
 
@@ -138,7 +139,7 @@ void is_odd(uint16_t secret) {
 
 Shown in Figure~\ref{fig:example0}, the function takes a 32 bit integer as the secret input and check the last digit of the integer. An attacker can know the last digit bit of the input integer by observing which branch is actually executed. So in the above function, we think the code has one secret-dependent control-flow vulnerability and it can leak one bit of the secret information.
 
-\subsubsection{Marking secret data as symbolic}
+\subsection{Marking secret data as symbolic}
 In order to test this function with Abacus, we need to tell Abacus which variable is the secret data. We use the function \textsf{abacus\_make\_symbolic}. The function takes three arguments: the type of the symbol, the address of the secret, and the length of the secret input. In the below example, the secret input is the variable secret, and its length is two bytes. We add the code in Figure~\ref{fig:example1} to the above function.
 
 \begin{figure}[h]
@@ -156,8 +157,7 @@ int main() {
 \end{figure}
 
 
-
-\subsubsection{Build the example}
+\subsection{Build the example}
 
 Abacus works directly on the machine instruction. Here we build it into 
 a 32-bit ELF executable. Note that while Abacus can work on stripped binaries 
@@ -169,7 +169,7 @@ $ gcc -m32 -g example1.c
 \end{lstlisting}
 
 
-\subsubsection{Collect the trace}
+\subsection{Collect the trace}
 We use the pin tool to collect the execution trace. The tool can automatically 
 collect the trace and other necessary runtime information.
 \begin{lstlisting}[language=bash]
@@ -184,7 +184,7 @@ $ /abacus/Intel-Pin-Archive/pin \
 You will get two files \textsf{Function.txt} and \textsf{Inst\_data.txt}. \textsf{Inst\_data.txt} is the mandatory input of ~\tool{}. \textsf{Function.txt}
 is optional. 
 
-\subsubsection{Quantify the leakage}
+\subsection{Quantify the leakage}
 To run Abacus on the execution trace and get the analysis result.
 \begin{lstlisting}[language=bash]
 
