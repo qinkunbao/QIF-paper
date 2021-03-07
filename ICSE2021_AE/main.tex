@@ -61,26 +61,27 @@ Dinghao Wu\IEEEauthorrefmark{1}}
 \maketitle
 
 \begin{abstract}
-Abacus is a precise side-channel analysis and vulnerability detection
-tool. Different from previous tools, it can also give an estimation
-of the amount of the leaked information for each leakage site.
+Side-channel vulnerabilities can leak sensitive information unconsciously. 
+In this paper, we introduce the usage of Abacus. A tool can analyze secret-dependent control-flow and secret-dependent data-access leakages in binary programs. Unlike previous tools, it can also estimate the amount of leaked information for each leakage site, which helps developers find and fix severe leakages.
 
 This document is to help users make use of Abacus and reproduce the
-results in the paper.
+results. Abacus is available at \url{https://github.com/s3team/Abacus}.
 \end{abstract}
 
 
 \section{Introduction}
-Abacus~\cite{bao2021abacus} is an address-based side-channel vulnerabilities detection tool. Different from previous tools, it can also give an estimation of the amount of the leaked information for each leakage site.
 
-We quantify the amount of each leakage site based on the search space. For example, if the length of the key is 128 bits, an attacker needs to brute force $2^128$ possible keys without any domain knowledge. However, suppose an attacker observes some information an can reduce the size of the search space to $2^120$. Then we can conclude 8 bits of the information are leaked.
+
+Abacus~\cite{bao2021abacus} is an address-based side-channel vulnerabilities analyze tool. Different from previous tools, it can also give an estimation of the amount of the leaked information for each leakage site.
+
+We quantify the amount of each leakage site based on the search space. For example, if the length of the key is 128 bits, an attacker needs to brute force $2^{128}$ possible keys without any domain knowledge. However, suppose an attacker observes some information an can reduce the size of the search space to $2^{120}$. Then we can conclude 8 bits of the information are leaked.
 
 \section{Requirements}
+We have tested ~tool{} on macOS and Ubuntu. You can refer to the continuous integration files to build Abacus on your operating system. However, we strongly recommend you to build~\tool{} in inside a container.
 \begin{itemize}
 \item Supported OS: Ubuntu 18.04
 \item Memory: 32 GB (If you want to run experiments concurrently, update the size of RAM
      accordingly. Otherwise the program may be terminated by the system.)
-\item Docker
 \end{itemize}
 
 \section{License}
