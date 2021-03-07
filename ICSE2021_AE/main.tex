@@ -72,9 +72,9 @@ results. Abacus is available at \url{https://github.com/s3team/Abacus}.
 
 Abacus~\cite{bao2021abacus} is an address-based side-channel vulnerability analysis tool. Different from previous tools~\cite{203878,236338,182946}, it can also give a precise estimation of the amount of the leaked information for each leakage site.
 
-We quantify the amount of leaked information for each leakage site based on the search space. For example, if the length of the key is 128 bits, an attacker needs to brute force $2^{128}$ possible keys without any domain knowledge. However, suppose an attacker observes some information an can reduce the size of the search space to $2^{120}$. Then we can conclude 8 bits of the information are leaked.
+We quantify the amount of leaked information for each leakage site based on the search space. For example, if the length of the key is 128 bits, an attacker needs to brute force $2^{128}$ possible keys without any domain knowledge. However, suppose the attacker observes some information and can reduce the size of the search space to $2^{120}$. Then we can conclude 8 bits of the information are leaked.
 
-~\tool{} takes a binary executable as the input. It uses dynamic binary instrumentation tools to collect execution traces. After that, ~\tool{} analyzes those traces and produce the vulnerability report. While ~\tool{} can work on the stripped binary executable, ~\tool{} can also read the symbol and debugging information to give a more fined-grained (e.g., line numbers) leakage report. Table~\ref{tab:DESOpenSSL1.1.1} shows an example of the leakage report. If you are interested in how ~\tool{} works, please refer to the technical paper~\cite{bao2021abacus}.
+\tool{} takes a binary executable as the input. It uses dynamic binary instrumentation tools to collect execution traces. After that, \tool{} analyzes those traces and produce the vulnerability report. While \tool{} can work on the stripped binary executable, \tool{} can also read the symbol and debugging information to give a more fine-grained (e.g., line numbers) report. Table~\ref{tab:DESOpenSSL1.1.1} shows an example of the report. If you are interested in how \tool{} works, please refer to the technical paper~\cite{bao2021abacus}.
 
 \begin{table}[h!]
 \centering\tiny\scriptsize
@@ -96,7 +96,7 @@ set\_key.c& 355&DES\_set\_key\_unchecked&3.1 &DA\\
 \end{table}
 
 \section{Requirements}
-We have tested~\tool{} on both macOS and Ubuntu. You can refer to the continuous integration scripts to build Abacus on your operating system. However, we strongly recommend you to build~\tool{} in inside a container to avoid any dependency programs. To simplify the illustration, we only include the instructions of installations with the docker in this paper.
+We have tested \tool{} on both macOS and Ubuntu. You can refer to the continuous integration scripts to build Abacus on your operating system. However, we strongly recommend you to build \tool{} inside a container to avoid any dependency problems. To simplify the illustration, we only include the instructions of installations within the docker in this paper.
 \begin{itemize}
 \item Supported OS: Ubuntu 18.04
 \item Memory: 32 GB (If you want to run experiments concurrently, update the size of RAM
@@ -113,7 +113,7 @@ $ cd Abacus
 $ ./docker.sh
 \end{lstlisting}
 
-The ``docker.sh'' script creates a docker image automatically and enter the container that includes all dependencies. After that, run the following command to build Abacus.
+The ``docker.sh'' script creates a docker image automatically and enters the container that includes all dependencies. After that, run the following command to build Abacus.
 
 \begin{lstlisting}[language=bash]
 $ ./build.sh
