@@ -60,16 +60,14 @@ Dinghao Wu\IEEEauthorrefmark{1}}
 
 \begin{abstract}
 Side-channel vulnerabilities can leak sensitive information unconsciously. 
-In this paper, we introduce the usage of Abacus. Abacus is a tool that can analyze secret-dependent control-flow and secret-dependent data-access leakages in binary programs. Unlike previous tools that can only identify leakages, it can also estimate the amount of leaked information for each leakage site. A severe vulnerability usually leaks more information, allowing developers to triage the patching effort for side channel vulnerabilities.
-
-This paper is to help users make use of Abacus and reproduce the
+In this paper, we introduce the usage of Abacus. Abacus is a tool that can analyze secret-dependent control-flow and secret-dependent data-access leakages in binary programs. Unlike previous tools that can only identify leakages, it can also estimate the amount of leaked information for each leakage site. A severe vulnerability usually leaks more information, allowing developers to triage the patching effort for side channel vulnerabilities. This paper is to help users make use of Abacus and reproduce the
 results. Abacus is available at \url{https://github.com/s3team/Abacus}.
 \end{abstract}
 
 \IEEEpeerreviewmaketitle
 \pagenumbering{arabic}
 \pagestyle{plain}
-\section{Introduction}
+\section{DESCRIPTION}
 
 
 Abacus~\cite{bao2021abacus} is an address-based side-channel vulnerability analysis tool. Different from previous tools~\cite{203878,236338,182946}, it can also give a precise estimation of the amount of the leaked information for each leakage site.
@@ -115,7 +113,7 @@ $ cd Abacus
 $ ./docker.sh
 \end{lstlisting}
 
-The `docker.sh` will create a docker image automatically and enter the container that includes all dependencies. After that, run the following command to build Abacus.
+The ``docker.sh'' script creates a docker image automatically and enter the container that includes all dependencies. After that, run the following command to build Abacus.
 
 \begin{lstlisting}[language=bash]
 $ ./build.sh
@@ -134,7 +132,7 @@ void is_odd(uint16_t secret) {
   }
 }
 \end{lstlisting}
-\caption{A Simple Function}
+\caption{A simple example}
 \label{fig:example0}
 \end{figure}
 
@@ -153,7 +151,7 @@ int main() {
   return 0;
 }
 \end{lstlisting}
-\caption{Secret-dependent data accesses}
+\caption{A simple function that marks a variable \textsf{secret} as symbolic}
 \label{fig:example1}
 \end{figure}
 
