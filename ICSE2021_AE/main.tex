@@ -26,8 +26,6 @@
 \usepackage[scaled]{beramono}
 \usepackage[T1]{fontenc}
 
-
-
 \usepackage[english]{babel} % handle hyphenation
 
 \usepackage{amssymb}
@@ -145,7 +143,7 @@ Shown in Figure~\ref{fig:example0}, the function takes a 32 bit integer as the s
 In order to test this function with Abacus, we need to tell Abacus which variable is the secret data. We use the function \textsf{abacus\_make\_symbolic}. The function takes three arguments: the type of the symbol, the address of the secret, and the length of the secret input. In the below example, the secret input is the variable secret, and its length is two bytes. We add the code in Figure~\ref{fig:example1} to the above function.
 
 \begin{figure}[h]
-\begin{lstlisting}[xleftmargin=.06\textwidth, xrightmargin=.06\textwidth,numbers=left, frame=single, language=C]
+\begin{lstlisting}[firstnumber=10, xleftmargin=.06\textwidth, xrightmargin=.06\textwidth,numbers=left, frame=single, language=C]
 int main() {
   uint16_t secret = 6;
   char *type = "1";
@@ -212,10 +210,15 @@ Function Name:  is_odd Module Name:  a.out Offset: 30
 As expected, it shows that the function is\_odd has one secret-dependent control-flows at line 3. Also, Abacus show the vulnerability leaks 1 bit information.
 
 \section{Analyze Cryptography Function}
-The results (Table II in the accepted paper) in the evaluation section can be 
-verified by running the simple command after you build Abacus successfully in 
-the docker (step 1). We have prepared scripts to test each crypto algorithm 
-automatically.
+We have applied~tool{} on the following libraries:
+\begin{itemize}
+\item OpenSSL: 0.9.7, 1.0.2f, 1.0.2k, 1.1.0f, 1.1.1, 1.1.1g
+\item MbedTLS: 2.5, 2.15
+\item Libgcrypt: 1.8.5
+\item Monocyper: 3.0
+\end{itemize}
+
+The results can be reproduced by running the simple command after you build Abacus successfully in the docker (step 1). We have prepared scripts to analyze each cryptography algorithm automatically.
 
 For example, if you want to test AES in mbedTLS 2.5, you can try the 
 following command.
@@ -224,6 +227,9 @@ following command.
 $ cd /abacus/script/AES_MBEDTLS_2.5
 $ ./start.sh
 \end{lstlisting}
+
+
+
 \section*{Acknowledgment}
 We thank anonymous reviewers for their valuable feedback. The work was supported in part by the National Science Foundation (NSF) under grant CNS-1652790, and the Office of Naval Research (ONR) under grants N00014-16-1-2912, N00014-16-1-2265, and N00014-17-1-2894. 
 
