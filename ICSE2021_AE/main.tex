@@ -62,7 +62,7 @@ Dinghao Wu\IEEEauthorrefmark{1}}
 
 \begin{abstract}
 Side-channel vulnerabilities can leak sensitive information unconsciously. 
-In this paper, we introduce the usage of Abacus, a tool that can analyze secret-dependent control-flow and secret-dependent data-access leakages in binary programs. Unlike previous tools that can only identify leakages, it can also estimate the amount of leaked information for each leakage site. A severe vulnerability usually leaks more information, allowing developers to triage the patching effort for side channel vulnerabilities.
+In this paper, we introduce the usage of Abacus. Abacus is a tool that can analyze secret-dependent control-flow and secret-dependent data-access leakages in binary programs. Unlike previous tools that can only identify leakages, it can also estimate the amount of leaked information for each leakage site. A severe vulnerability usually leaks more information, allowing developers to triage the patching effort for side channel vulnerabilities.
 
 This paper is to help users make use of Abacus and reproduce the
 results. Abacus is available at \url{https://github.com/s3team/Abacus}.
@@ -74,13 +74,13 @@ results. Abacus is available at \url{https://github.com/s3team/Abacus}.
 
 Abacus~\cite{bao2021abacus} is an address-based side-channel vulnerability analysis tool. Different from previous tools, it can also give an estimation of the amount of the leaked information for each leakage site.
 
-We quantify the amount of each leakage site based on the search space. For example, if the length of the key is 128 bits, an attacker needs to brute force $2^{128}$ possible keys without any domain knowledge. However, suppose an attacker observes some information an can reduce the size of the search space to $2^{120}$. Then we can conclude 8 bits of the information are leaked.
+We quantify the amount of leaked information for each leakage site based on the search space. For example, if the length of the key is 128 bits, an attacker needs to brute force $2^{128}$ possible keys without any domain knowledge. However, suppose an attacker observes some information an can reduce the size of the search space to $2^{120}$. Then we can conclude 8 bits of the information are leaked.
 
-~\tool{} takes a binary executable as the input. It uses dynamic binary instrumentation tools to collect execution traces. After that, ~\tool{} analyzes those traces and produce the vulnerability report. While ~\tool{} can work on the stripped binary executable, ~\tool{} can also read the symbol and debugging information to give a more fined-grained (e.g., line numbers) leakage report. Table~\ref{tab:DESOpenSSL1.1.1} shows an example of the leakage report.
+~\tool{} takes a binary executable as the input. It uses dynamic binary instrumentation tools to collect execution traces. After that, ~\tool{} analyzes those traces and produce the vulnerability report. While ~\tool{} can work on the stripped binary executable, ~\tool{} can also read the symbol and debugging information to give a more fined-grained (e.g., line numbers) leakage report. Table~\ref{tab:DESOpenSSL1.1.1} shows an example of the leakage report. If you are interested in how ~\tool{} works, please refer to the technical paper~\cite{bao2021abacus}.
 
 \begin{table}[h!]
 \centering\tiny\scriptsize
-\caption{Leakages in DES implemented by OpenSSL 1.1.1}\label{tab:DESOpenSSL1.1.1}
+\caption{Leakages in DES (OpenSSL 1.1.1)}\label{tab:DESOpenSSL1.1.1}
 %\resizebox{\columnwidth}{!}{
 \begin{tabular}{lrlrr}
 \hline
@@ -98,7 +98,7 @@ set\_key.c& 355&DES\_set\_key\_unchecked&3.1 &DA\\
 \end{table}
 
 \section{Requirements}
-We have tested ~\tool{} on both macOS and Ubuntu. You can refer to the continuous integration scripts to build Abacus on your operating system. However, we strongly recommend you to build~\tool{} in inside a container to avoid any dependency programs. To simplify the illustration, we only include the instructions of installations in the paper.
+We have tested~\tool{} on both macOS and Ubuntu. You can refer to the continuous integration scripts to build Abacus on your operating system. However, we strongly recommend you to build~\tool{} in inside a container to avoid any dependency programs. To simplify the illustration, we only include the instructions of installations with the docker in this paper.
 \begin{itemize}
 \item Supported OS: Ubuntu 18.04
 \item Memory: 32 GB (If you want to run experiments concurrently, update the size of RAM
@@ -116,15 +116,13 @@ $ cd Abacus
 $ ./docker.sh
 \end{lstlisting}
 
-The `docker.sh` can create a docker image automatically and enter the container. After you build the docker image and enter the container, run the following command to build Abacus.
+The `docker.sh` will create a docker image automatically and enter the container that includes all dependencies. After that, run the following command to build Abacus.
 
 \begin{lstlisting}[language=bash]
 $ ./build.sh
 \end{lstlisting}
-\subsection{Run the hello world example}
-\emph{Ensure from here on that you are in the Docker Container.}
-
-In the hello word example, we will guide you through the main steps needed to test a simple function with Abacus.
+\section{Run the hello world example}
+In this section, we walk you through the steps to test a simple function with~\tool{}.
 
 \begin{figure}[h]
 \begin{lstlisting}[xleftmargin=.06\textwidth, xrightmargin=.06\textwidth,numbers=left, frame=single, language=C]
@@ -141,10 +139,10 @@ void is_odd(uint16_t secret) {
 \label{fig:example0}
 \end{figure}
 
-It is a simple function. It takes a 32 bit integer as the secret input and check the last digit of the integer. As an attacker, he can know the last digit bit of the input integer by observing which branch is actually executed. So in the above function, we think the code has one secret-dependent control-flow vulnerability and it can leak one bit of information.
+Shown in Figure~\ref{fig:example0}, the function takes a 32 bit integer as the secret input and check the last digit of the integer. An attacker can know the last digit bit of the input integer by observing which branch is actually executed. So in the above function, we think the code has one secret-dependent control-flow vulnerability and it can leak one bit of the secret information.
 
 \subsubsection{Marking secret data as symbolic}
-In order to test this function with Abacus, we need to tell Abacus which variable is the secret data. We use the function abacus\_make\_symbolic. The function takes three arguments: the type of the symbol, the address of the secret, and the length of the secret input. In the below example, the secret input is the variable secret, and its length is two bytes.
+In order to test this function with Abacus, we need to tell Abacus which variable is the secret data. We use the function \textsf{abacus\_make\_symbolic}. The function takes three arguments: the type of the symbol, the address of the secret, and the length of the secret input. In the below example, the secret input is the variable secret, and its length is two bytes. We add the code in Figure~\ref{fig:example1} to the above function.
 
 \begin{figure}[h]
 \begin{lstlisting}[xleftmargin=.06\textwidth, xrightmargin=.06\textwidth,numbers=left, frame=single, language=C]
@@ -167,13 +165,11 @@ int main() {
 Abacus works directly on the machine instruction. Here we build it into 
 a 32-bit ELF executable. Note that while Abacus can work on stripped binaries 
 without the source code. However, in the example, we use debug information 
-to get a more clear result.
+to get a more clear result (e.g., the line number in the source code).
 \begin{lstlisting}[language=bash]
 $ cd examples
 $ gcc -m32 -g example1.c
 \end{lstlisting}
-
-
 
 
 \subsubsection{Collect the trace}
@@ -187,8 +183,8 @@ $ /abacus/Intel-Pin-Archive/pin -t Pintools/obj-ia32/MyPinToolLinux.so \
   -- ./examples/a.out 
 \end{lstlisting}
 
-You will get two files Function.txt and Inst\_data.txt, which are 
-the inputs of the Abacus.
+You will get two files \textsf{Function.txt} and \textsf{Inst\_data.txt}. \textsf{Inst\_data.txt} is the mandatory input of ~\tool{}. \textsf{Function.txt}
+is optional. 
 
 \subsubsection{Quantify the leakage}
 To run Abacus on the execution trace and get the analysis result.
@@ -207,13 +203,13 @@ Control Transfer: 1
 Data Access: 0
 Information Leak for each address:
 Address: 5664259b Leaked:1.0 bits Type: CF  
-Source code: example1.c line number: 13
+Source code: example1.c line number: 3
 Function Name:  is_odd Module Name:  a.out Offset: 30
 
 ...
 \end{lstlisting}
 
-As expected, it shows that the function is\_odd has one secret-dependent control-flows at line 13. Also, Abacus show the vulnerability leaks 1 bit information.
+As expected, it shows that the function is\_odd has one secret-dependent control-flows at line 3. Also, Abacus show the vulnerability leaks 1 bit information.
 
 \section{Analyze Cryptography Function}
 The results (Table II in the accepted paper) in the evaluation section can be 
