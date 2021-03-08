@@ -75,7 +75,7 @@ Abacus~\cite{bao2021abacus} is an address-based side-channel vulnerability analy
 
 We quantify the amount of leaked information for each leakage site based on the search space. For example, if the length of the key is 128 bits, an attacker needs to brute force $2^{128}$ possible keys without any domain knowledge. However, suppose the attacker observes some information and can reduce the size of the search space to $2^{120}$. Then we can conclude 8 bits of the information are leaked.
 
-\tool{} takes a binary executable as the input. It uses dynamic binary instrumentation tools to collect execution traces. After that, \tool{} analyzes those traces and produce the vulnerability report. While \tool{} can work on the stripped binary executable, \tool{} can also read the symbol and debugging information to give a more fine-grained (e.g., line numbers) report. Table~\ref{tab:DESOpenSSL1.1.1} shows an example of the report. If you are interested in how \tool{} works, please refer to the technical paper~\cite{bao2021abacus}.
+\tool{} takes a binary executable as the input. It uses dynamic binary instrumentation tools to collect execution traces. After that, \tool{} analyzes those traces and produces the vulnerability report. While \tool{} can work on the stripped binary executable, \tool{} can also read the symbol and debugging information to give a more fine-grained (e.g., line numbers) report. Table~\ref{tab:DESOpenSSL1.1.1} shows an example of the report. If you are interested in how \tool{} works, please refer to the technical paper~\cite{bao2021abacus}.
 
 \begin{table}[h!]
 \centering\tiny\scriptsize
@@ -114,7 +114,7 @@ $ cd Abacus
 $ ./docker.sh
 \end{lstlisting}
 
-The ``docker.sh'' script creates a docker image automatically and enters the container that includes all dependencies. After that, run the following command to build \tool{}.
+The ``docker.sh'' script creates a docker image automatically and enters the container that includes all dependencies. After that, run the following command to build \tool{}:
 
 \begin{lstlisting}[language=bash]
 $ ./build.sh
@@ -137,10 +137,10 @@ void is_odd(uint16_t secret) {
 \label{fig:example0}
 \end{figure}
 
-Shown in Figure~\ref{fig:example0}, the function takes a 32 bit integer as the secret input and check the last digit of the integer. An attacker can know the last digit bit of the input integer by observing which branch is actually executed. So in the above function, we think the code has one secret-dependent control-flow vulnerability and it can leak one bit of the secret information.
+As shown in Figure~\ref{fig:example0}, the function takes a 32-bit integer as the secret input and checks the last digit of the integer. An attacker can know the last bit of the input integer by observing which branch is actually executed. So in the above function, we think the code has one secret-dependent control-flow vulnerability, and it can leak one bit of the secret information.
 
 \subsection{Marking secret data as symbolic}
-In order to test this function with \tool{}, we need to mark which variable is the secret data. We use the function \textsf{abacus\_make\_symbolic}. The function takes three arguments: the type of the symbol, the address of the secret, and the length of the secret input. In the below example, the secret input is the variable \textsf{secret}, and its length is two bytes. We add the \textsf{main} function in Figure~\ref{fig:example1} and compile the source code into an executable.
+In order to test this function with \tool{}, we need to mark the variable that representing the secret data as a symbolic variable. We use the function \textsf{abacus\_make\_symbolic}. The function takes three arguments: the type of the symbol, the address of the secret, and the length of the secret input. In the below example, the secret input is the variable \textsf{secret}, and its length is two bytes. We add the \textsf{main} function in Figure~\ref{fig:example1} and compile the source code into an executable.
 
 \begin{figure}[h]
 \begin{lstlisting}[firstnumber=10, xleftmargin=.07\textwidth, xrightmargin=.07\textwidth, numbers=left, frame=single, language=C]
@@ -224,16 +224,16 @@ $ ./start.sh
 
 \section{Command-line Options}
 ~\tool{} takes the trace file as the input (\textsf{Inst\_data.txt}). After the trace file, \tool{} has the following command-line options:
-\vspace{5pt}
+\vspace{1pt}
 \\\textsf{-d {executable file}}
-\\ Read an elf \textit{executable file}. \tool{} can parse the debug information inside the file. With the optional input, \tool{} is able to output which line in the original source code that actually leaks the sensitive information.
-\vspace{5pt}
+\\ Read an elf \textit{executable file}. \tool{} can parse the debug information inside the file. With the optional input, \tool{} is able to output which line in the original source code actually leaks the sensitive information.
+\vspace{1pt}
 \\\textsf{-f {function file}}
 \\Read a function file that was generated by the Pin tool. The command is optional. With the optional input, \tool{} is able to output which function leaks the information and call sites from the sensitive buffer to the leaked site.
-\vspace{5pt}
-\\\textsf{-n {Monte Carlo Times}}
+\vspace{1pt}
+\\\textsf{-n {Monte Carlo times}}
 \\ Set the times of Monte Carlo Sampling when \tool{} estimates the amount of leakage information. If you do not specify the option, \tool{} can automatically terminate the sampling when the tool has 95\% confidence that the error of estimated leaked information is less than 1 bit. Please refer to the paper if you want to learn more about the details.
-\vspace{5pt}
+\vspace{1pt}
 \\\textsf{-a {The address of the secret buffer} \\-s {The size of the buffer}}
 \\The two input options must be used together. In the previous example, we use abacus\_make\_symbolic to mark the secret buffer. For a raw binary, we use the two options to tell \tool{} which buffer is the secret and its length.
 
