@@ -61,7 +61,7 @@ Dinghao Wu\IEEEauthorrefmark{1}}
 
 \begin{abstract}
 Side-channel vulnerabilities can leak sensitive information unconsciously. 
-In this paper, we introduce the usage of Abacus. Abacus is a tool that can analyze secret-dependent control-flow and secret-dependent data-access leakages in binary programs. Unlike previous tools that can only identify leakages, it can also estimate the amount of leaked information for each leakage site. A severe vulnerability usually leaks more information, allowing developers to triage the patching effort for side channel vulnerabilities. This paper is to help users make use of Abacus and reproduce our previous
+In this paper, we introduce the usage of Abacus. Abacus is a tool that can analyze secret-dependent control-flow and secret-dependent data-access leakages in binary programs. Unlike previous tools that can only identify leakages, it can also estimate the amount of leaked information for each leakage site. Severe vulnerabilities usually leak more information, allowing developers to triage the patching effort for side-channel vulnerabilities. This paper is to help users make use of Abacus and reproduce our previous
 results. Abacus is available at \url{https://github.com/s3team/Abacus}.
 \end{abstract}
 
@@ -82,18 +82,17 @@ We quantify the amount of leaked information for each leakage site based on the 
 \caption{Leakages in DES (OpenSSL 1.1.1)}\label{tab:DESOpenSSL1.1.1}
 %\resizebox{\columnwidth}{!}{
 \begin{tabular}{lrlrr}
-\hline
-\textbf{File} & \textbf{Line No.} & \textbf{Function} & \textbf{\# Leaked Bits} & \textbf{Type} \\\hline
+\toprule
+\textbf{File} & \textbf{Line No.} & \textbf{Function} & \textbf{\# Leaked Bits} & \textbf{Type} \\\toprule
 set\_key.c& 350&DES\_set\_key\_unchecked&5.8 &DA\\
 set\_key.c& 350&DES\_set\_key\_unchecked&6.6 &DA\\
 set\_key.c& 350&DES\_set\_key\_unchecked&7.5 &DA\\
 set\_key.c& 350&DES\_set\_key\_unchecked&6.4 &DA\\
 set\_key.c& 355&DES\_set\_key\_unchecked&1.9 &DA\\
 set\_key.c& 355&DES\_set\_key\_unchecked&3.1 &DA\\
-\hline
+\bottomrule
 \end{tabular}
 %}
-\renewcommand{\baselinestretch}{1.0}\selectfont
 \end{table}
 
 \section{Requirements}
