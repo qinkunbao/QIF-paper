@@ -237,7 +237,7 @@ $ ./start.sh
 \\ Set the times of Monte Carlo Sampling when \tool{} estimates the amount of leakage information. If you do not specify the option, \tool{} can automatically terminate the sampling when the tool has 95\% confidence that the error of estimated leaked information is less than 1 bit. Please refer to the paper if you want to learn more about the details.
 \vspace{3pt}
 \\\textsf{-a {<the address of the secret buffer>} \\-s {<the size of the buffer>}}
-\\The two input options must be used together. In the previous example, we use \textsf{abacus\_make\_symbolic} to mark the secret buffer. For a raw binary, we use the two options to tell \tool{} which buffer is the secret and its length.
+\\The two input options must be used together. In the previous example, we use \textsf{abacus\_make\_symbolic} to mark the secret buffer. For a raw binary, we use the above two options to tell \tool{} which buffer is the secret and its length.
 
 \section{CONTRIBUTING}
 \tool{} is open source under the MIT License. Any pull requests and feature requests are welcome.
