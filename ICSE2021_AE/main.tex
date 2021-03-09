@@ -96,7 +96,7 @@ set\_key.c& 355&DES\_set\_key\_unchecked&3.1 &DA\\
 \end{table}
 
 \section{Requirements}
-We have tested \tool{} on both macOS and Ubuntu. You can refer to the continuous integration scripts to build Abacus on your operating system. However, we strongly recommend you to build \tool{} inside a container to avoid any dependency problems. To simplify the illustration, we only include the instructions of installations within the docker in this paper.
+We have tested \tool{} on both macOS and Ubuntu. You can refer to the continuous integration scripts to build \tool{} on your operating system. However, we strongly recommend you to build \tool{} inside a container to avoid any dependency problems. To simplify the illustration, we only include the instructions of installations within the docker in this paper.
 \begin{itemize}
 \item Supported OS: Ubuntu 18.04
 \item Memory: 32 GB (If you want to run experiments concurrently, update the size of RAM
@@ -213,7 +213,7 @@ We have applied~tool{} on the following libraries:
 \item Monocyper: 3.0
 \end{itemize}
 
-The results can be reproduced by running the simple command after you build Abacus successfully inside the container. We have prepared scripts to analyze each cryptography algorithm automatically.
+The results can be reproduced by running the simple command after you build \tool{} successfully inside the container. We have prepared scripts to analyze each cryptography algorithm automatically.
 
 For example, if you want to test AES in mbedTLS 2.5, you can simply run the 
 following command.
