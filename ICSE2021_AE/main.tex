@@ -160,7 +160,7 @@ int main() {
 
 \subsection{Build the example}
 
-Abacus analyzes vulnerabilities on the binary executable. Here we build it into  a 32-bit ELF executable. Note that while Abacus can work on stripped binaries without the source code. However, in the example, we use debug information to get a more detailed result (e.g., the line number in the source code).
+Abacus analyzes vulnerabilities on the binary executable. Here we build it into  a 32-bit ELF executable. Note that while Abacus can work on stripped binaries without the source code, we use debug information to get a more detailed result (e.g., the line number in the source code) in this example.
 \begin{lstlisting}[language=bash]
 $ cd examples
 $ gcc -m32 -g example1.c
