@@ -140,7 +140,7 @@ void is_odd(uint16_t secret) {
 
 As shown in Figure~\ref{fig:example0}, the function takes a 32-bit integer as the secret input and checks the last digit of the integer. An attacker can know the last bit of the input integer by observing which branch is actually executed. So in the above function, we think the code has one secret-dependent control-flow vulnerability, and it can leak one bit of the secret information.
 
-\subsection{Marking secret data as symbolic}
+\subsection{Mark secret data as symbolic}
 In order to test this function with \tool{}, we need to mark the variable that representing the secret data as a symbolic variable. We use the function \textsf{abacus\_make\_symbolic}. The function takes three arguments: the type of the symbol, the address of the secret, and the length of the secret input. In the below example, the secret input is the variable \textsf{secret}, and its length is two bytes. We add the \textsf{main} function in Figure~\ref{fig:example1} and compile the source code into an executable.
 
 \begin{figure}[h]
